@@ -11,6 +11,7 @@ const inter = Inter({
 });
 
 export const metadata: Metadata = {
+  metadataBase: new URL(SITE_CONFIG.url),
   title: {
     default: DEFAULT_SEO.title,
     template: `%s | ${SITE_CONFIG.name}`,
