@@ -5,13 +5,17 @@
 
 'use client';
 
-import { Task } from '../types';
+import { Task, Project, Contact } from '../types';
 import { X, Star, Calendar, Trash2, Plus, Sun } from 'lucide-react';
 import { useState } from 'react';
 import SubTaskItem from './SubTaskItem';
+import MentionTextarea from './MentionTextarea';
 
 interface TaskDetailProps {
   task: Task;
+  tasks?: Task[];
+  projects?: Project[];
+  contacts?: Contact[];
   onClose: () => void;
   onUpdate: (id: string, updates: Partial<Task>) => void;
   onDelete: (id: string) => void;
@@ -24,6 +28,9 @@ interface TaskDetailProps {
 
 export default function TaskDetail({
   task,
+  tasks = [],
+  projects = [],
+  contacts = [],
   onClose,
   onUpdate,
   onDelete,
@@ -147,12 +154,18 @@ export default function TaskDetail({
         <div className="mb-6">
           <label className="mb-2 block text-sm font-medium text-slate-700 dark:text-slate-300">
             Notes
+            <span className="ml-2 text-xs text-slate-500 dark:text-slate-400">
+              (Type @ to mention tasks, projects, or contacts)
+            </span>
           </label>
-          <textarea
+          <MentionTextarea
             value={task.description || ''}
-            onChange={(e) => onUpdate(task.id, { description: e.target.value })}
-            placeholder="Add notes..."
+            onChange={(value) => onUpdate(task.id, { description: value })}
+            placeholder="Add notes... (Type @ to mention)"
             rows={4}
+            tasks={tasks}
+            projects={projects}
+            contacts={contacts}
             className="w-full rounded-lg border border-slate-300 bg-white px-3 py-2 text-sm text-slate-900 placeholder-slate-400 focus:border-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-500/20 dark:border-slate-600 dark:bg-slate-700 dark:text-slate-100 dark:placeholder-slate-500"
           />
         </div>

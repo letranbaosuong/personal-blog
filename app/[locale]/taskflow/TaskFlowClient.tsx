@@ -456,6 +456,9 @@ export default function TaskFlowClient() {
         <div className="hidden w-96 lg:block">
           <TaskDetail
             task={selectedTask}
+            tasks={tasks}
+            projects={projects}
+            contacts={contacts}
             onClose={() => setSelectedTask(null)}
             onUpdate={updateTask}
             onDelete={deleteTask}
@@ -471,6 +474,9 @@ export default function TaskFlowClient() {
         <div className="hidden w-96 lg:block">
           <ContactDetail
             contact={selectedContact}
+            tasks={tasks}
+            projects={projects}
+            contacts={contacts}
             onClose={() => setSelectedContact(null)}
             onUpdate={updateContact}
             onDelete={deleteContact}
@@ -484,6 +490,9 @@ export default function TaskFlowClient() {
         <div className="fixed inset-0 z-50 bg-white dark:bg-slate-800 lg:hidden">
           <TaskDetail
             task={selectedTask}
+            tasks={tasks}
+            projects={projects}
+            contacts={contacts}
             onClose={() => setSelectedTask(null)}
             onUpdate={updateTask}
             onDelete={deleteTask}
@@ -501,6 +510,9 @@ export default function TaskFlowClient() {
         <div className="fixed inset-0 z-50 bg-white dark:bg-slate-800 lg:hidden">
           <ContactDetail
             contact={selectedContact}
+            tasks={tasks}
+            projects={projects}
+            contacts={contacts}
             onClose={() => setSelectedContact(null)}
             onUpdate={updateContact}
             onDelete={deleteContact}
