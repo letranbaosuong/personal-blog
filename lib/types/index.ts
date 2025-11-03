@@ -148,6 +148,7 @@ export interface FirebaseConfig {
 export interface CardProps {
   className?: string;
   children: React.ReactNode;
+  style?: React.CSSProperties;
 }
 
 export interface ButtonProps {

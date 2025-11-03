@@ -10,6 +10,16 @@
  * Semantic naming for easy maintenance and reusability
  */
 
+@theme inline {
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --font-sans: var(--font-geist-sans);
+  --font-mono: var(--font-geist-mono);
+}
+
+/* Enable dark mode with class strategy */
+@variant dark (&:where(.dark, .dark *));
+
 :root {
   /* Light Theme Colors */
   --background: #ffffff;
@@ -29,13 +39,6 @@
 
   --card: #ffffff;
   --card-hover: #f8fafc;
-}
-
-@theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
 }
 
 /* Support both system preference and manual dark mode toggle */

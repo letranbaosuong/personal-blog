@@ -7,14 +7,19 @@ import { cn } from '@/lib/utils';
 import type { CardProps } from '@/lib/types';
 
 export const Card = React.forwardRef<HTMLDivElement, CardProps>(
-  ({ className, children, ...props }, ref) => {
+  ({ className, children, style, ...props }, ref) => {
     return (
       <div
         ref={ref}
         className={cn(
-          'rounded-lg border border-slate-200 bg-white shadow-sm transition-colors dark:border-slate-700 dark:bg-slate-800',
+          'rounded-lg border shadow-sm transition-colors',
           className
         )}
+        style={{
+          backgroundColor: 'var(--card)',
+          borderColor: 'var(--border)',
+          ...style,
+        }}
         {...props}
       >
         {children}
