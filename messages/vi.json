@@ -1,0 +1,180 @@
+{
+  "common": {
+    "readMore": "Đọc thêm",
+    "loading": "Đang tải...",
+    "error": "Đã xảy ra lỗi",
+    "notFound": "Không tìm thấy",
+    "backToHome": "Về trang chủ",
+    "searchPlaceholder": "Tìm kiếm...",
+    "all": "Tất cả",
+    "categories": "Danh mục",
+    "tags": "Thẻ",
+    "share": "Chia sẻ",
+    "previous": "Trước",
+    "next": "Tiếp",
+    "close": "Đóng",
+    "open": "Mở",
+    "submit": "Gửi",
+    "cancel": "Hủy",
+    "save": "Lưu",
+    "edit": "Sửa",
+    "delete": "Xóa",
+    "confirm": "Xác nhận",
+    "language": "Ngôn ngữ"
+  },
+  "nav": {
+    "home": "Trang chủ",
+    "about": "Giới thiệu",
+    "blog": "Blog",
+    "projects": "Dự án",
+    "contact": "Liên hệ",
+    "toggleTheme": "Đổi giao diện",
+    "changeLanguage": "Đổi ngôn ngữ"
+  },
+  "footer": {
+    "copyright": "Bản quyền được bảo lưu.",
+    "builtWith": "Xây dựng với Next.js & Tailwind CSS",
+    "followMe": "Theo dõi tôi",
+    "quickLinks": "Liên kết nhanh",
+    "categories": "Danh mục",
+    "connect": "Kết nối"
+  },
+  "home": {
+    "hero": {
+      "badge": "Chào mừng đến blog của tôi",
+      "greeting": "Xin chào, tôi là",
+      "description": "Lập trình viên Full Stack đam mê tạo ra các giải pháp thanh lịch cho những vấn đề phức tạp. Tôi viết về công nghệ, sức khỏe, thể hình và âm nhạc. Chào mừng đến không gian kỹ thuật số nơi tôi chia sẻ hành trình, dự án và suy nghĩ của mình.",
+      "aboutButton": "Về tôi",
+      "blogButton": "Đọc Blog"
+    },
+    "categories": {
+      "title": "Tôi viết về gì",
+      "subtitle": "Khám phá suy nghĩ và trải nghiệm của tôi qua các chủ đề khác nhau"
+    },
+    "cta": {
+      "title": "Hãy cùng làm việc",
+      "description": "Tôi luôn sẵn sàng thảo luận về các dự án mới, ý tưởng sáng tạo hoặc cơ hội để trở thành một phần trong tầm nhìn của bạn.",
+      "button": "Liên hệ ngay"
+    }
+  },
+  "about": {
+    "title": "Giới thiệu",
+    "subtitle": "Tìm hiểu thêm về hành trình và đam mê của tôi",
+    "intro": {
+      "title": "Giới thiệu",
+      "description": "Xin chào! Tôi là một Lập trình viên Full Stack đam mê với niềm yêu thích tạo ra các giải pháp thanh lịch cho những vấn đề phức tạp. Hành trình của tôi trong công nghệ được thúc đẩy bởi sự tò mò và mong muốn không ngừng học hỏi và phát triển."
+    },
+    "skills": {
+      "title": "Kỹ năng & Công nghệ",
+      "frontend": "Frontend",
+      "backend": "Backend",
+      "tools": "Công cụ & Khác"
+    },
+    "interests": {
+      "title": "Ngoài lập trình",
+      "technology": {
+        "title": "Công nghệ",
+        "description": "Khám phá các framework, ngôn ngữ và best practices mới"
+      },
+      "health": {
+        "title": "Sức khỏe & Thể chất",
+        "description": "Duy trì lối sống cân bằng thông qua dinh dưỡng và thể dục"
+      },
+      "guitar": {
+        "title": "Guitar",
+        "description": "Chơi và học các bài hát mới trong thời gian rảnh"
+      },
+      "calisthenics": {
+        "title": "Thể hình",
+        "description": "Xây dựng sức mạnh và sự linh hoạt qua tập luyện với trọng lượng cơ thể"
+      }
+    },
+    "journey": {
+      "title": "Hành trình của tôi",
+      "description": "Từ một người mới bắt đầu tò mò đến một lập trình viên đam mê, hành trình của tôi tràn đầy thử thách và thành tựu. Tôi tin vào việc học hỏi liên tục và chia sẻ kiến thức với cộng đồng."
+    }
+  },
+  "blog": {
+    "title": "Blog",
+    "subtitle": "Suy nghĩ, câu chuyện và ý tưởng",
+    "allPosts": "Tất cả bài viết",
+    "filterByCategory": "Lọc theo danh mục",
+    "noPostsFound": "Không tìm thấy bài viết",
+    "readingTime": "{minutes} phút đọc",
+    "publishedOn": "Xuất bản vào",
+    "updatedOn": "Cập nhật vào",
+    "author": "Tác giả",
+    "relatedPosts": "Bài viết liên quan",
+    "tableOfContents": "Mục lục",
+    "shareThisPost": "Chia sẻ bài viết",
+    "backToBlog": "Về trang Blog",
+    "categories": {
+      "technology": "Công nghệ",
+      "health": "Sức khỏe",
+      "guitar": "Guitar",
+      "calisthenics": "Thể hình"
+    },
+    "categoryDescriptions": {
+      "technology": "Phát triển web, lập trình và insights công nghệ",
+      "health": "Sức khỏe, dinh dưỡng và lối sống lành mạnh",
+      "guitar": "Âm nhạc, kỹ thuật guitar và cover bài hát",
+      "calisthenics": "Tập luyện với trọng lượng cơ thể và hành trình thể hình"
+    }
+  },
+  "projects": {
+    "title": "Dự án",
+    "subtitle": "Những thứ tôi đã xây dựng và đóng góp",
+    "viewProject": "Xem dự án",
+    "viewCode": "Xem code",
+    "liveDemo": "Demo trực tiếp",
+    "technologies": "Công nghệ",
+    "featured": "Dự án nổi bật",
+    "allProjects": "Tất cả dự án",
+    "inProgress": "Đang thực hiện",
+    "completed": "Đã hoàn thành"
+  },
+  "contact": {
+    "title": "Liên hệ",
+    "subtitle": "Hãy kết nối và cùng tạo nên điều tuyệt vời",
+    "form": {
+      "name": "Tên",
+      "namePlaceholder": "Tên của bạn",
+      "email": "Email",
+      "emailPlaceholder": "email.cua.ban@example.com",
+      "subject": "Chủ đề",
+      "subjectPlaceholder": "Về vấn đề gì?",
+      "message": "Tin nhắn",
+      "messagePlaceholder": "Tin nhắn của bạn...",
+      "send": "Gửi tin nhắn",
+      "sending": "Đang gửi...",
+      "success": "Gửi tin nhắn thành công!",
+      "error": "Gửi tin nhắn thất bại. Vui lòng thử lại."
+    },
+    "info": {
+      "title": "Thông tin liên hệ",
+      "email": "Email",
+      "phone": "Điện thoại",
+      "location": "Địa điểm",
+      "availability": "Thời gian có mặt"
+    },
+    "social": {
+      "title": "Kết nối với tôi",
+      "github": "GitHub",
+      "linkedin": "LinkedIn",
+      "twitter": "Twitter",
+      "facebook": "Facebook"
+    }
+  },
+  "errors": {
+    "404": {
+      "title": "Không tìm thấy trang",
+      "description": "Trang bạn đang tìm kiếm không tồn tại hoặc đã được chuyển đi.",
+      "backHome": "Về trang chủ"
+    },
+    "500": {
+      "title": "Đã xảy ra lỗi",
+      "description": "Chúng tôi đang khắc phục sự cố này. Vui lòng thử lại sau.",
+      "retry": "Thử lại"
+    }
+  }
+}

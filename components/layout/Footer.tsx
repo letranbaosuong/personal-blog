@@ -1,14 +1,27 @@
 /**
  * Footer Component
+ * Internationalized with next-intl
  */
 
-import Link from 'next/link';
+'use client';
+
+import { useTranslations } from 'next-intl';
 import { Github, Linkedin, Twitter, Mail } from 'lucide-react';
 import Container from '@/components/common/Container';
-import { SITE_CONFIG, NAV_LINKS } from '@/lib/constants';
+import { Link } from '@/lib/i18n/navigation';
+import { SITE_CONFIG } from '@/lib/constants';
 
 export default function Footer() {
+  const t = useTranslations();
   const currentYear = new Date().getFullYear();
+
+  const navLinks = [
+    { href: '/', label: t('nav.home') },
+    { href: '/about', label: t('nav.about') },
+    { href: '/blog', label: t('nav.blog') },
+    { href: '/projects', label: t('nav.projects') },
+    { href: '/contact', label: t('nav.contact') },
+  ];
 
   const socialLinks = [
     {
@@ -44,18 +57,17 @@ export default function Footer() {
                 {SITE_CONFIG.name}
               </h3>
               <p className="text-sm text-gray-600 dark:text-gray-400">
-                Personal blog and portfolio showcasing my projects, skills, and
-                thoughts on technology, health, fitness, and music.
+                {t('home.hero.description')}
               </p>
             </div>
 
             {/* Quick Links */}
             <div>
               <h3 className="mb-4 text-lg font-semibold text-gray-900 dark:text-white">
-                Quick Links
+                {t('footer.quickLinks')}
               </h3>
               <ul className="space-y-2">
-                {NAV_LINKS.map((link) => (
+                {navLinks.map((link) => (
                   <li key={link.href}>
                     <Link
                       href={link.href}
@@ -71,7 +83,7 @@ export default function Footer() {
             {/* Social Links */}
             <div>
               <h3 className="mb-4 text-lg font-semibold text-gray-900 dark:text-white">
-                Connect
+                {t('footer.connect')}
               </h3>
               <div className="flex space-x-4">
                 {socialLinks.map((social) => {
@@ -95,9 +107,14 @@ export default function Footer() {
 
           {/* Bottom Bar */}
           <div className="mt-8 border-t border-gray-200 pt-8 dark:border-gray-800">
-            <p className="text-center text-sm text-gray-600 dark:text-gray-400">
-              &copy; {currentYear} {SITE_CONFIG.author}. All rights reserved.
-            </p>
+            <div className="flex flex-col items-center gap-2">
+              <p className="text-center text-sm text-gray-600 dark:text-gray-400">
+                &copy; {currentYear} {SITE_CONFIG.author}. {t('footer.copyright')}
+              </p>
+              <p className="text-center text-xs text-gray-500 dark:text-gray-500">
+                {t('footer.builtWith')}
+              </p>
+            </div>
           </div>
         </div>
       </Container>

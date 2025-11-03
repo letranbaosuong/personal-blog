@@ -1,0 +1,180 @@
+{
+  "common": {
+    "readMore": "阅读更多",
+    "loading": "加载中...",
+    "error": "发生错误",
+    "notFound": "未找到",
+    "backToHome": "返回首页",
+    "searchPlaceholder": "搜索...",
+    "all": "全部",
+    "categories": "分类",
+    "tags": "标签",
+    "share": "分享",
+    "previous": "上一页",
+    "next": "下一页",
+    "close": "关闭",
+    "open": "打开",
+    "submit": "提交",
+    "cancel": "取消",
+    "save": "保存",
+    "edit": "编辑",
+    "delete": "删除",
+    "confirm": "确认",
+    "language": "语言"
+  },
+  "nav": {
+    "home": "首页",
+    "about": "关于",
+    "blog": "博客",
+    "projects": "项目",
+    "contact": "联系",
+    "toggleTheme": "切换主题",
+    "changeLanguage": "更改语言"
+  },
+  "footer": {
+    "copyright": "版权所有。",
+    "builtWith": "使用 Next.js 和 Tailwind CSS 构建",
+    "followMe": "关注我",
+    "quickLinks": "快速链接",
+    "categories": "分类",
+    "connect": "让我们联系"
+  },
+  "home": {
+    "hero": {
+      "badge": "欢迎来到我的博客",
+      "greeting": "你好，我是",
+      "description": "全栈开发者，热衷于为复杂问题创建优雅的解决方案。我撰写有关技术、健康、健身和音乐的文章。欢迎来到我的数字空间，在这里我分享我的旅程、项目和想法。",
+      "aboutButton": "关于我",
+      "blogButton": "阅读博客"
+    },
+    "categories": {
+      "title": "我写什么",
+      "subtitle": "探索我在不同主题上的想法和经验"
+    },
+    "cta": {
+      "title": "让我们一起工作",
+      "description": "我随时欢迎讨论新项目、创意想法或成为您愿景一部分的机会。",
+      "button": "联系我"
+    }
+  },
+  "about": {
+    "title": "关于我",
+    "subtitle": "了解更多关于我的旅程和热情",
+    "intro": {
+      "title": "介绍",
+      "description": "你好！我是一位充满热情的全栈开发者，喜欢为复杂问题创建优雅的解决方案。我在技术领域的旅程是由好奇心和不断学习成长的愿望驱动的。"
+    },
+    "skills": {
+      "title": "技能和技术",
+      "frontend": "前端",
+      "backend": "后端",
+      "tools": "工具和其他"
+    },
+    "interests": {
+      "title": "编码之外",
+      "technology": {
+        "title": "技术",
+        "description": "探索新框架、语言和最佳实践"
+      },
+      "health": {
+        "title": "健康与养生",
+        "description": "通过营养和健身保持平衡的生活方式"
+      },
+      "guitar": {
+        "title": "吉他",
+        "description": "在业余时间演奏和学习新歌"
+      },
+      "calisthenics": {
+        "title": "健美操",
+        "description": "通过体重训练建立力量和灵活性"
+      }
+    },
+    "journey": {
+      "title": "我的旅程",
+      "description": "从好奇的初学者到充满热情的开发者，我的旅程充满了挑战和成就。我相信持续学习并与社区分享知识。"
+    }
+  },
+  "blog": {
+    "title": "博客",
+    "subtitle": "思想、故事和想法",
+    "allPosts": "所有文章",
+    "filterByCategory": "按分类筛选",
+    "noPostsFound": "未找到文章",
+    "readingTime": "{minutes}分钟阅读",
+    "publishedOn": "发布于",
+    "updatedOn": "更新于",
+    "author": "作者",
+    "relatedPosts": "相关文章",
+    "tableOfContents": "目录",
+    "shareThisPost": "分享此文章",
+    "backToBlog": "返回博客",
+    "categories": {
+      "technology": "技术",
+      "health": "健康",
+      "guitar": "吉他",
+      "calisthenics": "健美操"
+    },
+    "categoryDescriptions": {
+      "technology": "Web开发、编程和技术见解",
+      "health": "健康、营养和健康生活",
+      "guitar": "音乐、吉他技巧和歌曲翻唱",
+      "calisthenics": "体重训练和健身之旅"
+    }
+  },
+  "projects": {
+    "title": "项目",
+    "subtitle": "我构建和贡献的内容",
+    "viewProject": "查看项目",
+    "viewCode": "查看代码",
+    "liveDemo": "在线演示",
+    "technologies": "技术",
+    "featured": "精选项目",
+    "allProjects": "所有项目",
+    "inProgress": "进行中",
+    "completed": "已完成"
+  },
+  "contact": {
+    "title": "联系我",
+    "subtitle": "让我们联系并一起创造惊人的东西",
+    "form": {
+      "name": "姓名",
+      "namePlaceholder": "您的姓名",
+      "email": "邮箱",
+      "emailPlaceholder": "your.email@example.com",
+      "subject": "主题",
+      "subjectPlaceholder": "关于什么？",
+      "message": "消息",
+      "messagePlaceholder": "您的消息...",
+      "send": "发送消息",
+      "sending": "发送中...",
+      "success": "消息发送成功！",
+      "error": "消息发送失败。请重试。"
+    },
+    "info": {
+      "title": "联系信息",
+      "email": "邮箱",
+      "phone": "电话",
+      "location": "位置",
+      "availability": "可用性"
+    },
+    "social": {
+      "title": "与我联系",
+      "github": "GitHub",
+      "linkedin": "LinkedIn",
+      "twitter": "Twitter",
+      "facebook": "Facebook"
+    }
+  },
+  "errors": {
+    "404": {
+      "title": "页面未找到",
+      "description": "您要查找的页面不存在或已移动。",
+      "backHome": "返回首页"
+    },
+    "500": {
+      "title": "出了点问题",
+      "description": "我们正在努力解决这个问题。请稍后再试。",
+      "retry": "重试"
+    }
+  }
+}
