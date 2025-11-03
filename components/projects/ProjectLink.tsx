@@ -3,7 +3,7 @@
  * Handles both internal and external links appropriately
  */
 
-import Link from 'next/link';
+import { Link } from '@/lib/i18n/navigation';
 
 interface ProjectLinkProps {
   href: string;
@@ -18,31 +18,32 @@ export default function ProjectLink({
   className = '',
   variant = 'demo',
 }: ProjectLinkProps) {
-  const isInternal = href.startsWith('/');
+  // Check if it's an external URL (starts with http:// or https://)
+  const isExternal = href.startsWith('http://') || href.startsWith('https://');
 
-  if (isInternal) {
-    // Internal link - use Next.js Link
+  if (isExternal) {
+    // External link - use regular anchor
     return (
-      <Link
+      <a
         href={href}
-        className={className}
         target="_blank"
         rel="noopener noreferrer"
+        className={className}
       >
         {children}
-      </Link>
+      </a>
     );
   }
 
-  // External link - use regular anchor
+  // Internal link - use i18n Link (will automatically add locale prefix)
   return (
-    <a
-      href={href}
+    <Link
+      href={`/${href}`}
+      className={className}
       target="_blank"
       rel="noopener noreferrer"
-      className={className}
     >
       {children}
-    </a>
+    </Link>
   );
 }

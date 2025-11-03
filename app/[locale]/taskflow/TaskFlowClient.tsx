@@ -1,6 +1,6 @@
 /**
- * TaskFlow - Main Page
- * A modern task management application
+ * TaskFlow Client Component
+ * Main client-side logic for TaskFlow
  */
 
 'use client';
@@ -10,11 +10,10 @@ import { Plus } from 'lucide-react';
 import Sidebar from './components/Sidebar';
 import TaskList from './components/TaskList';
 import { useTasks } from './hooks/useTasks';
-import { Task, TaskFilters } from './types';
+import { TaskFilters } from './types';
 
-export default function TaskFlowPage() {
+export default function TaskFlowClient() {
   const [activeView, setActiveView] = useState('all');
-  const [showCreateModal, setShowCreateModal] = useState(false);
   const [newTaskTitle, setNewTaskTitle] = useState('');
 
   // Get filters based on active view
@@ -32,7 +31,7 @@ export default function TaskFlowPage() {
     }
   }, [activeView]);
 
-  const { tasks, loading, createTask, toggleComplete, toggleImportant, toggleMyDay } =
+  const { tasks, loading, createTask, toggleComplete, toggleImportant } =
     useTasks(filters);
 
   // Get view title
@@ -70,7 +69,7 @@ export default function TaskFlowPage() {
 
   if (loading) {
     return (
-      <div className="flex h-screen items-center justify-center">
+      <div className="flex h-screen items-center justify-center bg-slate-50 dark:bg-slate-900">
         <div className="text-center">
           <div className="mb-4 text-6xl">⚡</div>
           <p className="text-slate-600 dark:text-slate-400">Loading TaskFlow...</p>
