@@ -3,16 +3,14 @@
  * Internationalized with next-intl
  */
 
-'use client';
-
-import { useTranslations } from 'next-intl';
+import { getTranslations } from 'next-intl/server';
 import { Github, Linkedin, Twitter, Mail } from 'lucide-react';
 import Container from '@/components/common/Container';
 import { Link } from '@/lib/i18n/navigation';
 import { SITE_CONFIG } from '@/lib/constants';
 
-export default function Footer() {
-  const t = useTranslations();
+export default async function Footer() {
+  const t = await getTranslations();
   const currentYear = new Date().getFullYear();
 
   const navLinks = [
