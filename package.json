@@ -6,7 +6,10 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "eslint"
+    "lint": "eslint",
+    "set-admin": "node scripts/set-admin.js",
+    "set-admin-simple": "node scripts/set-admin-simple.js",
+    "create-admin-user": "node scripts/create-admin-user.js"
   },
   "dependencies": {
     "clsx": "^2.1.1",
@@ -35,6 +38,7 @@
     "@types/react-dom": "^19",
     "eslint": "^9",
     "eslint-config-next": "16.0.1",
+    "firebase-admin": "^13.5.0",
     "jest": "^29.7.0",
     "jest-environment-jsdom": "^29.7.0",
     "tailwindcss": "^4",
