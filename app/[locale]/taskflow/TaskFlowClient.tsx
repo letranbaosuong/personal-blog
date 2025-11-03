@@ -29,7 +29,7 @@ export default function TaskFlowClient() {
         return { status: 'completed' };
       case 'all':
       default:
-        return { status: 'pending' };
+        return undefined; // No filter - show all tasks
     }
   }, [activeView]);
 
@@ -54,6 +54,17 @@ export default function TaskFlowClient() {
       setSelectedTask(updated || null);
     }
   }, [tasks, selectedTask]);
+
+  // Group tasks by status for 'all' view
+  const groupedTasks = useMemo(() => {
+    if (activeView !== 'all') return null;
+
+    return {
+      pending: tasks.filter((t) => t.status === 'pending'),
+      'in-progress': tasks.filter((t) => t.status === 'in-progress'),
+      completed: tasks.filter((t) => t.status === 'completed'),
+    };
+  }, [activeView, tasks]);
 
   // Get view title
   const viewTitle = useMemo(() => {
@@ -141,13 +152,105 @@ export default function TaskFlowClient() {
 
         {/* Task List */}
         <div className="flex-1 overflow-y-auto p-6">
-          <TaskList
-            tasks={tasks}
-            onToggleComplete={toggleComplete}
-            onToggleImportant={toggleImportant}
-            onTaskClick={(task) => setSelectedTask(task)}
-            emptyMessage={`No ${viewTitle.toLowerCase()} yet. Start adding tasks!`}
-          />
+          {activeView === 'all' && groupedTasks ? (
+            // Grouped view for 'All Tasks'
+            <div className="space-y-6">
+              {/* Pending Tasks */}
+              {groupedTasks.pending.length > 0 && (
+                <div>
+                  <div className="mb-3 flex items-center gap-3">
+                    <h3 className="text-sm font-semibold uppercase tracking-wider text-slate-500 dark:text-slate-400">
+                      Pending
+                    </h3>
+                    <div className="text-xs text-slate-400 dark:text-slate-500">
+                      {groupedTasks.pending.length} {groupedTasks.pending.length === 1 ? 'task' : 'tasks'}
+                    </div>
+                  </div>
+                  <TaskList
+                    tasks={groupedTasks.pending}
+                    onToggleComplete={toggleComplete}
+                    onToggleImportant={toggleImportant}
+                    onTaskClick={(task) => setSelectedTask(task)}
+                    emptyMessage="No pending tasks"
+                  />
+                </div>
+              )}
+
+              {/* Divider */}
+              {groupedTasks.pending.length > 0 && groupedTasks['in-progress'].length > 0 && (
+                <div className="border-t border-slate-200 dark:border-slate-700" />
+              )}
+
+              {/* In Progress Tasks */}
+              {groupedTasks['in-progress'].length > 0 && (
+                <div>
+                  <div className="mb-3 flex items-center gap-3">
+                    <h3 className="text-sm font-semibold uppercase tracking-wider text-slate-500 dark:text-slate-400">
+                      In Progress
+                    </h3>
+                    <div className="text-xs text-slate-400 dark:text-slate-500">
+                      {groupedTasks['in-progress'].length} {groupedTasks['in-progress'].length === 1 ? 'task' : 'tasks'}
+                    </div>
+                  </div>
+                  <TaskList
+                    tasks={groupedTasks['in-progress']}
+                    onToggleComplete={toggleComplete}
+                    onToggleImportant={toggleImportant}
+                    onTaskClick={(task) => setSelectedTask(task)}
+                    emptyMessage="No in-progress tasks"
+                  />
+                </div>
+              )}
+
+              {/* Divider */}
+              {(groupedTasks.pending.length > 0 || groupedTasks['in-progress'].length > 0) &&
+                groupedTasks.completed.length > 0 && (
+                  <div className="border-t border-slate-200 dark:border-slate-700" />
+                )}
+
+              {/* Completed Tasks */}
+              {groupedTasks.completed.length > 0 && (
+                <div>
+                  <div className="mb-3 flex items-center gap-3">
+                    <h3 className="text-sm font-semibold uppercase tracking-wider text-slate-500 dark:text-slate-400">
+                      Completed
+                    </h3>
+                    <div className="text-xs text-slate-400 dark:text-slate-500">
+                      {groupedTasks.completed.length} {groupedTasks.completed.length === 1 ? 'task' : 'tasks'}
+                    </div>
+                  </div>
+                  <TaskList
+                    tasks={groupedTasks.completed}
+                    onToggleComplete={toggleComplete}
+                    onToggleImportant={toggleImportant}
+                    onTaskClick={(task) => setSelectedTask(task)}
+                    emptyMessage="No completed tasks"
+                  />
+                </div>
+              )}
+
+              {/* Empty state - when no tasks at all */}
+              {groupedTasks.pending.length === 0 &&
+                groupedTasks['in-progress'].length === 0 &&
+                groupedTasks.completed.length === 0 && (
+                  <div className="flex flex-col items-center justify-center py-12 text-center">
+                    <div className="mb-2 text-4xl">📝</div>
+                    <p className="text-slate-500 dark:text-slate-400">
+                      No tasks yet. Start adding tasks!
+                    </p>
+                  </div>
+                )}
+            </div>
+          ) : (
+            // Normal view for other filters
+            <TaskList
+              tasks={tasks}
+              onToggleComplete={toggleComplete}
+              onToggleImportant={toggleImportant}
+              onTaskClick={(task) => setSelectedTask(task)}
+              emptyMessage={`No ${viewTitle.toLowerCase()} yet. Start adding tasks!`}
+            />
+          )}
         </div>
       </div>
 
