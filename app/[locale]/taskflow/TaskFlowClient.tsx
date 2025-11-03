@@ -5,7 +5,7 @@
 
 'use client';
 
-import { useState, useMemo, useCallback } from 'react';
+import { useState, useMemo, useCallback, useEffect } from 'react';
 import { Plus } from 'lucide-react';
 import Sidebar from './components/Sidebar';
 import TaskList from './components/TaskList';
@@ -78,12 +78,13 @@ export default function TaskFlowClient() {
   } = useTasks(filters);
 
   // Toast notification handlers
-  const addToast = useCallback((title: string, message: string) => {
+  const addToast = useCallback((title: string, message: string, taskId?: string) => {
     const newToast: ToastMessage = {
       id: `toast_${Date.now()}_${Math.random().toString(36).substring(2, 11)}`,
       title,
       message,
       type: 'info',
+      taskId,
     };
     setToasts((prev) => [...prev, newToast]);
   }, []);
@@ -92,12 +93,36 @@ export default function TaskFlowClient() {
     setToasts((prev) => prev.filter((t) => t.id !== id));
   }, []);
 
+  // Handle task click from notifications
+  const handleTaskClick = useCallback((taskId: string) => {
+    const task = tasks.find((t) => t.id === taskId);
+    if (task) {
+      setSelectedTask(task);
+    }
+  }, [tasks]);
+
   // Monitor reminders
   useReminders(tasks, {
     onReminder: (notification) => {
-      addToast(notification.title, notification.message);
+      addToast(notification.title, notification.message, notification.taskId);
     },
   });
+
+  // Listen for browser notification clicks
+  useEffect(() => {
+    const handleOpenTask = (event: CustomEvent) => {
+      const { taskId } = event.detail;
+      if (taskId) {
+        handleTaskClick(taskId);
+      }
+    };
+
+    window.addEventListener('taskflow:openTask' as any, handleOpenTask);
+
+    return () => {
+      window.removeEventListener('taskflow:openTask' as any, handleOpenTask);
+    };
+  }, [handleTaskClick]);
 
   // Update selected task when tasks change
   useMemo(() => {
@@ -410,7 +435,7 @@ export default function TaskFlowClient() {
       </div>
 
       {/* Toast Notifications */}
-      <Toast toasts={toasts} onDismiss={dismissToast} />
+      <Toast toasts={toasts} onDismiss={dismissToast} onTaskClick={handleTaskClick} />
     </div>
   );
 }

@@ -54,6 +54,7 @@ export function useReminders(tasks: Task[], options?: UseRemindersOptions) {
           title: '⏰ Task Reminder',
           body: message,
           tag: task.id,
+          data: { taskId: task.id },
         });
 
         // Trigger callback for in-app notification

@@ -7,6 +7,7 @@ export interface NotificationOptions {
   body: string;
   icon?: string;
   tag?: string;
+  data?: any; // Additional data like taskId
 }
 
 export const notifications = {
@@ -49,15 +50,24 @@ export const notifications = {
         tag: options.tag,
         badge: options.icon || '/favicon.ico',
         requireInteraction: false,
+        data: options.data,
       });
 
       // Auto close after 10 seconds
       setTimeout(() => notification.close(), 10000);
 
-      // Handle click
+      // Handle click - dispatch custom event with taskId
       notification.onclick = () => {
         window.focus();
         notification.close();
+
+        // Dispatch custom event to open task detail
+        if (options.data?.taskId) {
+          const event = new CustomEvent('taskflow:openTask', {
+            detail: { taskId: options.data.taskId },
+          });
+          window.dispatchEvent(event);
+        }
       };
     } catch (error) {
       console.error('Error showing notification:', error);

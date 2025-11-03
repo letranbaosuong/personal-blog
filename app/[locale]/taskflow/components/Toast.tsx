@@ -13,18 +13,25 @@ export interface ToastMessage {
   message: string;
   type?: 'info' | 'success' | 'warning' | 'error';
   duration?: number;
+  taskId?: string; // Optional taskId for opening task detail
 }
 
 interface ToastProps {
   toasts: ToastMessage[];
   onDismiss: (id: string) => void;
+  onTaskClick?: (taskId: string) => void;
 }
 
-export default function Toast({ toasts, onDismiss }: ToastProps) {
+export default function Toast({ toasts, onDismiss, onTaskClick }: ToastProps) {
   return (
     <div className="fixed bottom-4 right-4 z-50 flex flex-col gap-2">
       {toasts.map((toast) => (
-        <ToastItem key={toast.id} toast={toast} onDismiss={onDismiss} />
+        <ToastItem
+          key={toast.id}
+          toast={toast}
+          onDismiss={onDismiss}
+          onTaskClick={onTaskClick}
+        />
       ))}
     </div>
   );
@@ -33,9 +40,11 @@ export default function Toast({ toasts, onDismiss }: ToastProps) {
 function ToastItem({
   toast,
   onDismiss,
+  onTaskClick,
 }: {
   toast: ToastMessage;
   onDismiss: (id: string) => void;
+  onTaskClick?: (taskId: string) => void;
 }) {
   const [isVisible, setIsVisible] = useState(false);
 
@@ -69,11 +78,20 @@ function ToastItem({
     }
   };
 
+  const handleToastClick = () => {
+    if (toast.taskId && onTaskClick) {
+      onTaskClick(toast.taskId);
+      setIsVisible(false);
+      setTimeout(() => onDismiss(toast.id), 300);
+    }
+  };
+
   return (
     <div
+      onClick={handleToastClick}
       className={`flex min-w-[320px] max-w-md items-start gap-3 rounded-lg border p-4 shadow-lg transition-all duration-300 ${
         isVisible ? 'translate-x-0 opacity-100' : 'translate-x-full opacity-0'
-      } ${getTypeStyles()}`}
+      } ${getTypeStyles()} ${toast.taskId ? 'cursor-pointer hover:shadow-xl' : ''}`}
     >
       {/* Icon */}
       <div className="flex-shrink-0 pt-0.5">
@@ -84,11 +102,15 @@ function ToastItem({
       <div className="flex-1">
         <h4 className="text-sm font-semibold">{toast.title}</h4>
         <p className="mt-1 text-sm opacity-90">{toast.message}</p>
+        {toast.taskId && (
+          <p className="mt-1 text-xs opacity-70">Click to view task</p>
+        )}
       </div>
 
       {/* Close button */}
       <button
-        onClick={() => {
+        onClick={(e) => {
+          e.stopPropagation();
           setIsVisible(false);
           setTimeout(() => onDismiss(toast.id), 300);
         }}
