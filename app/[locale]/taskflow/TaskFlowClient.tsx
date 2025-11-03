@@ -9,12 +9,14 @@ import { useState, useMemo } from 'react';
 import { Plus } from 'lucide-react';
 import Sidebar from './components/Sidebar';
 import TaskList from './components/TaskList';
+import TaskDetail from './components/TaskDetail';
 import { useTasks } from './hooks/useTasks';
-import { TaskFilters } from './types';
+import { Task, TaskFilters } from './types';
 
 export default function TaskFlowClient() {
   const [activeView, setActiveView] = useState('all');
   const [newTaskTitle, setNewTaskTitle] = useState('');
+  const [selectedTask, setSelectedTask] = useState<Task | null>(null);
 
   // Get filters based on active view
   const filters: TaskFilters | undefined = useMemo(() => {
@@ -31,8 +33,27 @@ export default function TaskFlowClient() {
     }
   }, [activeView]);
 
-  const { tasks, loading, createTask, toggleComplete, toggleImportant } =
-    useTasks(filters);
+  const {
+    tasks,
+    loading,
+    createTask,
+    updateTask,
+    deleteTask,
+    toggleComplete,
+    toggleImportant,
+    toggleMyDay,
+    addSubTask,
+    toggleSubTask,
+    deleteSubTask,
+  } = useTasks(filters);
+
+  // Update selected task when tasks change
+  useMemo(() => {
+    if (selectedTask) {
+      const updated = tasks.find((t) => t.id === selectedTask.id);
+      setSelectedTask(updated || null);
+    }
+  }, [tasks, selectedTask]);
 
   // Get view title
   const viewTitle = useMemo(() => {
@@ -80,12 +101,12 @@ export default function TaskFlowClient() {
 
   return (
     <div className="flex h-screen bg-slate-50 dark:bg-slate-900">
-      {/* Sidebar */}
+      {/* Sidebar - Navigation */}
       <div className="hidden w-64 md:block">
         <Sidebar activeView={activeView} onViewChange={setActiveView} />
       </div>
 
-      {/* Main Content */}
+      {/* Main Content - Task List */}
       <div className="flex flex-1 flex-col overflow-hidden">
         {/* Header */}
         <div className="border-b border-slate-200 bg-white p-6 dark:border-slate-700 dark:bg-slate-800">
@@ -124,10 +145,45 @@ export default function TaskFlowClient() {
             tasks={tasks}
             onToggleComplete={toggleComplete}
             onToggleImportant={toggleImportant}
+            onTaskClick={(task) => setSelectedTask(task)}
             emptyMessage={`No ${viewTitle.toLowerCase()} yet. Start adding tasks!`}
           />
         </div>
       </div>
+
+      {/* Right Sidebar - Task Detail */}
+      {selectedTask && (
+        <div className="hidden w-96 lg:block">
+          <TaskDetail
+            task={selectedTask}
+            onClose={() => setSelectedTask(null)}
+            onUpdate={updateTask}
+            onDelete={deleteTask}
+            onToggleImportant={toggleImportant}
+            onToggleMyDay={toggleMyDay}
+            onAddSubTask={addSubTask}
+            onToggleSubTask={toggleSubTask}
+            onDeleteSubTask={deleteSubTask}
+          />
+        </div>
+      )}
+
+      {/* Mobile: Full-screen Task Detail Overlay */}
+      {selectedTask && (
+        <div className="fixed inset-0 z-50 bg-white dark:bg-slate-800 lg:hidden">
+          <TaskDetail
+            task={selectedTask}
+            onClose={() => setSelectedTask(null)}
+            onUpdate={updateTask}
+            onDelete={deleteTask}
+            onToggleImportant={toggleImportant}
+            onToggleMyDay={toggleMyDay}
+            onAddSubTask={addSubTask}
+            onToggleSubTask={toggleSubTask}
+            onDeleteSubTask={deleteSubTask}
+          />
+        </div>
+      )}
 
       {/* Mobile Sidebar Toggle - placeholder for mobile menu */}
       <div className="fixed bottom-4 right-4 md:hidden">

@@ -113,6 +113,16 @@ export function useTasks(filters?: TaskFilters) {
     [loadTasks]
   );
 
+  // Delete sub-task
+  const deleteSubTask = useCallback(
+    (taskId: string, subTaskId: string) => {
+      const updated = taskService.deleteSubTask(taskId, subTaskId);
+      if (updated) loadTasks();
+      return updated;
+    },
+    [loadTasks]
+  );
+
   return {
     tasks,
     loading,
@@ -124,6 +134,7 @@ export function useTasks(filters?: TaskFilters) {
     toggleMyDay,
     addSubTask,
     toggleSubTask,
+    deleteSubTask,
     refresh: loadTasks,
   };
 }
