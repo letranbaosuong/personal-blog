@@ -5,7 +5,7 @@
 
 'use client';
 
-import { useState, useMemo } from 'react';
+import { useState, useMemo, useCallback } from 'react';
 import { Plus } from 'lucide-react';
 import Sidebar from './components/Sidebar';
 import TaskList from './components/TaskList';
@@ -13,15 +13,17 @@ import TaskDetail from './components/TaskDetail';
 import DatePicker from './components/DatePicker';
 import ReminderPicker from './components/ReminderPicker';
 import RepeatPicker from './components/RepeatPicker';
+import Toast, { ToastMessage } from './components/Toast';
 import { useTasks } from './hooks/useTasks';
 import { useProjects } from './hooks/useProjects';
+import { useReminders } from './hooks/useReminders';
 import { Task, TaskFilters, RepeatSettings } from './types';
 
 export default function TaskFlowClient() {
   const [activeView, setActiveView] = useState('all');
   const [newTaskTitle, setNewTaskTitle] = useState('');
   const [selectedTask, setSelectedTask] = useState<Task | null>(null);
-  const [showNewProjectDialog, setShowNewProjectDialog] = useState(false);
+  const [toasts, setToasts] = useState<ToastMessage[]>([]);
 
   // Quick add task properties
   const [quickAddDueDate, setQuickAddDueDate] = useState<string | undefined>();
@@ -74,6 +76,28 @@ export default function TaskFlowClient() {
     toggleSubTask,
     deleteSubTask,
   } = useTasks(filters);
+
+  // Toast notification handlers
+  const addToast = useCallback((title: string, message: string) => {
+    const newToast: ToastMessage = {
+      id: `toast_${Date.now()}_${Math.random().toString(36).substring(2, 11)}`,
+      title,
+      message,
+      type: 'info',
+    };
+    setToasts((prev) => [...prev, newToast]);
+  }, []);
+
+  const dismissToast = useCallback((id: string) => {
+    setToasts((prev) => prev.filter((t) => t.id !== id));
+  }, []);
+
+  // Monitor reminders
+  useReminders(tasks, {
+    onReminder: (notification) => {
+      addToast(notification.title, notification.message);
+    },
+  });
 
   // Update selected task when tasks change
   useMemo(() => {
@@ -384,6 +408,9 @@ export default function TaskFlowClient() {
           <Plus className="h-6 w-6" />
         </button>
       </div>
+
+      {/* Toast Notifications */}
+      <Toast toasts={toasts} onDismiss={dismissToast} />
     </div>
   );
 }
