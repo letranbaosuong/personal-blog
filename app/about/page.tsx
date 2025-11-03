@@ -59,10 +59,10 @@ export default function AboutPage() {
       <Container>
         {/* Header */}
         <div className="mb-16 text-center">
-          <h1 className="mb-4 text-4xl font-bold text-gray-900 dark:text-white">
+          <h1 className="mb-4 text-4xl font-bold text-slate-900 dark:text-slate-100">
             About Me
           </h1>
-          <p className="mx-auto max-w-2xl text-lg text-gray-600 dark:text-gray-400">
+          <p className="mx-auto max-w-2xl text-lg text-slate-600 dark:text-slate-300">
             I'm a passionate full-stack developer who loves creating beautiful and
             functional web applications. Here's my journey so far.
           </p>
@@ -73,12 +73,12 @@ export default function AboutPage() {
           <Card>
             <CardHeader>
               <CardTitle className="flex items-center gap-2">
-                <Code2 className="h-6 w-6 text-blue-600" />
+                <Code2 className="h-6 w-6 text-blue-600 dark:text-blue-400" />
                 Professional Summary
               </CardTitle>
             </CardHeader>
             <CardContent>
-              <p className="text-gray-600 leading-relaxed dark:text-gray-400">
+              <p className="text-slate-600 leading-relaxed dark:text-slate-300">
                 With over 3 years of experience in web development, I specialize in
                 building modern, scalable web applications. I'm passionate about
                 clean code, user experience, and continuous learning. Beyond coding,
@@ -92,8 +92,8 @@ export default function AboutPage() {
 
         {/* Work Experience */}
         <section className="mb-16">
-          <h2 className="mb-6 flex items-center gap-2 text-2xl font-bold text-gray-900 dark:text-white">
-            <Briefcase className="h-6 w-6 text-blue-600" />
+          <h2 className="mb-6 flex items-center gap-2 text-2xl font-bold text-slate-900 dark:text-slate-100">
+            <Briefcase className="h-6 w-6 text-blue-600 dark:text-blue-400" />
             Work Experience
           </h2>
           <div className="space-y-6">
@@ -113,7 +113,7 @@ export default function AboutPage() {
                   </div>
                 </CardHeader>
                 <CardContent>
-                  <p className="mb-4 text-gray-600 dark:text-gray-400">
+                  <p className="mb-4 text-slate-600 dark:text-slate-300">
                     {exp.description}
                   </p>
                   <div className="flex flex-wrap gap-2">
@@ -131,8 +131,8 @@ export default function AboutPage() {
 
         {/* Education */}
         <section className="mb-16">
-          <h2 className="mb-6 flex items-center gap-2 text-2xl font-bold text-gray-900 dark:text-white">
-            <GraduationCap className="h-6 w-6 text-blue-600" />
+          <h2 className="mb-6 flex items-center gap-2 text-2xl font-bold text-slate-900 dark:text-slate-100">
+            <GraduationCap className="h-6 w-6 text-blue-600 dark:text-blue-400" />
             Education
           </h2>
           <div className="space-y-6">
@@ -152,7 +152,7 @@ export default function AboutPage() {
                   </div>
                 </CardHeader>
                 <CardContent>
-                  <p className="text-gray-600 dark:text-gray-400">
+                  <p className="text-slate-600 dark:text-slate-300">
                     {edu.description}
                   </p>
                 </CardContent>
@@ -163,8 +163,8 @@ export default function AboutPage() {
 
         {/* Skills */}
         <section>
-          <h2 className="mb-6 flex items-center gap-2 text-2xl font-bold text-gray-900 dark:text-white">
-            <Award className="h-6 w-6 text-blue-600" />
+          <h2 className="mb-6 flex items-center gap-2 text-2xl font-bold text-slate-900 dark:text-slate-100">
+            <Award className="h-6 w-6 text-blue-600 dark:text-blue-400" />
             Skills & Technologies
           </h2>
           <div className="grid grid-cols-1 gap-6 md:grid-cols-2">
