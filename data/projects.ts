@@ -22,6 +22,16 @@ export interface ProjectContent {
 
 export const projects: Project[] = [
   {
+    id: '0',
+    slug: 'taskflow',
+    image: 'https://images.unsplash.com/photo-1484480974693-6ca0a78fb36b?w=800&q=80',
+    technologies: ['Next.js 15', 'TypeScript', 'Tailwind CSS', 'localStorage'],
+    github: '/taskflow',
+    demo: '/taskflow',
+    status: 'completed',
+    featured: true,
+  },
+  {
     id: '1',
     slug: 'personal-blog',
     image: 'https://images.unsplash.com/photo-1499750310107-5fef28a66643?w=800&q=80',
@@ -78,6 +88,19 @@ export const projects: Project[] = [
 
 export const projectsContent: Record<string, Record<string, ProjectContent>> = {
   en: {
+    'taskflow': {
+      title: 'TaskFlow - Smart Task Management',
+      description: 'A modern and powerful task management application with project organization, sub-tasks, smart scheduling, and collaboration features. Built with Next.js 15 and TypeScript.',
+      features: [
+        'Create tasks with due dates and priorities',
+        'Sub-tasks with auto-completion',
+        'My Day and Important views',
+        'Project organization',
+        'Responsive design (Mobile, Tablet, Desktop)',
+        'Dark mode support',
+        'Local storage (no backend required)',
+      ],
+    },
     'personal-blog': {
       title: 'Personal Blog & Portfolio',
       description: 'A modern, fully internationalized blog and portfolio website built with Next.js 15 and TypeScript. Features dark mode, multilingual support, and responsive design.',
@@ -146,6 +169,19 @@ export const projectsContent: Record<string, Record<string, ProjectContent>> = {
     },
   },
   vi: {
+    'taskflow': {
+      title: 'TaskFlow - Quản lý Công việc Thông minh',
+      description: 'Ứng dụng quản lý công việc hiện đại và mạnh mẽ với tổ chức dự án, công việc con, lên lịch thông minh và tính năng cộng tác. Xây dựng với Next.js 15 và TypeScript.',
+      features: [
+        'Tạo công việc với ngày hết hạn và ưu tiên',
+        'Công việc con với tự động hoàn thành',
+        'Chế độ Hôm nay và Quan trọng',
+        'Tổ chức dự án',
+        'Thiết kế responsive (Mobile, Tablet, Desktop)',
+        'Hỗ trợ chế độ tối',
+        'Lưu trữ local (không cần backend)',
+      ],
+    },
     'personal-blog': {
       title: 'Blog & Portfolio Cá nhân',
       description: 'Website blog và portfolio hiện đại, hỗ trợ đa ngôn ngữ được xây dựng với Next.js 15 và TypeScript. Có chế độ tối, hỗ trợ đa ngôn ngữ và thiết kế responsive.',
@@ -214,6 +250,19 @@ export const projectsContent: Record<string, Record<string, ProjectContent>> = {
     },
   },
   ja: {
+    'taskflow': {
+      title: 'TaskFlow - スマートタスク管理',
+      description: 'プロジェクト整理、サブタスク、スマートスケジューリング、コラボレーション機能を備えた、モダンで強力なタスク管理アプリケーション。Next.js 15とTypeScriptで構築。',
+      features: [
+        '期限と優先順位付きタスク作成',
+        '自動完了付きサブタスク',
+        '今日と重要なビュー',
+        'プロジェクト整理',
+        'レスポンシブデザイン（モバイル、タブレット、デスクトップ）',
+        'ダークモード対応',
+        'ローカルストレージ（バックエンド不要）',
+      ],
+    },
     'personal-blog': {
       title: '個人ブログ＆ポートフォリオ',
       description: 'Next.js 15とTypeScriptで構築された、完全に国際化されたモダンなブログとポートフォリオWebサイト。ダークモード、多言語サポート、レスポンシブデザインを特徴としています。',
@@ -282,6 +331,19 @@ export const projectsContent: Record<string, Record<string, ProjectContent>> = {
     },
   },
   zh: {
+    'taskflow': {
+      title: 'TaskFlow - 智能任务管理',
+      description: '具有项目组织、子任务、智能调度和协作功能的现代化强大任务管理应用程序。使用Next.js 15和TypeScript构建。',
+      features: [
+        '创建带截止日期和优先级的任务',
+        '带自动完成的子任务',
+        '我的一天和重要视图',
+        '项目组织',
+        '响应式设计（移动端、平板、桌面端）',
+        '深色模式支持',
+        '本地存储（无需后端）',
+      ],
+    },
     'personal-blog': {
       title: '个人博客和作品集',
       description: '使用Next.js 15和TypeScript构建的现代化、完全国际化的博客和作品集网站。具有深色模式、多语言支持和响应式设计。',
@@ -350,6 +412,19 @@ export const projectsContent: Record<string, Record<string, ProjectContent>> = {
     },
   },
   ko: {
+    'taskflow': {
+      title: 'TaskFlow - 스마트 작업 관리',
+      description: '프로젝트 구성, 하위 작업, 스마트 일정 관리 및 협업 기능을 갖춘 현대적이고 강력한 작업 관리 애플리케이션. Next.js 15 및 TypeScript로 구축.',
+      features: [
+        '마감일 및 우선순위가 있는 작업 생성',
+        '자동 완료 기능이 있는 하위 작업',
+        '오늘과 중요한 보기',
+        '프로젝트 구성',
+        '반응형 디자인 (모바일, 태블릿, 데스크톱)',
+        '다크 모드 지원',
+        '로컬 스토리지 (백엔드 불필요)',
+      ],
+    },
     'personal-blog': {
       title: '개인 블로그 및 포트폴리오',
       description: 'Next.js 15와 TypeScript로 구축된 현대적이고 완전히 국제화된 블로그 및 포트폴리오 웹사이트. 다크 모드, 다국어 지원 및 반응형 디자인을 특징으로 합니다.',
@@ -418,6 +493,19 @@ export const projectsContent: Record<string, Record<string, ProjectContent>> = {
     },
   },
   th: {
+    'taskflow': {
+      title: 'TaskFlow - การจัดการงานอัจฉริยะ',
+      description: 'แอปพลิเคชันการจัดการงานที่ทันสมัยและทรงพลังพร้อมการจัดระเบียบโปรเจกต์ งานย่อย การจัดตารางอัจฉริยะ และฟีเจอร์การทำงานร่วมกัน สร้างด้วย Next.js 15 และ TypeScript',
+      features: [
+        'สร้างงานพร้อมวันครบกำหนดและลำดับความสำคัญ',
+        'งานย่อยพร้อมการทำให้เสร็จอัตโนมัติ',
+        'มุมมองวันนี้และสำคัญ',
+        'การจัดระเบียบโปรเจกต์',
+        'การออกแบบที่ตอบสนอง (มือถือ แท็บเล็ต เดสก์ท็อป)',
+        'รองรับโหมดมืด',
+        'การจัดเก็บข้อมูลภายใน (ไม่ต้องการแบ็คเอนด์)',
+      ],
+    },
     'personal-blog': {
       title: 'บล็อกและพอร์ตโฟลิโอส่วนตัว',
       description: 'เว็บไซต์บล็อกและพอร์ตโฟลิโอที่ทันสมัยและรองรับหลายภาษาอย่างสมบูรณ์ที่สร้างด้วย Next.js 15 และ TypeScript มีโหมดมืด การรองรับหลายภาษา และการออกแบบที่ตอบสนอง',

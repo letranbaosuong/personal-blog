@@ -1,0 +1,47 @@
+/**
+ * TaskList Component - Display list of tasks
+ */
+
+'use client';
+
+import { Task } from '../types';
+import TaskItem from './TaskItem';
+
+interface TaskListProps {
+  tasks: Task[];
+  onToggleComplete: (id: string) => void;
+  onToggleImportant: (id: string) => void;
+  onTaskClick?: (task: Task) => void;
+  emptyMessage?: string;
+}
+
+export default function TaskList({
+  tasks,
+  onToggleComplete,
+  onToggleImportant,
+  onTaskClick,
+  emptyMessage = 'No tasks yet. Create one to get started!',
+}: TaskListProps) {
+  if (tasks.length === 0) {
+    return (
+      <div className="flex flex-col items-center justify-center py-12 text-center">
+        <div className="mb-4 text-6xl">📝</div>
+        <p className="text-slate-500 dark:text-slate-400">{emptyMessage}</p>
+      </div>
+    );
+  }
+
+  return (
+    <div className="space-y-2">
+      {tasks.map((task) => (
+        <TaskItem
+          key={task.id}
+          task={task}
+          onToggleComplete={onToggleComplete}
+          onToggleImportant={onToggleImportant}
+          onClick={() => onTaskClick?.(task)}
+        />
+      ))}
+    </div>
+  );
+}

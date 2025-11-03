@@ -6,6 +6,7 @@ import { Metadata } from 'next';
 import { setRequestLocale } from 'next-intl/server';
 import { getTranslations } from 'next-intl/server';
 import Container from '@/components/common/Container';
+import ProjectLink from '@/components/projects/ProjectLink';
 import { LocalePageProps } from '@/types/i18n';
 
 export async function generateMetadata({ params }: LocalePageProps): Promise<Metadata> {
@@ -103,24 +104,22 @@ export default async function ProjectsPage({ params }: LocalePageProps) {
                       {/* Links */}
                       <div className="flex gap-3">
                         {project.github && (
-                          <a
+                          <ProjectLink
                             href={project.github}
-                            target="_blank"
-                            rel="noopener noreferrer"
+                            variant="github"
                             className="rounded-lg bg-slate-900 px-4 py-2 text-sm font-medium text-white transition-colors hover:bg-slate-700 dark:bg-slate-700 dark:hover:bg-slate-600"
                           >
-                            {t('viewCode')}
-                          </a>
+                            {project.github.startsWith('/') ? t('viewProject') : t('viewCode')}
+                          </ProjectLink>
                         )}
                         {project.demo && (
-                          <a
+                          <ProjectLink
                             href={project.demo}
-                            target="_blank"
-                            rel="noopener noreferrer"
+                            variant="demo"
                             className="rounded-lg bg-blue-600 px-4 py-2 text-sm font-medium text-white transition-colors hover:bg-blue-700"
                           >
                             {t('liveDemo')}
-                          </a>
+                          </ProjectLink>
                         )}
                       </div>
                     </div>
