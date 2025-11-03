@@ -1,10 +1,12 @@
 /**
  * Main Layout Component
+ * Uses LayoutWrapper to conditionally show Header/Footer
  */
 
 import React from 'react';
 import Header from './Header';
 import Footer from './Footer';
+import LayoutWrapper from './LayoutWrapper';
 
 interface MainLayoutProps {
   children: React.ReactNode;
@@ -12,10 +14,8 @@ interface MainLayoutProps {
 
 export default function MainLayout({ children }: MainLayoutProps) {
   return (
-    <div className="flex min-h-screen flex-col">
-      <Header />
-      <main className="flex-1">{children}</main>
-      <Footer />
-    </div>
+    <LayoutWrapper header={<Header />} footer={<Footer />}>
+      {children}
+    </LayoutWrapper>
   );
 }
