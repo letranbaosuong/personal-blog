@@ -12,6 +12,7 @@ import TaskList from './components/TaskList';
 import TaskDetail from './components/TaskDetail';
 import ContactList from './components/ContactList';
 import ContactDetail from './components/ContactDetail';
+import ContactForm from './components/ContactForm';
 import DatePicker from './components/DatePicker';
 import ReminderPicker from './components/ReminderPicker';
 import RepeatPicker from './components/RepeatPicker';
@@ -27,6 +28,7 @@ export default function TaskFlowClient() {
   const [newTaskTitle, setNewTaskTitle] = useState('');
   const [selectedTask, setSelectedTask] = useState<Task | null>(null);
   const [selectedContact, setSelectedContact] = useState<Contact | null>(null);
+  const [isContactFormOpen, setIsContactFormOpen] = useState(false);
   const [toasts, setToasts] = useState<ToastMessage[]>([]);
 
   // Quick add task properties
@@ -38,6 +40,7 @@ export default function TaskFlowClient() {
   const {
     contacts,
     loading: contactsLoading,
+    createContact,
     updateContact,
     deleteContact,
     toggleImportant: toggleContactImportant,
@@ -267,11 +270,22 @@ export default function TaskFlowClient() {
             <h2 className="text-2xl font-bold text-slate-900 dark:text-slate-100">
               {viewTitle}
             </h2>
-            <div className="text-sm text-slate-500 dark:text-slate-400">
-              {activeView === 'contacts'
-                ? `${contacts.length} ${contacts.length === 1 ? 'contact' : 'contacts'}`
-                : `${tasks.length} ${tasks.length === 1 ? 'task' : 'tasks'}`
-              }
+            <div className="flex items-center gap-4">
+              <div className="text-sm text-slate-500 dark:text-slate-400">
+                {activeView === 'contacts'
+                  ? `${contacts.length} ${contacts.length === 1 ? 'contact' : 'contacts'}`
+                  : `${tasks.length} ${tasks.length === 1 ? 'task' : 'tasks'}`
+                }
+              </div>
+              {activeView === 'contacts' && (
+                <button
+                  onClick={() => setIsContactFormOpen(true)}
+                  className="flex items-center gap-2 rounded-lg bg-blue-600 px-4 py-2 text-sm font-medium text-white transition-colors hover:bg-blue-700"
+                >
+                  <Plus className="h-4 w-4" />
+                  Add Contact
+                </button>
+              )}
             </div>
           </div>
 
@@ -504,6 +518,16 @@ export default function TaskFlowClient() {
 
       {/* Toast Notifications */}
       <Toast toasts={toasts} onDismiss={dismissToast} onTaskClick={handleTaskClick} />
+
+      {/* Contact Form Modal */}
+      <ContactForm
+        isOpen={isContactFormOpen}
+        onClose={() => setIsContactFormOpen(false)}
+        onCreate={(contact) => {
+          createContact(contact);
+          setIsContactFormOpen(false);
+        }}
+      />
     </div>
   );
 }
