@@ -91,7 +91,11 @@ export default async function LocaleLayout({
   return (
     <html lang={locale} dir={localeDirs[locale as Locale]} suppressHydrationWarning>
       <body className={`${inter.variable} font-sans antialiased`}>
-        <NextIntlClientProvider messages={messages}>
+        <NextIntlClientProvider
+          locale={locale}
+          messages={messages}
+          timeZone="Asia/Ho_Chi_Minh"
+        >
           <ThemeProvider>
             <MainLayout>{children}</MainLayout>
           </ThemeProvider>
