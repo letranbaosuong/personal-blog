@@ -95,9 +95,13 @@ export default function TaskFlowClient() {
 
   // Handle task click from notifications
   const handleTaskClick = useCallback((taskId: string) => {
+    console.log('Opening task:', taskId);
     const task = tasks.find((t) => t.id === taskId);
+    console.log('Found task:', task);
     if (task) {
       setSelectedTask(task);
+    } else {
+      console.warn('Task not found:', taskId);
     }
   }, [tasks]);
 
@@ -110,17 +114,20 @@ export default function TaskFlowClient() {
 
   // Listen for browser notification clicks
   useEffect(() => {
-    const handleOpenTask = (event: CustomEvent) => {
-      const { taskId } = event.detail;
+    const handleOpenTask = (event: Event) => {
+      console.log('taskflow:openTask event received:', event);
+      const customEvent = event as CustomEvent;
+      const { taskId } = customEvent.detail || {};
+      console.log('Extracted taskId:', taskId);
       if (taskId) {
         handleTaskClick(taskId);
       }
     };
 
-    window.addEventListener('taskflow:openTask' as any, handleOpenTask);
+    window.addEventListener('taskflow:openTask', handleOpenTask as EventListener);
 
     return () => {
-      window.removeEventListener('taskflow:openTask' as any, handleOpenTask);
+      window.removeEventListener('taskflow:openTask', handleOpenTask as EventListener);
     };
   }, [handleTaskClick]);
 

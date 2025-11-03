@@ -58,15 +58,20 @@ export const notifications = {
 
       // Handle click - dispatch custom event with taskId
       notification.onclick = () => {
+        console.log('Browser notification clicked!');
         window.focus();
         notification.close();
 
         // Dispatch custom event to open task detail
         if (options.data?.taskId) {
+          console.log('Dispatching taskflow:openTask event with taskId:', options.data.taskId);
           const event = new CustomEvent('taskflow:openTask', {
             detail: { taskId: options.data.taskId },
           });
           window.dispatchEvent(event);
+          console.log('Event dispatched successfully');
+        } else {
+          console.warn('No taskId in notification data');
         }
       };
     } catch (error) {

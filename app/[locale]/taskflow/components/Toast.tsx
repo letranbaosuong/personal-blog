@@ -79,10 +79,14 @@ function ToastItem({
   };
 
   const handleToastClick = () => {
+    console.log('Toast clicked, taskId:', toast.taskId);
     if (toast.taskId && onTaskClick) {
+      console.log('Calling onTaskClick with taskId:', toast.taskId);
       onTaskClick(toast.taskId);
       setIsVisible(false);
       setTimeout(() => onDismiss(toast.id), 300);
+    } else {
+      console.log('No taskId or onTaskClick callback');
     }
   };
 
