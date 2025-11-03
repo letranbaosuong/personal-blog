@@ -4,7 +4,7 @@
 
 'use client';
 
-import { Task } from '../types';
+import { Task, Project } from '../types';
 import TaskItem from './TaskItem';
 
 interface TaskListProps {
@@ -13,6 +13,7 @@ interface TaskListProps {
   onToggleImportant: (id: string) => void;
   onTaskClick?: (task: Task) => void;
   emptyMessage?: string;
+  projects?: Project[]; // List of projects to display project names
 }
 
 export default function TaskList({
@@ -21,7 +22,14 @@ export default function TaskList({
   onToggleImportant,
   onTaskClick,
   emptyMessage = 'No tasks yet. Create one to get started!',
+  projects = [],
 }: TaskListProps) {
+  // Helper to get project name by ID
+  const getProjectName = (projectId?: string): string | undefined => {
+    if (!projectId) return undefined;
+    const project = projects.find((p) => p.id === projectId);
+    return project?.name;
+  };
   if (tasks.length === 0) {
     return (
       <div className="flex flex-col items-center justify-center py-12 text-center">
@@ -40,6 +48,7 @@ export default function TaskList({
           onToggleComplete={onToggleComplete}
           onToggleImportant={onToggleImportant}
           onClick={() => onTaskClick?.(task)}
+          projectName={getProjectName(task.projectId)}
         />
       ))}
     </div>

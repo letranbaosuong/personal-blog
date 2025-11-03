@@ -222,6 +222,7 @@ export default function TaskFlowClient() {
                     onToggleImportant={toggleImportant}
                     onTaskClick={(task) => setSelectedTask(task)}
                     emptyMessage="No pending tasks"
+                    projects={projects}
                   />
                 </div>
               )}
@@ -248,6 +249,7 @@ export default function TaskFlowClient() {
                     onToggleImportant={toggleImportant}
                     onTaskClick={(task) => setSelectedTask(task)}
                     emptyMessage="No in-progress tasks"
+                    projects={projects}
                   />
                 </div>
               )}
@@ -275,6 +277,7 @@ export default function TaskFlowClient() {
                     onToggleImportant={toggleImportant}
                     onTaskClick={(task) => setSelectedTask(task)}
                     emptyMessage="No completed tasks"
+                    projects={projects}
                   />
                 </div>
               )}
@@ -299,6 +302,7 @@ export default function TaskFlowClient() {
               onToggleImportant={toggleImportant}
               onTaskClick={(task) => setSelectedTask(task)}
               emptyMessage={`No ${viewTitle.toLowerCase()} yet. Start adding tasks!`}
+              projects={projects}
             />
           )}
         </div>

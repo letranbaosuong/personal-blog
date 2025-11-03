@@ -13,6 +13,7 @@ interface TaskItemProps {
   onToggleComplete: (id: string) => void;
   onToggleImportant: (id: string) => void;
   onClick?: () => void;
+  projectName?: string; // Name of the project this task belongs to
 }
 
 export default function TaskItem({
@@ -20,6 +21,7 @@ export default function TaskItem({
   onToggleComplete,
   onToggleImportant,
   onClick,
+  projectName,
 }: TaskItemProps) {
   const [isExpanded, setIsExpanded] = useState(false);
 
@@ -164,9 +166,9 @@ export default function TaskItem({
                 <span>{formatDueDate(task.dueDate)}</span>
               </div>
             )}
-            {task.projectId && (
+            {projectName && (
               <span className="rounded-full bg-blue-100 px-2 py-0.5 text-xs text-blue-700 dark:bg-blue-900/30 dark:text-blue-300">
-                Project
+                📁 {projectName}
               </span>
             )}
           </div>
