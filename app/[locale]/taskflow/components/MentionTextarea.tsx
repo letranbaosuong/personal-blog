@@ -121,8 +121,8 @@ export default function MentionTextarea({
 
     if (lastAtIndex === -1) return;
 
-    // Insert mention
-    const mentionText = `@${item.name}`;
+    // Insert mention with brackets format: @[Name]
+    const mentionText = `@[${item.name}]`;
     const newValue =
       value.substring(0, lastAtIndex) +
       mentionText +

@@ -34,12 +34,13 @@ export default function MentionText({
   onProjectClick,
   onContactClick,
 }: MentionTextProps) {
-  // Parse text to find mentions
+  // Parse text to find mentions with @[Name] format
   const parseText = (input: string): ParsedSegment[] => {
     if (!input) return [];
 
     const segments: ParsedSegment[] = [];
-    const mentionRegex = /@(\w+(?:\s+\w+)*)/g;
+    // Match @[Name] format - supports names with spaces and special chars
+    const mentionRegex = /@\[([^\]]+)\]/g;
     let lastIndex = 0;
     let match;
 
@@ -62,29 +63,29 @@ export default function MentionText({
       if (task) {
         segments.push({
           type: 'mention',
-          content: `@${mentionName}`,
+          content: mentionName,
           item: task,
           itemType: 'task',
         });
       } else if (project) {
         segments.push({
           type: 'mention',
-          content: `@${mentionName}`,
+          content: mentionName,
           item: project,
           itemType: 'project',
         });
       } else if (contact) {
         segments.push({
           type: 'mention',
-          content: `@${mentionName}`,
+          content: mentionName,
           item: contact,
           itemType: 'contact',
         });
       } else {
-        // Mention not found, render as plain text
+        // Mention not found, render as plain text with brackets
         segments.push({
           type: 'text',
-          content: `@${mentionName}`,
+          content: `@[${mentionName}]`,
         });
       }
 
@@ -171,7 +172,7 @@ export default function MentionText({
                 ? 'bg-purple-100 dark:bg-purple-900/30'
                 : 'bg-green-100 dark:bg-green-900/30'
             }`}
-            title={`Click to view ${segment.itemType}: ${segment.content.substring(1)}`}
+            title={`Click to view ${segment.itemType}: ${segment.content}`}
           >
             {getIcon(segment.itemType!)}
             {segment.content}
