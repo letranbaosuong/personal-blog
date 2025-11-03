@@ -10,19 +10,23 @@ import { Plus } from 'lucide-react';
 import Sidebar from './components/Sidebar';
 import TaskList from './components/TaskList';
 import TaskDetail from './components/TaskDetail';
+import ContactList from './components/ContactList';
+import ContactDetail from './components/ContactDetail';
 import DatePicker from './components/DatePicker';
 import ReminderPicker from './components/ReminderPicker';
 import RepeatPicker from './components/RepeatPicker';
 import Toast, { ToastMessage } from './components/Toast';
 import { useTasks } from './hooks/useTasks';
 import { useProjects } from './hooks/useProjects';
+import { useContacts } from './hooks/useContacts';
 import { useReminders } from './hooks/useReminders';
-import { Task, TaskFilters, RepeatSettings } from './types';
+import { Task, Contact, TaskFilters, RepeatSettings } from './types';
 
 export default function TaskFlowClient() {
   const [activeView, setActiveView] = useState('all');
   const [newTaskTitle, setNewTaskTitle] = useState('');
   const [selectedTask, setSelectedTask] = useState<Task | null>(null);
+  const [selectedContact, setSelectedContact] = useState<Contact | null>(null);
   const [toasts, setToasts] = useState<ToastMessage[]>([]);
 
   // Quick add task properties
@@ -31,6 +35,13 @@ export default function TaskFlowClient() {
   const [quickAddRepeat, setQuickAddRepeat] = useState<RepeatSettings | undefined>();
 
   const { projects, createProject } = useProjects();
+  const {
+    contacts,
+    loading: contactsLoading,
+    updateContact,
+    deleteContact,
+    toggleImportant: toggleContactImportant,
+  } = useContacts();
 
   // Get current project if viewing a project
   const currentProject = useMemo(() => {
@@ -139,6 +150,14 @@ export default function TaskFlowClient() {
     }
   }, [tasks, selectedTask]);
 
+  // Update selected contact when contacts change
+  useMemo(() => {
+    if (selectedContact) {
+      const updated = contacts.find((c) => c.id === selectedContact.id);
+      setSelectedContact(updated || null);
+    }
+  }, [contacts, selectedContact]);
+
   // Group tasks by status for 'all' view
   const groupedTasks = useMemo(() => {
     if (activeView !== 'all') return null;
@@ -165,6 +184,8 @@ export default function TaskFlowClient() {
         return 'Important';
       case 'completed':
         return 'Completed';
+      case 'contacts':
+        return 'Contacts';
       case 'all':
       default:
         return 'All Tasks';
@@ -216,7 +237,7 @@ export default function TaskFlowClient() {
     setActiveView(`project:${newProject.id}`);
   };
 
-  if (loading) {
+  if (loading || contactsLoading) {
     return (
       <div className="flex h-screen items-center justify-center bg-slate-50 dark:bg-slate-900">
         <div className="text-center">
@@ -242,17 +263,21 @@ export default function TaskFlowClient() {
       <div className="flex flex-1 flex-col overflow-hidden">
         {/* Header */}
         <div className="border-b border-slate-200 bg-white p-6 dark:border-slate-700 dark:bg-slate-800">
-          <div className="mb-4 flex items-center justify-between">
+          <div className={`flex items-center justify-between ${activeView === 'contacts' ? '' : 'mb-4'}`}>
             <h2 className="text-2xl font-bold text-slate-900 dark:text-slate-100">
               {viewTitle}
             </h2>
             <div className="text-sm text-slate-500 dark:text-slate-400">
-              {tasks.length} {tasks.length === 1 ? 'task' : 'tasks'}
+              {activeView === 'contacts'
+                ? `${contacts.length} ${contacts.length === 1 ? 'contact' : 'contacts'}`
+                : `${tasks.length} ${tasks.length === 1 ? 'task' : 'tasks'}`
+              }
             </div>
           </div>
 
-          {/* Quick Add */}
-          <div className="space-y-2">
+          {/* Quick Add - Only show for task views */}
+          {activeView !== 'contacts' && (
+            <div className="space-y-2">
             <div className="flex gap-2">
               <input
                 type="text"
@@ -290,11 +315,23 @@ export default function TaskFlowClient() {
               />
             </div>
           </div>
+          )}
         </div>
 
-        {/* Task List */}
+        {/* Main Content Area */}
         <div className="flex-1 overflow-y-auto p-6">
-          {activeView === 'all' && groupedTasks ? (
+          {activeView === 'contacts' ? (
+            // Contacts View
+            <ContactList
+              contacts={contacts}
+              onToggleImportant={toggleContactImportant}
+              onContactClick={(contact) => {
+                setSelectedContact(contact);
+                setSelectedTask(null); // Clear selected task
+              }}
+              emptyMessage="No contacts yet. Add your first contact!"
+            />
+          ) : activeView === 'all' && groupedTasks ? (
             // Grouped view for 'All Tasks'
             <div className="space-y-6">
               {/* Pending Tasks */}
@@ -400,7 +437,7 @@ export default function TaskFlowClient() {
         </div>
       </div>
 
-      {/* Right Sidebar - Task Detail */}
+      {/* Right Sidebar - Task Detail or Contact Detail */}
       {selectedTask && (
         <div className="hidden w-96 lg:block">
           <TaskDetail
@@ -413,6 +450,17 @@ export default function TaskFlowClient() {
             onAddSubTask={addSubTask}
             onToggleSubTask={toggleSubTask}
             onDeleteSubTask={deleteSubTask}
+          />
+        </div>
+      )}
+      {selectedContact && (
+        <div className="hidden w-96 lg:block">
+          <ContactDetail
+            contact={selectedContact}
+            onClose={() => setSelectedContact(null)}
+            onUpdate={updateContact}
+            onDelete={deleteContact}
+            onToggleImportant={toggleContactImportant}
           />
         </div>
       )}
@@ -430,6 +478,19 @@ export default function TaskFlowClient() {
             onAddSubTask={addSubTask}
             onToggleSubTask={toggleSubTask}
             onDeleteSubTask={deleteSubTask}
+          />
+        </div>
+      )}
+
+      {/* Mobile: Full-screen Contact Detail Overlay */}
+      {selectedContact && (
+        <div className="fixed inset-0 z-50 bg-white dark:bg-slate-800 lg:hidden">
+          <ContactDetail
+            contact={selectedContact}
+            onClose={() => setSelectedContact(null)}
+            onUpdate={updateContact}
+            onDelete={deleteContact}
+            onToggleImportant={toggleContactImportant}
           />
         </div>
       )}

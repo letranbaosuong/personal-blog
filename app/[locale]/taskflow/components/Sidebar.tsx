@@ -4,7 +4,7 @@
 
 'use client';
 
-import { Home, Star, Sun, CheckCircle, Plus } from 'lucide-react';
+import { Home, Star, Sun, CheckCircle, Users, Plus } from 'lucide-react';
 import { useState } from 'react';
 import { useProjects } from '../hooks/useProjects';
 
@@ -23,6 +23,7 @@ export default function Sidebar({ activeView, onViewChange, onNewProject }: Side
     { id: 'important', label: 'Important', icon: Star, color: 'text-yellow-600' },
     { id: 'all', label: 'All Tasks', icon: Home, color: 'text-blue-600' },
     { id: 'completed', label: 'Completed', icon: CheckCircle, color: 'text-green-600' },
+    { id: 'contacts', label: 'Contacts', icon: Users, color: 'text-purple-600' },
   ];
 
   return (
