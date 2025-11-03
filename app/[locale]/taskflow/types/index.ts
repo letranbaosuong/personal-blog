@@ -62,10 +62,29 @@ export interface Project {
 export interface Contact {
   id: string;
   name: string;
-  email: string;
+  age?: number;
+  dateOfBirth?: string; // ISO date string
+  email?: string;
   phone?: string;
+  occupation?: string; // Họ làm gì
+  location?: string; // Nơi gặp
+  meetingDate?: string; // Gặp khi nào (ISO date string)
+  meetingOccasion?: string; // Gặp họ trong dịp nào
+  company?: string; // Công ty
+  relationship?: string; // Mối quan hệ (bạn, đồng nghiệp, khách hàng, etc.)
+  socialMedia?: {
+    facebook?: string;
+    linkedin?: string;
+    instagram?: string;
+    zalo?: string;
+  };
   avatar?: string;
   notes?: string;
+  tags?: string[]; // Tags để phân loại
+  isImportant?: boolean;
+  createdBy: string;
+  createdAt: string;
+  updatedAt: string;
 }
 
 export interface User {
