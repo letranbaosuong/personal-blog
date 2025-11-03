@@ -11,15 +11,35 @@ import Sidebar from './components/Sidebar';
 import TaskList from './components/TaskList';
 import TaskDetail from './components/TaskDetail';
 import { useTasks } from './hooks/useTasks';
+import { useProjects } from './hooks/useProjects';
 import { Task, TaskFilters } from './types';
 
 export default function TaskFlowClient() {
   const [activeView, setActiveView] = useState('all');
   const [newTaskTitle, setNewTaskTitle] = useState('');
   const [selectedTask, setSelectedTask] = useState<Task | null>(null);
+  const [showNewProjectDialog, setShowNewProjectDialog] = useState(false);
+
+  const { projects, createProject } = useProjects();
+
+  // Get current project if viewing a project
+  const currentProject = useMemo(() => {
+    if (activeView.startsWith('project:')) {
+      const projectId = activeView.replace('project:', '');
+      return projects.find((p) => p.id === projectId);
+    }
+    return null;
+  }, [activeView, projects]);
 
   // Get filters based on active view
   const filters: TaskFilters | undefined = useMemo(() => {
+    // Project view
+    if (activeView.startsWith('project:')) {
+      const projectId = activeView.replace('project:', '');
+      return { projectId };
+    }
+
+    // Standard views
     switch (activeView) {
       case 'my-day':
         return { isMyDay: true, status: 'pending' };
@@ -68,6 +88,12 @@ export default function TaskFlowClient() {
 
   // Get view title
   const viewTitle = useMemo(() => {
+    // Project view
+    if (currentProject) {
+      return currentProject.name;
+    }
+
+    // Standard views
     switch (activeView) {
       case 'my-day':
         return 'My Day';
@@ -79,7 +105,7 @@ export default function TaskFlowClient() {
       default:
         return 'All Tasks';
     }
-  }, [activeView]);
+  }, [activeView, currentProject]);
 
   // Quick add task
   const handleQuickAdd = () => {
@@ -91,12 +117,32 @@ export default function TaskFlowClient() {
       isImportant: activeView === 'important',
       isMyDay: activeView === 'my-day',
       status: 'pending',
+      projectId: currentProject?.id, // Assign to current project if viewing one
       subTasks: [],
       attachments: [],
       createdBy: 'demo_user',
     });
 
     setNewTaskTitle('');
+  };
+
+  // Handle new project
+  const handleNewProject = () => {
+    const projectName = prompt('Enter project name:');
+    if (!projectName?.trim()) return;
+
+    const newProject = createProject({
+      name: projectName.trim(),
+      description: '',
+      color: '#3b82f6',
+      icon: '📁',
+      members: ['demo_user'],
+      isShared: false,
+      createdBy: 'demo_user',
+    });
+
+    // Switch to new project view
+    setActiveView(`project:${newProject.id}`);
   };
 
   if (loading) {
@@ -114,7 +160,11 @@ export default function TaskFlowClient() {
     <div className="flex h-screen bg-slate-50 dark:bg-slate-900">
       {/* Sidebar - Navigation */}
       <div className="hidden w-64 md:block">
-        <Sidebar activeView={activeView} onViewChange={setActiveView} />
+        <Sidebar
+          activeView={activeView}
+          onViewChange={setActiveView}
+          onNewProject={handleNewProject}
+        />
       </div>
 
       {/* Main Content - Task List */}

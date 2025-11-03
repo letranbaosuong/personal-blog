@@ -72,6 +72,12 @@ export const projectService = {
     return taskService.getFilteredTasks({ projectId });
   },
 
+  // Get project task count
+  getProjectTaskCount: (projectId: string): number => {
+    const tasks = taskService.getTasks();
+    return tasks.filter((task) => task.projectId === projectId).length;
+  },
+
   // Initialize with sample data
   initializeSampleData: (): void => {
     const existingProjects = projectService.getProjects();
@@ -79,11 +85,11 @@ export const projectService = {
 
     const sampleProjects: Project[] = [
       {
-        id: 'project_1',
-        name: 'Personal',
-        description: 'Personal tasks and goals',
+        id: 'project_hamaco',
+        name: 'Hamaco Project',
+        description: 'Hamaco business development and operations',
         color: '#3b82f6',
-        icon: '👤',
+        icon: '🏢',
         taskIds: [],
         members: ['demo_user'],
         isShared: false,
@@ -91,11 +97,11 @@ export const projectService = {
         createdAt: new Date().toISOString(),
       },
       {
-        id: 'project_2',
-        name: 'Work',
-        description: 'Work-related tasks',
-        color: '#8b5cf6',
-        icon: '💼',
+        id: 'project_herbalife',
+        name: 'Herbalife',
+        description: 'Herbalife nutrition and wellness program',
+        color: '#22c55e',
+        icon: '🌿',
         taskIds: [],
         members: ['demo_user'],
         isShared: false,
