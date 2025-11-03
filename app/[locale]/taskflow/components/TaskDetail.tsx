@@ -6,10 +6,11 @@
 'use client';
 
 import { Task, Project, Contact } from '../types';
-import { X, Star, Calendar, Trash2, Plus, Sun } from 'lucide-react';
+import { X, Star, Calendar, Trash2, Plus, Sun, Edit2 } from 'lucide-react';
 import { useState } from 'react';
 import SubTaskItem from './SubTaskItem';
 import MentionTextarea from './MentionTextarea';
+import MentionText from './MentionText';
 
 interface TaskDetailProps {
   task: Task;
@@ -24,6 +25,9 @@ interface TaskDetailProps {
   onAddSubTask: (taskId: string, title: string) => void;
   onToggleSubTask: (taskId: string, subTaskId: string) => void;
   onDeleteSubTask: (taskId: string, subTaskId: string) => void;
+  onTaskClick?: (task: Task) => void;
+  onProjectClick?: (projectId: string) => void;
+  onContactClick?: (contact: Contact) => void;
 }
 
 export default function TaskDetail({
@@ -39,9 +43,13 @@ export default function TaskDetail({
   onAddSubTask,
   onToggleSubTask,
   onDeleteSubTask,
+  onTaskClick,
+  onProjectClick,
+  onContactClick,
 }: TaskDetailProps) {
   const [isEditingTitle, setIsEditingTitle] = useState(false);
   const [editedTitle, setEditedTitle] = useState(task.title);
+  const [isEditingNotes, setIsEditingNotes] = useState(false);
   const [newSubTaskTitle, setNewSubTaskTitle] = useState('');
 
   const handleSaveTitle = () => {
@@ -152,22 +160,59 @@ export default function TaskDetail({
 
         {/* Description */}
         <div className="mb-6">
-          <label className="mb-2 block text-sm font-medium text-slate-700 dark:text-slate-300">
-            Notes
-            <span className="ml-2 text-xs text-slate-500 dark:text-slate-400">
-              (Type @ to mention tasks, projects, or contacts)
-            </span>
-          </label>
-          <MentionTextarea
-            value={task.description || ''}
-            onChange={(value) => onUpdate(task.id, { description: value })}
-            placeholder="Add notes... (Type @ to mention)"
-            rows={4}
-            tasks={tasks}
-            projects={projects}
-            contacts={contacts}
-            className="w-full rounded-lg border border-slate-300 bg-white px-3 py-2 text-sm text-slate-900 placeholder-slate-400 focus:border-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-500/20 dark:border-slate-600 dark:bg-slate-700 dark:text-slate-100 dark:placeholder-slate-500"
-          />
+          <div className="mb-2 flex items-center justify-between">
+            <label className="block text-sm font-medium text-slate-700 dark:text-slate-300">
+              Notes
+              {isEditingNotes && (
+                <span className="ml-2 text-xs text-slate-500 dark:text-slate-400">
+                  (Type @ to mention tasks, projects, or contacts)
+                </span>
+              )}
+            </label>
+            {!isEditingNotes && task.description && (
+              <button
+                onClick={() => setIsEditingNotes(true)}
+                className="rounded p-1 text-slate-400 transition-colors hover:bg-slate-100 hover:text-slate-600 dark:hover:bg-slate-700 dark:hover:text-slate-300"
+                title="Edit notes"
+              >
+                <Edit2 className="h-4 w-4" />
+              </button>
+            )}
+          </div>
+          {isEditingNotes ? (
+            <MentionTextarea
+              value={task.description || ''}
+              onChange={(value) => onUpdate(task.id, { description: value })}
+              placeholder="Add notes... (Type @ to mention)"
+              rows={4}
+              tasks={tasks}
+              projects={projects}
+              contacts={contacts}
+              className="w-full rounded-lg border border-slate-300 bg-white px-3 py-2 text-sm text-slate-900 placeholder-slate-400 focus:border-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-500/20 dark:border-slate-600 dark:bg-slate-700 dark:text-slate-100 dark:placeholder-slate-500"
+            />
+          ) : task.description ? (
+            <div
+              onClick={() => setIsEditingNotes(true)}
+              className="cursor-text rounded-lg border border-transparent p-3 transition-colors hover:bg-slate-50 dark:hover:bg-slate-700"
+            >
+              <MentionText
+                text={task.description}
+                tasks={tasks}
+                projects={projects}
+                contacts={contacts}
+                onTaskClick={onTaskClick}
+                onProjectClick={(project) => onProjectClick?.(project.id)}
+                onContactClick={onContactClick}
+              />
+            </div>
+          ) : (
+            <div
+              onClick={() => setIsEditingNotes(true)}
+              className="cursor-text rounded-lg border border-slate-300 bg-white px-3 py-2 text-sm text-slate-400 dark:border-slate-600 dark:bg-slate-700 dark:text-slate-500"
+            >
+              Add notes... (Type @ to mention)
+            </div>
+          )}
         </div>
 
         {/* Sub-tasks */}

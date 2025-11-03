@@ -467,6 +467,12 @@ export default function TaskFlowClient() {
             onAddSubTask={addSubTask}
             onToggleSubTask={toggleSubTask}
             onDeleteSubTask={deleteSubTask}
+            onTaskClick={(task) => setSelectedTask(task)}
+            onProjectClick={(projectId) => setActiveView(`project:${projectId}`)}
+            onContactClick={(contact) => {
+              setSelectedContact(contact);
+              setSelectedTask(null);
+            }}
           />
         </div>
       )}
@@ -481,6 +487,12 @@ export default function TaskFlowClient() {
             onUpdate={updateContact}
             onDelete={deleteContact}
             onToggleImportant={toggleContactImportant}
+            onTaskClick={(task) => {
+              setSelectedTask(task);
+              setSelectedContact(null);
+            }}
+            onProjectClick={(projectId) => setActiveView(`project:${projectId}`)}
+            onContactClick={(contact) => setSelectedContact(contact)}
           />
         </div>
       )}
@@ -501,6 +513,12 @@ export default function TaskFlowClient() {
             onAddSubTask={addSubTask}
             onToggleSubTask={toggleSubTask}
             onDeleteSubTask={deleteSubTask}
+            onTaskClick={(task) => setSelectedTask(task)}
+            onProjectClick={(projectId) => setActiveView(`project:${projectId}`)}
+            onContactClick={(contact) => {
+              setSelectedContact(contact);
+              setSelectedTask(null);
+            }}
           />
         </div>
       )}
@@ -517,6 +535,12 @@ export default function TaskFlowClient() {
             onUpdate={updateContact}
             onDelete={deleteContact}
             onToggleImportant={toggleContactImportant}
+            onTaskClick={(task) => {
+              setSelectedTask(task);
+              setSelectedContact(null);
+            }}
+            onProjectClick={(projectId) => setActiveView(`project:${projectId}`)}
+            onContactClick={(contact) => setSelectedContact(contact)}
           />
         </div>
       )}
