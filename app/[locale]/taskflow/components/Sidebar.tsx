@@ -7,6 +7,7 @@
 import { Home, Star, Sun, CheckCircle, Users, Plus } from 'lucide-react';
 import { useState } from 'react';
 import { useProjects } from '../hooks/useProjects';
+import TaskFlowSettings from './TaskFlowSettings';
 
 interface SidebarProps {
   activeView: string;
@@ -114,11 +115,9 @@ export default function Sidebar({ activeView, onViewChange, onNewProject }: Side
         </div>
       </nav>
 
-      {/* Footer */}
-      <div className="border-t border-slate-200 p-4 dark:border-slate-700">
-        <p className="text-xs text-slate-500 dark:text-slate-400">
-          Built with Next.js & TypeScript
-        </p>
+      {/* Footer - Settings */}
+      <div className="border-t border-slate-200 dark:border-slate-700">
+        <TaskFlowSettings />
       </div>
     </div>
   );
