@@ -100,8 +100,8 @@ export default function ContactForm({ isOpen, onClose, onCreate }: ContactFormPr
   if (!isOpen) return null;
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 p-4">
-      <div className="w-full max-w-2xl max-h-[90vh] overflow-hidden rounded-xl bg-white shadow-xl dark:bg-slate-800">
+    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 p-0 lg:p-4">
+      <div className="flex h-full w-full flex-col overflow-hidden bg-white shadow-xl dark:bg-slate-800 lg:h-auto lg:max-h-[90vh] lg:max-w-2xl lg:rounded-xl">
         {/* Header */}
         <div className="flex items-center justify-between border-b border-slate-200 p-4 dark:border-slate-700">
           <h3 className="text-lg font-semibold text-slate-900 dark:text-slate-100">
@@ -116,7 +116,7 @@ export default function ContactForm({ isOpen, onClose, onCreate }: ContactFormPr
         </div>
 
         {/* Form */}
-        <form onSubmit={handleSubmit} className="overflow-y-auto p-6" style={{ maxHeight: 'calc(90vh - 140px)' }}>
+        <form onSubmit={handleSubmit} className="flex-1 overflow-y-auto p-4 lg:p-6">
           <div className="space-y-6">
             {/* Basic Information */}
             <div className="space-y-4">
@@ -258,7 +258,7 @@ export default function ContactForm({ isOpen, onClose, onCreate }: ContactFormPr
               </div>
 
               {/* Meeting Date & Occasion */}
-              <div className="grid grid-cols-2 gap-4">
+              <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
                 <div>
                   <label className="mb-1 flex items-center gap-2 text-sm font-medium text-slate-700 dark:text-slate-300">
                     <Calendar className="h-4 w-4" />
@@ -307,7 +307,7 @@ export default function ContactForm({ isOpen, onClose, onCreate }: ContactFormPr
                 Social Media
               </h4>
 
-              <div className="grid grid-cols-2 gap-4">
+              <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
                 {/* Facebook */}
                 <div>
                   <label className="mb-1 block text-sm font-medium text-slate-700 dark:text-slate-300">
@@ -397,18 +397,18 @@ export default function ContactForm({ isOpen, onClose, onCreate }: ContactFormPr
         </form>
 
         {/* Footer */}
-        <div className="flex items-center justify-end gap-3 border-t border-slate-200 p-4 dark:border-slate-700">
+        <div className="flex flex-shrink-0 items-center justify-end gap-3 border-t border-slate-200 p-4 dark:border-slate-700">
           <button
             type="button"
             onClick={handleClose}
-            className="rounded-lg px-4 py-2 text-sm font-medium text-slate-700 transition-colors hover:bg-slate-100 dark:text-slate-300 dark:hover:bg-slate-700"
+            className="flex-1 rounded-lg px-4 py-2 text-sm font-medium text-slate-700 transition-colors hover:bg-slate-100 dark:text-slate-300 dark:hover:bg-slate-700 lg:flex-none"
           >
             Cancel
           </button>
           <button
             type="submit"
             onClick={handleSubmit}
-            className="rounded-lg bg-blue-600 px-4 py-2 text-sm font-medium text-white transition-colors hover:bg-blue-700"
+            className="flex-1 rounded-lg bg-blue-600 px-4 py-2 text-sm font-medium text-white transition-colors hover:bg-blue-700 lg:flex-none"
           >
             Add Contact
           </button>
