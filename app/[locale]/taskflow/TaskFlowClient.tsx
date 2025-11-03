@@ -10,15 +10,23 @@ import { Plus } from 'lucide-react';
 import Sidebar from './components/Sidebar';
 import TaskList from './components/TaskList';
 import TaskDetail from './components/TaskDetail';
+import DatePicker from './components/DatePicker';
+import ReminderPicker from './components/ReminderPicker';
+import RepeatPicker from './components/RepeatPicker';
 import { useTasks } from './hooks/useTasks';
 import { useProjects } from './hooks/useProjects';
-import { Task, TaskFilters } from './types';
+import { Task, TaskFilters, RepeatSettings } from './types';
 
 export default function TaskFlowClient() {
   const [activeView, setActiveView] = useState('all');
   const [newTaskTitle, setNewTaskTitle] = useState('');
   const [selectedTask, setSelectedTask] = useState<Task | null>(null);
   const [showNewProjectDialog, setShowNewProjectDialog] = useState(false);
+
+  // Quick add task properties
+  const [quickAddDueDate, setQuickAddDueDate] = useState<string | undefined>();
+  const [quickAddReminder, setQuickAddReminder] = useState<string | undefined>();
+  const [quickAddRepeat, setQuickAddRepeat] = useState<RepeatSettings | undefined>();
 
   const { projects, createProject } = useProjects();
 
@@ -114,6 +122,9 @@ export default function TaskFlowClient() {
     createTask({
       title: newTaskTitle,
       description: '',
+      dueDate: quickAddDueDate,
+      reminder: quickAddReminder,
+      repeat: quickAddRepeat,
       isImportant: activeView === 'important',
       isMyDay: activeView === 'my-day',
       status: 'pending',
@@ -123,7 +134,11 @@ export default function TaskFlowClient() {
       createdBy: 'demo_user',
     });
 
+    // Clear all quick add fields
     setNewTaskTitle('');
+    setQuickAddDueDate(undefined);
+    setQuickAddReminder(undefined);
+    setQuickAddRepeat(undefined);
   };
 
   // Handle new project
@@ -181,22 +196,43 @@ export default function TaskFlowClient() {
           </div>
 
           {/* Quick Add */}
-          <div className="flex gap-2">
-            <input
-              type="text"
-              value={newTaskTitle}
-              onChange={(e) => setNewTaskTitle(e.target.value)}
-              onKeyPress={(e) => e.key === 'Enter' && handleQuickAdd()}
-              placeholder="Add a task..."
-              className="flex-1 rounded-lg border border-slate-300 bg-white px-4 py-2 text-sm text-slate-900 placeholder-slate-400 focus:border-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-500/20 dark:border-slate-600 dark:bg-slate-700 dark:text-slate-100 dark:placeholder-slate-500"
-            />
-            <button
-              onClick={handleQuickAdd}
-              className="flex items-center gap-2 rounded-lg bg-blue-600 px-4 py-2 text-sm font-medium text-white transition-colors hover:bg-blue-700"
-            >
-              <Plus className="h-4 w-4" />
-              Add
-            </button>
+          <div className="space-y-2">
+            <div className="flex gap-2">
+              <input
+                type="text"
+                value={newTaskTitle}
+                onChange={(e) => setNewTaskTitle(e.target.value)}
+                onKeyDown={(e) => e.key === 'Enter' && handleQuickAdd()}
+                placeholder="Add a task..."
+                className="flex-1 rounded-lg border border-slate-300 bg-white px-4 py-2 text-sm text-slate-900 placeholder-slate-400 focus:border-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-500/20 dark:border-slate-600 dark:bg-slate-700 dark:text-slate-100 dark:placeholder-slate-500"
+              />
+              <button
+                onClick={handleQuickAdd}
+                className="flex items-center gap-2 rounded-lg bg-blue-600 px-4 py-2 text-sm font-medium text-white transition-colors hover:bg-blue-700"
+              >
+                <Plus className="h-4 w-4" />
+                Add
+              </button>
+            </div>
+
+            {/* Quick Add Options */}
+            <div className="flex items-center gap-2 px-1">
+              <DatePicker
+                value={quickAddDueDate}
+                onChange={setQuickAddDueDate}
+                placeholder="Due date"
+              />
+              <ReminderPicker
+                value={quickAddReminder}
+                onChange={setQuickAddReminder}
+                placeholder="Remind me"
+              />
+              <RepeatPicker
+                value={quickAddRepeat}
+                onChange={setQuickAddRepeat}
+                placeholder="Repeat"
+              />
+            </div>
           </div>
         </div>
 

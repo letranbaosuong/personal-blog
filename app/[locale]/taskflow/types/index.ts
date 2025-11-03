@@ -4,6 +4,15 @@
 
 export type TaskStatus = 'pending' | 'in-progress' | 'completed';
 export type ViewMode = 'list' | 'grid' | 'tree';
+export type RepeatType = 'none' | 'daily' | 'weekly' | 'monthly' | 'yearly' | 'custom';
+
+export interface RepeatSettings {
+  type: RepeatType;
+  interval?: number; // e.g., every 2 days
+  daysOfWeek?: number[]; // 0-6 (Sunday-Saturday)
+  dayOfMonth?: number; // 1-31
+  endDate?: string; // ISO date string
+}
 
 export interface SubTask {
   id: string;
@@ -23,6 +32,8 @@ export interface Task {
   title: string;
   description?: string;
   dueDate?: string; // ISO date string
+  reminder?: string; // ISO date string
+  repeat?: RepeatSettings;
   isImportant: boolean;
   isMyDay: boolean;
   status: TaskStatus;
