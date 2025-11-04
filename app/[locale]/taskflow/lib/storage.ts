@@ -7,6 +7,9 @@ const STORAGE_KEYS = {
   PROJECTS: 'taskflow_projects',
   CONTACTS: 'taskflow_contacts',
   USER: 'taskflow_user',
+  ACTIVE_VIEW: 'taskflow_active_view',
+  SELECTED_TASK_ID: 'taskflow_selected_task_id',
+  SELECTED_CONTACT_ID: 'taskflow_selected_contact_id',
 } as const;
 
 export const storage = {

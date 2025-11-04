@@ -22,6 +22,7 @@ import { useProjects } from './hooks/useProjects';
 import { useContacts } from './hooks/useContacts';
 import { useReminders } from './hooks/useReminders';
 import { Task, Contact, TaskFilters, RepeatSettings } from './types';
+import { storage, STORAGE_KEYS } from './lib/storage';
 
 type NavigationHistoryItem = {
   type: 'task' | 'contact';
@@ -29,7 +30,11 @@ type NavigationHistoryItem = {
 };
 
 export default function TaskFlowClient() {
-  const [activeView, setActiveView] = useState('all');
+  // Load activeView from localStorage, default to 'all' if not found
+  const [activeView, setActiveView] = useState(() => {
+    const saved = storage.get<string>(STORAGE_KEYS.ACTIVE_VIEW);
+    return saved || 'all';
+  });
   const [newTaskTitle, setNewTaskTitle] = useState('');
   const [selectedTask, setSelectedTask] = useState<Task | null>(null);
   const [selectedContact, setSelectedContact] = useState<Contact | null>(null);
@@ -37,6 +42,25 @@ export default function TaskFlowClient() {
   const [toasts, setToasts] = useState<ToastMessage[]>([]);
   const [navigationHistory, setNavigationHistory] = useState<NavigationHistoryItem[]>([]);
   const [isMobileSidebarOpen, setIsMobileSidebarOpen] = useState(false);
+
+  // Save activeView to localStorage when it changes
+  useEffect(() => {
+    storage.set(STORAGE_KEYS.ACTIVE_VIEW, activeView);
+  }, [activeView]);
+
+  // Save selected task/contact ID to localStorage when they change
+  useEffect(() => {
+    if (selectedTask) {
+      storage.set(STORAGE_KEYS.SELECTED_TASK_ID, selectedTask.id);
+      storage.remove(STORAGE_KEYS.SELECTED_CONTACT_ID);
+    } else if (selectedContact) {
+      storage.set(STORAGE_KEYS.SELECTED_CONTACT_ID, selectedContact.id);
+      storage.remove(STORAGE_KEYS.SELECTED_TASK_ID);
+    } else {
+      storage.remove(STORAGE_KEYS.SELECTED_TASK_ID);
+      storage.remove(STORAGE_KEYS.SELECTED_CONTACT_ID);
+    }
+  }, [selectedTask, selectedContact]);
 
   // Quick add task properties
   const [quickAddDueDate, setQuickAddDueDate] = useState<string | undefined>();
@@ -178,6 +202,33 @@ export default function TaskFlowClient() {
   }), [addToast]);
 
   useReminders(tasks, reminderOptions);
+
+  // Restore selected task/contact from localStorage after data loads
+  useEffect(() => {
+    // Only restore once when tasks and contacts are loaded and no selection exists
+    if (!loading && !contactsLoading && !selectedTask && !selectedContact) {
+      const savedTaskId = storage.get<string>(STORAGE_KEYS.SELECTED_TASK_ID);
+      const savedContactId = storage.get<string>(STORAGE_KEYS.SELECTED_CONTACT_ID);
+
+      if (savedTaskId) {
+        const task = tasks.find((t) => t.id === savedTaskId);
+        if (task) {
+          setSelectedTask(task);
+        } else {
+          // Task not found, clear storage
+          storage.remove(STORAGE_KEYS.SELECTED_TASK_ID);
+        }
+      } else if (savedContactId) {
+        const contact = contacts.find((c) => c.id === savedContactId);
+        if (contact) {
+          setSelectedContact(contact);
+        } else {
+          // Contact not found, clear storage
+          storage.remove(STORAGE_KEYS.SELECTED_CONTACT_ID);
+        }
+      }
+    }
+  }, [loading, contactsLoading, tasks, contacts, selectedTask, selectedContact]);
 
   // Listen for browser notification clicks
   useEffect(() => {
