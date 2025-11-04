@@ -6,7 +6,7 @@
 'use client';
 
 import { Contact, Task, Project } from '../types';
-import { X, Star, Trash2, Mail, Phone, Briefcase, MapPin, Calendar, Users, Edit2, Check } from 'lucide-react';
+import { X, Star, Trash2, Mail, Phone, Briefcase, MapPin, Calendar, Users, Edit2, Check, ArrowLeft } from 'lucide-react';
 import { useState, useRef, useEffect } from 'react';
 import MentionTextarea from './MentionTextarea';
 import MentionText from './MentionText';
@@ -23,6 +23,7 @@ interface ContactDetailProps {
   onTaskClick?: (task: Task) => void;
   onProjectClick?: (projectId: string) => void;
   onContactClick?: (contact: Contact) => void;
+  onBack?: () => void;
 }
 
 export default function ContactDetail({
@@ -37,6 +38,7 @@ export default function ContactDetail({
   onTaskClick,
   onProjectClick,
   onContactClick,
+  onBack,
 }: ContactDetailProps) {
   const [isEditingName, setIsEditingName] = useState(false);
   const [editedName, setEditedName] = useState(contact.name);
@@ -87,9 +89,20 @@ export default function ContactDetail({
       {/* Header */}
       <div className="border-b border-slate-200 p-4 dark:border-slate-700">
         <div className="flex items-center justify-between">
-          <h3 className="text-lg font-semibold text-slate-900 dark:text-slate-100">
-            Contact Details
-          </h3>
+          <div className="flex items-center gap-2">
+            {onBack && (
+              <button
+                onClick={onBack}
+                className="rounded-lg p-1 text-slate-400 transition-colors hover:bg-slate-100 hover:text-slate-600 dark:hover:bg-slate-700 dark:hover:text-slate-300"
+                title="Go back"
+              >
+                <ArrowLeft className="h-5 w-5" />
+              </button>
+            )}
+            <h3 className="text-lg font-semibold text-slate-900 dark:text-slate-100">
+              Contact Details
+            </h3>
+          </div>
           <button
             onClick={onClose}
             className="rounded-lg p-1 text-slate-400 transition-colors hover:bg-slate-100 hover:text-slate-600 dark:hover:bg-slate-700 dark:hover:text-slate-300"

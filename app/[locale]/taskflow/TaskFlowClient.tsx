@@ -23,6 +23,11 @@ import { useContacts } from './hooks/useContacts';
 import { useReminders } from './hooks/useReminders';
 import { Task, Contact, TaskFilters, RepeatSettings } from './types';
 
+type NavigationHistoryItem = {
+  type: 'task' | 'contact';
+  id: string;
+};
+
 export default function TaskFlowClient() {
   const [activeView, setActiveView] = useState('all');
   const [newTaskTitle, setNewTaskTitle] = useState('');
@@ -30,6 +35,7 @@ export default function TaskFlowClient() {
   const [selectedContact, setSelectedContact] = useState<Contact | null>(null);
   const [isContactFormOpen, setIsContactFormOpen] = useState(false);
   const [toasts, setToasts] = useState<ToastMessage[]>([]);
+  const [navigationHistory, setNavigationHistory] = useState<NavigationHistoryItem[]>([]);
 
   // Quick add task properties
   const [quickAddDueDate, setQuickAddDueDate] = useState<string | undefined>();
@@ -118,6 +124,50 @@ export default function TaskFlowClient() {
       console.warn('Task not found:', taskId);
     }
   }, [tasks]);
+
+  // Navigation handlers with history
+  const navigateToTask = useCallback((task: Task) => {
+    // Save current item to history if exists
+    if (selectedTask) {
+      setNavigationHistory((prev) => [...prev, { type: 'task', id: selectedTask.id }]);
+    } else if (selectedContact) {
+      setNavigationHistory((prev) => [...prev, { type: 'contact', id: selectedContact.id }]);
+    }
+    setSelectedTask(task);
+    setSelectedContact(null);
+  }, [selectedTask, selectedContact]);
+
+  const navigateToContact = useCallback((contact: Contact) => {
+    // Save current item to history if exists
+    if (selectedTask) {
+      setNavigationHistory((prev) => [...prev, { type: 'task', id: selectedTask.id }]);
+    } else if (selectedContact) {
+      setNavigationHistory((prev) => [...prev, { type: 'contact', id: selectedContact.id }]);
+    }
+    setSelectedContact(contact);
+    setSelectedTask(null);
+  }, [selectedTask, selectedContact]);
+
+  const handleBack = useCallback(() => {
+    if (navigationHistory.length === 0) return;
+
+    const previousItem = navigationHistory[navigationHistory.length - 1];
+    setNavigationHistory((prev) => prev.slice(0, -1));
+
+    if (previousItem.type === 'task') {
+      const task = tasks.find((t) => t.id === previousItem.id);
+      if (task) {
+        setSelectedTask(task);
+        setSelectedContact(null);
+      }
+    } else {
+      const contact = contacts.find((c) => c.id === previousItem.id);
+      if (contact) {
+        setSelectedContact(contact);
+        setSelectedTask(null);
+      }
+    }
+  }, [navigationHistory, tasks, contacts]);
 
   // Monitor reminders
   useReminders(tasks, {
@@ -459,7 +509,10 @@ export default function TaskFlowClient() {
             tasks={tasks}
             projects={projects}
             contacts={contacts}
-            onClose={() => setSelectedTask(null)}
+            onClose={() => {
+              setSelectedTask(null);
+              setNavigationHistory([]);
+            }}
             onUpdate={updateTask}
             onDelete={deleteTask}
             onToggleImportant={toggleImportant}
@@ -467,12 +520,10 @@ export default function TaskFlowClient() {
             onAddSubTask={addSubTask}
             onToggleSubTask={toggleSubTask}
             onDeleteSubTask={deleteSubTask}
-            onTaskClick={(task) => setSelectedTask(task)}
+            onTaskClick={navigateToTask}
             onProjectClick={(projectId) => setActiveView(`project:${projectId}`)}
-            onContactClick={(contact) => {
-              setSelectedContact(contact);
-              setSelectedTask(null);
-            }}
+            onContactClick={navigateToContact}
+            onBack={navigationHistory.length > 0 ? handleBack : undefined}
           />
         </div>
       )}
@@ -483,16 +534,17 @@ export default function TaskFlowClient() {
             tasks={tasks}
             projects={projects}
             contacts={contacts}
-            onClose={() => setSelectedContact(null)}
+            onClose={() => {
+              setSelectedContact(null);
+              setNavigationHistory([]);
+            }}
             onUpdate={updateContact}
             onDelete={deleteContact}
             onToggleImportant={toggleContactImportant}
-            onTaskClick={(task) => {
-              setSelectedTask(task);
-              setSelectedContact(null);
-            }}
+            onTaskClick={navigateToTask}
             onProjectClick={(projectId) => setActiveView(`project:${projectId}`)}
-            onContactClick={(contact) => setSelectedContact(contact)}
+            onContactClick={navigateToContact}
+            onBack={navigationHistory.length > 0 ? handleBack : undefined}
           />
         </div>
       )}
@@ -505,7 +557,10 @@ export default function TaskFlowClient() {
             tasks={tasks}
             projects={projects}
             contacts={contacts}
-            onClose={() => setSelectedTask(null)}
+            onClose={() => {
+              setSelectedTask(null);
+              setNavigationHistory([]);
+            }}
             onUpdate={updateTask}
             onDelete={deleteTask}
             onToggleImportant={toggleImportant}
@@ -513,12 +568,10 @@ export default function TaskFlowClient() {
             onAddSubTask={addSubTask}
             onToggleSubTask={toggleSubTask}
             onDeleteSubTask={deleteSubTask}
-            onTaskClick={(task) => setSelectedTask(task)}
+            onTaskClick={navigateToTask}
             onProjectClick={(projectId) => setActiveView(`project:${projectId}`)}
-            onContactClick={(contact) => {
-              setSelectedContact(contact);
-              setSelectedTask(null);
-            }}
+            onContactClick={navigateToContact}
+            onBack={navigationHistory.length > 0 ? handleBack : undefined}
           />
         </div>
       )}
@@ -531,16 +584,17 @@ export default function TaskFlowClient() {
             tasks={tasks}
             projects={projects}
             contacts={contacts}
-            onClose={() => setSelectedContact(null)}
+            onClose={() => {
+              setSelectedContact(null);
+              setNavigationHistory([]);
+            }}
             onUpdate={updateContact}
             onDelete={deleteContact}
             onToggleImportant={toggleContactImportant}
-            onTaskClick={(task) => {
-              setSelectedTask(task);
-              setSelectedContact(null);
-            }}
+            onTaskClick={navigateToTask}
             onProjectClick={(projectId) => setActiveView(`project:${projectId}`)}
-            onContactClick={(contact) => setSelectedContact(contact)}
+            onContactClick={navigateToContact}
+            onBack={navigationHistory.length > 0 ? handleBack : undefined}
           />
         </div>
       )}

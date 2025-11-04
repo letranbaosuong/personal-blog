@@ -6,7 +6,7 @@
 'use client';
 
 import { Task, Project, Contact } from '../types';
-import { X, Star, Calendar, Trash2, Plus, Sun, Edit2, Check } from 'lucide-react';
+import { X, Star, Calendar, Trash2, Plus, Sun, Edit2, Check, ArrowLeft } from 'lucide-react';
 import { useState, useRef, useEffect } from 'react';
 import SubTaskItem from './SubTaskItem';
 import MentionTextarea from './MentionTextarea';
@@ -28,6 +28,7 @@ interface TaskDetailProps {
   onTaskClick?: (task: Task) => void;
   onProjectClick?: (projectId: string) => void;
   onContactClick?: (contact: Contact) => void;
+  onBack?: () => void;
 }
 
 export default function TaskDetail({
@@ -46,6 +47,7 @@ export default function TaskDetail({
   onTaskClick,
   onProjectClick,
   onContactClick,
+  onBack,
 }: TaskDetailProps) {
   const [isEditingTitle, setIsEditingTitle] = useState(false);
   const [editedTitle, setEditedTitle] = useState(task.title);
@@ -93,9 +95,20 @@ export default function TaskDetail({
       {/* Header */}
       <div className="border-b border-slate-200 p-4 dark:border-slate-700">
         <div className="flex items-center justify-between">
-          <h3 className="text-lg font-semibold text-slate-900 dark:text-slate-100">
-            Task Details
-          </h3>
+          <div className="flex items-center gap-2">
+            {onBack && (
+              <button
+                onClick={onBack}
+                className="rounded-lg p-1 text-slate-400 transition-colors hover:bg-slate-100 hover:text-slate-600 dark:hover:bg-slate-700 dark:hover:text-slate-300"
+                title="Go back"
+              >
+                <ArrowLeft className="h-5 w-5" />
+              </button>
+            )}
+            <h3 className="text-lg font-semibold text-slate-900 dark:text-slate-100">
+              Task Details
+            </h3>
+          </div>
           <button
             onClick={onClose}
             className="rounded-lg p-1 text-slate-400 transition-colors hover:bg-slate-100 hover:text-slate-600 dark:hover:bg-slate-700 dark:hover:text-slate-300"
