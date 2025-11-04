@@ -178,23 +178,65 @@ export function useReminders(tasks: Task[], options?: UseRemindersOptions) {
     }
   }, []);
 
-  // Set up reminder checking interval (only once on mount)
+  // Schedule precise timeouts for upcoming reminders
   useEffect(() => {
-    // Check after short delay on mount
+    const scheduledTimeouts: NodeJS.Timeout[] = [];
+    const now = Date.now();
+
+    console.log(`[Reminder Schedule] Setting up precise timeouts for ${tasks.length} tasks`);
+
+    tasks.forEach((task) => {
+      if (!task.reminder || task.status === 'completed') return;
+
+      const reminderTime = new Date(task.reminder);
+      if (isNaN(reminderTime.getTime())) return;
+
+      const reminderTimestamp = reminderTime.getTime();
+      const delay = reminderTimestamp - now;
+      const reminderKey = `${task.id}-${task.reminder}`;
+
+      // Skip if already notified
+      if (notifiedReminders.current.has(reminderKey)) {
+        console.log(`[Reminder Schedule] Skip "${task.title}" - already notified`);
+        return;
+      }
+
+      // Schedule timeout for reminders in the future (within next 24 hours)
+      if (delay > 0 && delay < 24 * 60 * 60 * 1000) {
+        const delayMinutes = Math.ceil(delay / 60000);
+        console.log(`[Reminder Schedule] Scheduling "${task.title}" in ${delayMinutes} minutes`);
+
+        const timeout = setTimeout(() => {
+          console.log(`[Reminder Trigger] EXACT TIME REACHED for "${task.title}"`);
+          checkReminders(); // Will trigger this specific reminder
+        }, delay);
+
+        scheduledTimeouts.push(timeout);
+      }
+      // For reminders that just passed (within 15 minutes), trigger immediately
+      else if (delay < 0 && Math.abs(delay) < 15 * 60 * 1000) {
+        console.log(`[Reminder Schedule] "${task.title}" just passed, checking immediately`);
+        // Will be caught by the initial check below
+      }
+    });
+
+    // Initial check for any reminders that already passed
     const initialTimeout = setTimeout(() => {
       checkReminders();
     }, 1000);
 
-    // Set up interval to check every minute
-    const interval = setInterval(() => {
+    // Backup interval check every 60 seconds (safety net)
+    const backupInterval = setInterval(() => {
+      console.log('[Reminder] Backup interval check');
       checkReminders();
-    }, 60 * 1000); // Check every 60 seconds
+    }, 60 * 1000);
 
     return () => {
       clearTimeout(initialTimeout);
-      clearInterval(interval);
+      clearInterval(backupInterval);
+      scheduledTimeouts.forEach((timeout) => clearTimeout(timeout));
     };
-  }, [checkReminders]); // checkReminders is stable, so this only runs once
+  }, [tasks, checkReminders]); // Re-run when tasks change
 
   return {
     notificationPermission: notifications.getPermission(),
