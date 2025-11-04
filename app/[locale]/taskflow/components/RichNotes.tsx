@@ -45,11 +45,12 @@ interface RichNotesProps {
 }
 
 interface ParsedLine {
-  type: 'checkbox' | 'tree' | 'text';
+  type: 'checkbox' | 'text';
   indent: number;
   checked?: boolean;
   content: string;
   lineIndex: number;
+  hasChildren?: boolean; // Auto-detected
 }
 
 export default function RichNotes({
@@ -70,7 +71,7 @@ export default function RichNotes({
     if (!input) return [];
 
     const lines = input.split('\n');
-    return lines.map((line, index) => {
+    const parsedLines = lines.map((line, index) => {
       // Count indentation (spaces or tabs)
       const indentMatch = line.match(/^(\s*)/);
       const indent = indentMatch ? Math.floor(indentMatch[1].length / 2) : 0;
@@ -80,34 +81,53 @@ export default function RichNotes({
       const checkboxMatch = trimmedLine.match(/^-\s*\[([ x])\]\s*(.+)$/i);
       if (checkboxMatch) {
         return {
-          type: 'checkbox',
+          type: 'checkbox' as const,
           indent,
           checked: checkboxMatch[1].toLowerCase() === 'x',
           content: checkboxMatch[2],
           lineIndex: index,
-        };
-      }
-
-      // Tree header syntax: > at start (easy to type!)
-      // Also support ▼ or ▶ for backward compatibility
-      const treeMatch = trimmedLine.match(/^[>▼▶]\s*(.+)$/);
-      if (treeMatch) {
-        return {
-          type: 'tree',
-          indent,
-          content: treeMatch[1],
-          lineIndex: index,
+          hasChildren: false,
         };
       }
 
       // Regular text
       return {
-        type: 'text',
+        type: 'text' as const,
         indent,
         content: trimmedLine,
         lineIndex: index,
+        hasChildren: false,
       };
     });
+
+    // Auto-detect parent lines (lines that have children with greater indent)
+    for (let i = 0; i < parsedLines.length; i++) {
+      const currentLine = parsedLines[i];
+
+      // Skip empty lines
+      if (!currentLine.content) continue;
+
+      // Check if next non-empty line has greater indent
+      for (let j = i + 1; j < parsedLines.length; j++) {
+        const nextLine = parsedLines[j];
+
+        // Skip empty lines
+        if (!nextLine.content) continue;
+
+        // If next line has greater indent, current line is a parent
+        if (nextLine.indent > currentLine.indent) {
+          currentLine.hasChildren = true;
+          break;
+        }
+
+        // If next line has same or less indent, stop checking
+        if (nextLine.indent <= currentLine.indent) {
+          break;
+        }
+      }
+    }
+
+    return parsedLines;
   };
 
   const parsedLines = parseText(text);
@@ -130,12 +150,12 @@ export default function RichNotes({
 
   // Check if line should be hidden (collapsed)
   const isLineHidden = (currentIndex: number, currentIndent: number): boolean => {
-    // Look backwards for parent tree section
+    // Look backwards for parent section
     for (let i = currentIndex - 1; i >= 0; i--) {
       const line = parsedLines[i];
       if (line.indent < currentIndent) {
-        // Found parent
-        if (line.type === 'tree' && collapsedSections.has(line.lineIndex)) {
+        // Found parent - check if it's collapsed
+        if (line.hasChildren && collapsedSections.has(line.lineIndex)) {
           return true;
         }
         break;
@@ -151,6 +171,11 @@ export default function RichNotes({
         if (isHidden) return null;
 
         const paddingLeft = line.indent * 20; // 20px per indent level
+        const isParent = line.hasChildren;
+        const isCollapsed = collapsedSections.has(line.lineIndex);
+
+        // Skip empty lines
+        if (!line.content) return null;
 
         // Render checkbox line
         if (line.type === 'checkbox') {
@@ -160,6 +185,19 @@ export default function RichNotes({
               className="flex items-start gap-2 py-1"
               style={{ paddingLeft: `${paddingLeft}px` }}
             >
+              {/* Show chevron if this checkbox has children */}
+              {isParent && (
+                <button
+                  onClick={() => toggleSection(line.lineIndex)}
+                  className="flex-shrink-0 mt-0.5 text-slate-600 hover:text-slate-900 dark:text-slate-400 dark:hover:text-slate-100 transition-colors"
+                >
+                  {isCollapsed ? (
+                    <ChevronRight className="h-4 w-4" />
+                  ) : (
+                    <ChevronDown className="h-4 w-4" />
+                  )}
+                </button>
+              )}
               <button
                 onClick={() => handleCheckboxToggle(line.lineIndex)}
                 className={`flex-shrink-0 mt-0.5 transition-colors ${
@@ -178,7 +216,7 @@ export default function RichNotes({
                   line.checked
                     ? 'text-slate-500 line-through dark:text-slate-400'
                     : 'text-slate-900 dark:text-slate-100'
-                }`}
+                } ${isParent ? 'font-medium' : ''}`}
               >
                 <MentionText
                   text={line.content}
@@ -194,9 +232,9 @@ export default function RichNotes({
           );
         }
 
-        // Render tree section header
-        if (line.type === 'tree') {
-          const isCollapsed = collapsedSections.has(line.lineIndex);
+        // Render text line (parent or regular)
+        if (isParent) {
+          // Parent line with children - make it collapsible
           return (
             <div
               key={index}
@@ -225,17 +263,12 @@ export default function RichNotes({
                     onContactClick={onContactClick}
                   />
                 </div>
-                <div className="flex-shrink-0 text-xs text-slate-500 dark:text-slate-400">
-                  {isCollapsed ? 'Click to expand' : 'Click to collapse'}
-                </div>
               </button>
             </div>
           );
         }
 
-        // Render regular text (skip empty lines)
-        if (!line.content) return null;
-
+        // Regular text line (not a parent)
         return (
           <div
             key={index}
