@@ -102,16 +102,23 @@ export function useReminders(tasks: Task[], options?: UseRemindersOptions) {
       const reminderTimestamp = reminderTime.getTime();
       const timeDiff = nowTime - reminderTimestamp;
 
-      // 2. Reminder time must have passed (but not too long ago)
-      // Only trigger if:
-      // - Reminder time <= now (has arrived)
-      // - Not too old (within last 24 hours to avoid old reminders)
+      // 2. Strict time validation - only notify reminders that JUST arrived
+      // Reminder must be:
+      // - Has arrived (reminderTime <= now)
+      // - Very recent (within last 10 minutes) - not old reminders
       // - Not yet notified
       const hasArrived = reminderTimestamp <= nowTime;
-      const notTooOld = timeDiff < 24 * 60 * 60 * 1000; // Within 24 hours
+      const isVeryRecent = timeDiff >= 0 && timeDiff < 10 * 60 * 1000; // Within 10 minutes
       const notYetNotified = !notifiedReminders.current.has(reminderKey);
 
-      if (hasArrived && notTooOld && notYetNotified) {
+      // Debug logging
+      if (task.reminder && !notYetNotified) {
+        console.log(`[Reminder] Already notified: ${task.title} at ${task.reminder}`);
+      }
+
+      if (hasArrived && isVeryRecent && notYetNotified) {
+        console.log(`[Reminder] Triggering notification for: ${task.title} at ${task.reminder}`);
+        console.log(`[Reminder] Time diff: ${Math.floor(timeDiff / 1000)} seconds ago`);
         // Format message
         const dueDateText = task.dueDate
           ? ` (Due: ${new Date(task.dueDate).toLocaleDateString('en-US', {
