@@ -23,7 +23,7 @@ export interface ProjectContent {
 export const projects: Project[] = [
   {
     id: '0',
-    slug: 'taskflow',
+    slug: 'taskflow-project',
     image: 'https://images.unsplash.com/photo-1484480974693-6ca0a78fb36b?w=800&q=80',
     technologies: ['Next.js 15', 'TypeScript', 'Tailwind CSS', 'localStorage'],
     github: 'taskflow',
@@ -88,7 +88,7 @@ export const projects: Project[] = [
 
 export const projectsContent: Record<string, Record<string, ProjectContent>> = {
   en: {
-    'taskflow': {
+    'taskflow-project': {
       title: 'TaskFlow - Smart Task Management',
       description: 'A modern and powerful task management application with project organization, sub-tasks, smart scheduling, and collaboration features. Built with Next.js 15 and TypeScript.',
       features: [
@@ -169,7 +169,7 @@ export const projectsContent: Record<string, Record<string, ProjectContent>> = {
     },
   },
   vi: {
-    'taskflow': {
+    'taskflow-project': {
       title: 'TaskFlow - Quản lý Công việc Thông minh',
       description: 'Ứng dụng quản lý công việc hiện đại và mạnh mẽ với tổ chức dự án, công việc con, lên lịch thông minh và tính năng cộng tác. Xây dựng với Next.js 15 và TypeScript.',
       features: [
@@ -250,7 +250,7 @@ export const projectsContent: Record<string, Record<string, ProjectContent>> = {
     },
   },
   ja: {
-    'taskflow': {
+    'taskflow-project': {
       title: 'TaskFlow - スマートタスク管理',
       description: 'プロジェクト整理、サブタスク、スマートスケジューリング、コラボレーション機能を備えた、モダンで強力なタスク管理アプリケーション。Next.js 15とTypeScriptで構築。',
       features: [
@@ -331,7 +331,7 @@ export const projectsContent: Record<string, Record<string, ProjectContent>> = {
     },
   },
   zh: {
-    'taskflow': {
+    'taskflow-project': {
       title: 'TaskFlow - 智能任务管理',
       description: '具有项目组织、子任务、智能调度和协作功能的现代化强大任务管理应用程序。使用Next.js 15和TypeScript构建。',
       features: [
@@ -412,7 +412,7 @@ export const projectsContent: Record<string, Record<string, ProjectContent>> = {
     },
   },
   ko: {
-    'taskflow': {
+    'taskflow-project': {
       title: 'TaskFlow - 스마트 작업 관리',
       description: '프로젝트 구성, 하위 작업, 스마트 일정 관리 및 협업 기능을 갖춘 현대적이고 강력한 작업 관리 애플리케이션. Next.js 15 및 TypeScript로 구축.',
       features: [
@@ -493,7 +493,7 @@ export const projectsContent: Record<string, Record<string, ProjectContent>> = {
     },
   },
   th: {
-    'taskflow': {
+    'taskflow-project': {
       title: 'TaskFlow - การจัดการงานอัจฉริยะ',
       description: 'แอปพลิเคชันการจัดการงานที่ทันสมัยและทรงพลังพร้อมการจัดระเบียบโปรเจกต์ งานย่อย การจัดตารางอัจฉริยะ และฟีเจอร์การทำงานร่วมกัน สร้างด้วย Next.js 15 และ TypeScript',
       features: [

@@ -8,6 +8,7 @@ import { setRequestLocale } from 'next-intl/server';
 import { getTranslations } from 'next-intl/server';
 import Container from '@/components/common/Container';
 import { LocalePageProps } from '@/types/i18n';
+import Link from 'next/link';
 
 export async function generateMetadata({ params }: LocalePageProps): Promise<Metadata> {
   const { locale } = await params;
@@ -49,10 +50,9 @@ export default async function BlogPage({ params }: LocalePageProps) {
             if (!content) return null;
 
             return (
-              <article
-                key={post.id}
-                className="group overflow-hidden rounded-lg border border-slate-200 bg-white transition-all hover:shadow-lg dark:border-slate-700 dark:bg-slate-800"
-              >
+              <Link key={post.id} href={`/blog/${post.slug}`}>
+                <article className="group overflow-hidden rounded-lg border border-slate-200 bg-white transition-all hover:shadow-lg dark:border-slate-700 dark:bg-slate-800 h-full cursor-pointer">
+
                 {/* Image */}
                 <div className="relative h-48 w-full overflow-hidden bg-slate-200 dark:bg-slate-700">
                   <img
@@ -99,6 +99,7 @@ export default async function BlogPage({ params }: LocalePageProps) {
                   </time>
                 </div>
               </article>
+              </Link>
             );
           })}
         </div>
