@@ -43,7 +43,7 @@ export default function TaskFlowClient() {
   const [quickAddReminder, setQuickAddReminder] = useState<string | undefined>();
   const [quickAddRepeat, setQuickAddRepeat] = useState<RepeatSettings | undefined>();
 
-  const { projects, createProject } = useProjects();
+  const { projects, createProject, getProjectTaskCount } = useProjects();
   const {
     contacts,
     loading: contactsLoading,
@@ -312,6 +312,8 @@ export default function TaskFlowClient() {
           activeView={activeView}
           onViewChange={setActiveView}
           onNewProject={handleNewProject}
+          projects={projects}
+          getProjectTaskCount={getProjectTaskCount}
         />
       </div>
 
@@ -651,6 +653,8 @@ export default function TaskFlowClient() {
                   handleNewProject();
                   setIsMobileSidebarOpen(false);
                 }}
+                projects={projects}
+                getProjectTaskCount={getProjectTaskCount}
               />
             </div>
           </div>

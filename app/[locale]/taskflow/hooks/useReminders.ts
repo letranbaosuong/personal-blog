@@ -20,13 +20,22 @@ interface UseRemindersOptions {
 
 export function useReminders(tasks: Task[], options?: UseRemindersOptions) {
   const notifiedReminders = useRef<Set<string>>(new Set());
-  const isInitialMount = useRef(true);
 
-  // Check and trigger reminders
+  // Store tasks and options in refs to avoid dependency issues
+  const tasksRef = useRef<Task[]>(tasks);
+  const optionsRef = useRef<UseRemindersOptions | undefined>(options);
+
+  // Update refs when props change
+  useEffect(() => {
+    tasksRef.current = tasks;
+    optionsRef.current = options;
+  }, [tasks, options]);
+
+  // Check and trigger reminders (stable function with no dependencies)
   const checkReminders = useCallback(() => {
     const now = new Date();
 
-    tasks.forEach((task) => {
+    tasksRef.current.forEach((task) => {
       // Skip if no reminder or already completed
       if (!task.reminder || task.status === 'completed') {
         return;
@@ -59,8 +68,8 @@ export function useReminders(tasks: Task[], options?: UseRemindersOptions) {
         });
 
         // Trigger callback for in-app notification
-        if (options?.onReminder) {
-          options.onReminder({
+        if (optionsRef.current?.onReminder) {
+          optionsRef.current.onReminder({
             taskId: task.id,
             title: '⏰ Task Reminder',
             message,
@@ -76,7 +85,7 @@ export function useReminders(tasks: Task[], options?: UseRemindersOptions) {
         }, 60 * 60 * 1000);
       }
     });
-  }, [tasks, options]);
+  }, []); // No dependencies - stable function
 
   // Request notification permission on mount
   useEffect(() => {
@@ -85,37 +94,23 @@ export function useReminders(tasks: Task[], options?: UseRemindersOptions) {
     }
   }, []);
 
-  // Check reminders every minute
+  // Set up reminder checking interval (only once on mount)
   useEffect(() => {
-    // Skip immediate check on initial mount or re-renders
-    // Only check via interval to avoid duplicate notifications on language change
-    if (isInitialMount.current) {
-      isInitialMount.current = false;
+    // Check after short delay on mount
+    const initialTimeout = setTimeout(() => {
+      checkReminders();
+    }, 1000);
 
-      // Check after a short delay on first mount
-      const initialTimeout = setTimeout(() => {
-        checkReminders();
-      }, 1000);
-
-      // Set up interval to check every minute
-      const interval = setInterval(() => {
-        checkReminders();
-      }, 60 * 1000); // Check every 60 seconds
-
-      return () => {
-        clearTimeout(initialTimeout);
-        clearInterval(interval);
-      };
-    }
-
-    // For subsequent renders (like language change), only set up interval
-    // Don't check immediately to avoid duplicate notifications
+    // Set up interval to check every minute
     const interval = setInterval(() => {
       checkReminders();
     }, 60 * 1000); // Check every 60 seconds
 
-    return () => clearInterval(interval);
-  }, [checkReminders]);
+    return () => {
+      clearTimeout(initialTimeout);
+      clearInterval(interval);
+    };
+  }, [checkReminders]); // checkReminders is stable, so this only runs once
 
   return {
     notificationPermission: notifications.getPermission(),

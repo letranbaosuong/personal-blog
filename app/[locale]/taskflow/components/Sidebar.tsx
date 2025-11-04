@@ -6,17 +6,24 @@
 
 import { Home, Star, Sun, CheckCircle, Users, Plus } from 'lucide-react';
 import { useState } from 'react';
-import { useProjects } from '../hooks/useProjects';
+import { Project } from '../types';
 import TaskFlowSettings from './TaskFlowSettings';
 
 interface SidebarProps {
   activeView: string;
   onViewChange: (view: string) => void;
   onNewProject?: () => void;
+  projects: Project[];
+  getProjectTaskCount: (projectId: string) => number;
 }
 
-export default function Sidebar({ activeView, onViewChange, onNewProject }: SidebarProps) {
-  const { projects, getProjectTaskCount } = useProjects();
+export default function Sidebar({
+  activeView,
+  onViewChange,
+  onNewProject,
+  projects,
+  getProjectTaskCount,
+}: SidebarProps) {
   const [showNewProjectInput, setShowNewProjectInput] = useState(false);
 
   const menuItems = [
