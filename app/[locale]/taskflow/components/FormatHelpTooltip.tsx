@@ -6,9 +6,11 @@
 
 import { HelpCircle } from 'lucide-react';
 import { useState } from 'react';
+import { useTranslations } from 'next-intl';
 
 export default function FormatHelpTooltip() {
   const [isOpen, setIsOpen] = useState(false);
+  const t = useTranslations('taskflow.formatHelp');
 
   return (
     <>
@@ -33,58 +35,55 @@ export default function FormatHelpTooltip() {
             {/* Content */}
             <div className="relative space-y-3">
               <h4 className="text-sm font-semibold text-slate-900 dark:text-slate-100">
-                Notes Formatting Guide
+                {t('title')}
               </h4>
 
               <div className="space-y-2 text-xs">
               {/* Checkboxes */}
               <div>
                 <div className="font-medium text-slate-700 dark:text-slate-300">
-                  ✓ Checkboxes:
+                  {t('checkboxes')}
                 </div>
                 <div className="ml-3 space-y-1 font-mono text-slate-600 dark:text-slate-400">
-                  <div>- [ ] Unchecked item</div>
-                  <div>- [x] Checked item</div>
+                  <div>{t('checkboxUnchecked')}</div>
+                  <div>{t('checkboxChecked')}</div>
                 </div>
               </div>
 
               {/* Tree structure */}
               <div>
                 <div className="font-medium text-slate-700 dark:text-slate-300">
-                  🌳 Tree Structure (auto-detect):
+                  {t('tree')}
                 </div>
                 <div className="ml-3 space-y-1 font-mono text-slate-600 dark:text-slate-400">
-                  <div>Parent line</div>
-                  <div>··Child (2 spaces)</div>
-                  <div>····Grand-child (4 spaces)</div>
+                  <div>{t('treeParent')}</div>
+                  <div>{t('treeChild')}</div>
+                  <div>{t('treeGrandchild')}</div>
                 </div>
                 <div className="ml-3 mt-1 text-slate-500 dark:text-slate-400">
-                  Parent lines auto-collapse!
+                  {t('treeHint')}
                 </div>
               </div>
 
               {/* Mentions */}
               <div>
                 <div className="font-medium text-slate-700 dark:text-slate-300">
-                  @ Mentions:
+                  {t('mentions')}
                 </div>
                 <div className="ml-3 space-y-1 font-mono text-slate-600 dark:text-slate-400">
-                  <div>@[Task name]</div>
-                  <div>@[Project name]</div>
-                  <div>@[Contact name]</div>
+                  <div>{t('mentionTask')}</div>
+                  <div>{t('mentionProject')}</div>
+                  <div>{t('mentionContact')}</div>
                 </div>
               </div>
 
               {/* Example */}
               <div>
                 <div className="font-medium text-slate-700 dark:text-slate-300">
-                  📝 Example:
+                  {t('example')}
                 </div>
-                <div className="ml-3 mt-1 rounded bg-slate-50 p-2 font-mono text-slate-600 dark:bg-slate-900 dark:text-slate-400">
-                  <div>Meeting notes</div>
-                  <div>··- [ ] Call @[John]</div>
-                  <div>····- [x] Prepare slides</div>
-                  <div>····- [ ] Send email</div>
+                <div className="ml-3 mt-1 rounded bg-slate-50 p-2 font-mono text-slate-600 dark:bg-slate-900 dark:text-slate-400 whitespace-pre-wrap">
+                  {t('exampleText')}
                 </div>
               </div>
               </div>
@@ -92,7 +91,7 @@ export default function FormatHelpTooltip() {
               {/* Tip */}
               <div className="rounded-md bg-blue-50 p-2 dark:bg-blue-900/20">
                 <p className="text-xs text-blue-900 dark:text-blue-300">
-                  💡 <strong>Tip:</strong> Just use spaces to indent - tree structure auto-detects!
+                  <strong>{t('tip')}</strong> {t('tipText')}
                 </p>
               </div>
             </div>
@@ -107,58 +106,55 @@ export default function FormatHelpTooltip() {
             {/* Content */}
             <div className="relative space-y-3">
               <h4 className="text-sm font-semibold text-slate-900 dark:text-slate-100">
-                Notes Formatting Guide
+                {t('title')}
               </h4>
 
               <div className="space-y-2 text-xs">
                 {/* Checkboxes */}
                 <div>
                   <div className="font-medium text-slate-700 dark:text-slate-300">
-                    ✓ Checkboxes:
+                    {t('checkboxes')}
                   </div>
                   <div className="ml-3 space-y-1 font-mono text-slate-600 dark:text-slate-400">
-                    <div>- [ ] Unchecked item</div>
-                    <div>- [x] Checked item</div>
+                    <div>{t('checkboxUnchecked')}</div>
+                    <div>{t('checkboxChecked')}</div>
                   </div>
                 </div>
 
                 {/* Tree structure */}
                 <div>
                   <div className="font-medium text-slate-700 dark:text-slate-300">
-                    🌳 Tree Structure (auto-detect):
+                    {t('tree')}
                   </div>
                   <div className="ml-3 space-y-1 font-mono text-slate-600 dark:text-slate-400">
-                    <div>Parent line</div>
-                    <div>··Child (2 spaces)</div>
-                    <div>····Grand-child (4 spaces)</div>
+                    <div>{t('treeParent')}</div>
+                    <div>{t('treeChild')}</div>
+                    <div>{t('treeGrandchild')}</div>
                   </div>
                   <div className="ml-3 mt-1 text-slate-500 dark:text-slate-400">
-                    Parent lines auto-collapse!
+                    {t('treeHint')}
                   </div>
                 </div>
 
                 {/* Mentions */}
                 <div>
                   <div className="font-medium text-slate-700 dark:text-slate-300">
-                    @ Mentions:
+                    {t('mentions')}
                   </div>
                   <div className="ml-3 space-y-1 font-mono text-slate-600 dark:text-slate-400">
-                    <div>@[Task name]</div>
-                    <div>@[Project name]</div>
-                    <div>@[Contact name]</div>
+                    <div>{t('mentionTask')}</div>
+                    <div>{t('mentionProject')}</div>
+                    <div>{t('mentionContact')}</div>
                   </div>
                 </div>
 
                 {/* Example */}
                 <div>
                   <div className="font-medium text-slate-700 dark:text-slate-300">
-                    📝 Example:
+                    {t('example')}
                   </div>
-                  <div className="ml-3 mt-1 rounded bg-slate-50 p-2 font-mono text-slate-600 dark:bg-slate-900 dark:text-slate-400">
-                    <div>Meeting notes</div>
-                    <div>··- [ ] Call @[John]</div>
-                    <div>····- [x] Prepare slides</div>
-                    <div>····- [ ] Send email</div>
+                  <div className="ml-3 mt-1 rounded bg-slate-50 p-2 font-mono text-slate-600 dark:bg-slate-900 dark:text-slate-400 whitespace-pre-wrap">
+                    {t('exampleText')}
                   </div>
                 </div>
               </div>
@@ -166,7 +162,7 @@ export default function FormatHelpTooltip() {
               {/* Tip */}
               <div className="rounded-md bg-blue-50 p-2 dark:bg-blue-900/20">
                 <p className="text-xs text-blue-900 dark:text-blue-300">
-                  💡 <strong>Tip:</strong> Just use spaces to indent - tree structure auto-detects!
+                  <strong>{t('tip')}</strong> {t('tipText')}
                 </p>
               </div>
             </div>

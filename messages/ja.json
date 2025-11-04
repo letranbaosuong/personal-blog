@@ -176,5 +176,118 @@
       "description": "この問題の修正に取り組んでいます。後でもう一度お試しください。",
       "retry": "再試行"
     }
+  },
+  "taskflow": {
+    "title": "TaskFlow",
+    "sidebar": {
+      "myDay": "今日の予定",
+      "important": "重要",
+      "planned": "予定済み",
+      "tasks": "タスク",
+      "projects": "プロジェクト",
+      "contacts": "連絡先",
+      "settings": "設定"
+    },
+    "task": {
+      "title": "タスク",
+      "details": "タスクの詳細",
+      "newTask": "新しいタスク",
+      "addTask": "タスクを追加",
+      "addStep": "ステップを追加...",
+      "noTasks": "タスクがありません",
+      "noTasksDescription": "タスクを追加して開始",
+      "completed": "完了",
+      "pending": "保留中",
+      "inProgress": "進行中",
+      "dueDate": "期限",
+      "reminder": "リマインダー",
+      "repeat": "繰り返し",
+      "notes": "メモ",
+      "notesPlaceholder": "メモを追加... (@で言及)",
+      "notesHint": "@でタスク、プロジェクト、連絡先を言及",
+      "subTasks": "サブタスク",
+      "subTasksCompleted": "{completed}/{total} 完了",
+      "deleteConfirm": "このタスクを削除してもよろしいですか？",
+      "deleteTask": "タスクを削除",
+      "created": "作成日",
+      "goBack": "戻る"
+    },
+    "project": {
+      "title": "プロジェクト",
+      "details": "プロジェクトの詳細",
+      "newProject": "新しいプロジェクト",
+      "addProject": "プロジェクトを追加",
+      "noProjects": "プロジェクトがありません",
+      "noProjectsDescription": "タスクを整理するプロジェクトを作成",
+      "deleteConfirm": "このプロジェクトを削除してもよろしいですか？",
+      "deleteProject": "プロジェクトを削除"
+    },
+    "contact": {
+      "title": "連絡先",
+      "details": "連絡先の詳細",
+      "newContact": "新しい連絡先",
+      "addContact": "連絡先を追加",
+      "noContacts": "連絡先がありません",
+      "noContactsDescription": "連絡先を追加して開始",
+      "name": "名前",
+      "email": "メール",
+      "phone": "電話",
+      "company": "会社",
+      "deleteConfirm": "この連絡先を削除してもよろしいですか？",
+      "deleteContact": "連絡先を削除"
+    },
+    "status": {
+      "label": "ステータス",
+      "pending": "保留中",
+      "inProgress": "進行中",
+      "completed": "完了"
+    },
+    "actions": {
+      "important": "重要",
+      "myDay": "今日の予定",
+      "ok": "OK",
+      "edit": "編集",
+      "editNotes": "メモを編集"
+    },
+    "settings": {
+      "title": "設定",
+      "notifications": "通知",
+      "enableNotifications": "通知を有効にする",
+      "notificationsDescription": "タスクのリマインダーを受け取る",
+      "theme": "テーマ",
+      "language": "言語",
+      "dataManagement": "データ管理",
+      "exportData": "データをエクスポート",
+      "importData": "データをインポート",
+      "clearAllData": "すべてのデータをクリア",
+      "clearConfirm": "本当によろしいですか？すべてのタスク、プロジェクト、連絡先が削除されます。",
+      "exportSuccess": "データのエクスポートに成功しました",
+      "importSuccess": "データのインポートに成功しました",
+      "importError": "データのインポートに失敗しました"
+    },
+    "formatHelp": {
+      "title": "メモのフォーマットガイド",
+      "checkboxes": "✓ チェックボックス:",
+      "checkboxUnchecked": "- [ ] 未チェック項目",
+      "checkboxChecked": "- [x] チェック済み項目",
+      "tree": "🌳 ツリー構造 (自動検出):",
+      "treeParent": "親行",
+      "treeChild": "··子 (2スペース)",
+      "treeGrandchild": "····孫 (4スペース)",
+      "treeHint": "親行は自動的に折りたたまれます！",
+      "mentions": "@ メンション:",
+      "mentionTask": "@[タスク名]",
+      "mentionProject": "@[プロジェクト名]",
+      "mentionContact": "@[連絡先名]",
+      "example": "📝 例:",
+      "exampleText": "会議メモ\n··- [ ] @[John]に電話\n····- [x] スライド準備\n····- [ ] メール送信",
+      "tip": "💡 ヒント:",
+      "tipText": "スペースでインデントするだけ - ツリー構造は自動検出されます！"
+    },
+    "notifications": {
+      "reminder": "タスクリマインダー",
+      "taskDue": "タスクの期限です",
+      "permissionDenied": "通知の許可が拒否されました"
+    }
   }
 }

@@ -176,5 +176,118 @@
       "description": "我们正在努力解决这个问题。请稍后再试。",
       "retry": "重试"
     }
+  },
+  "taskflow": {
+    "title": "TaskFlow",
+    "sidebar": {
+      "myDay": "我的一天",
+      "important": "重要",
+      "planned": "已计划",
+      "tasks": "任务",
+      "projects": "项目",
+      "contacts": "联系人",
+      "settings": "设置"
+    },
+    "task": {
+      "title": "任务",
+      "details": "任务详情",
+      "newTask": "新任务",
+      "addTask": "添加任务",
+      "addStep": "添加步骤...",
+      "noTasks": "还没有任务",
+      "noTasksDescription": "添加任务以开始",
+      "completed": "已完成",
+      "pending": "待处理",
+      "inProgress": "进行中",
+      "dueDate": "截止日期",
+      "reminder": "提醒",
+      "repeat": "重复",
+      "notes": "备注",
+      "notesPlaceholder": "添加备注... (输入@提及)",
+      "notesHint": "输入@提及任务、项目或联系人",
+      "subTasks": "子任务",
+      "subTasksCompleted": "{completed}/{total} 已完成",
+      "deleteConfirm": "确定要删除此任务吗？",
+      "deleteTask": "删除任务",
+      "created": "创建时间",
+      "goBack": "返回"
+    },
+    "project": {
+      "title": "项目",
+      "details": "项目详情",
+      "newProject": "新项目",
+      "addProject": "添加项目",
+      "noProjects": "还没有项目",
+      "noProjectsDescription": "创建项目以组织您的任务",
+      "deleteConfirm": "确定要删除此项目吗？",
+      "deleteProject": "删除项目"
+    },
+    "contact": {
+      "title": "联系人",
+      "details": "联系人详情",
+      "newContact": "新联系人",
+      "addContact": "添加联系人",
+      "noContacts": "还没有联系人",
+      "noContactsDescription": "添加联系人以开始",
+      "name": "姓名",
+      "email": "邮箱",
+      "phone": "电话",
+      "company": "公司",
+      "deleteConfirm": "确定要删除此联系人吗？",
+      "deleteContact": "删除联系人"
+    },
+    "status": {
+      "label": "状态",
+      "pending": "待处理",
+      "inProgress": "进行中",
+      "completed": "已完成"
+    },
+    "actions": {
+      "important": "重要",
+      "myDay": "我的一天",
+      "ok": "确定",
+      "edit": "编辑",
+      "editNotes": "编辑备注"
+    },
+    "settings": {
+      "title": "设置",
+      "notifications": "通知",
+      "enableNotifications": "启用通知",
+      "notificationsDescription": "获取任务提醒",
+      "theme": "主题",
+      "language": "语言",
+      "dataManagement": "数据管理",
+      "exportData": "导出数据",
+      "importData": "导入数据",
+      "clearAllData": "清除所有数据",
+      "clearConfirm": "确定吗？这将删除所有任务、项目和联系人。",
+      "exportSuccess": "数据导出成功",
+      "importSuccess": "数据导入成功",
+      "importError": "数据导入失败"
+    },
+    "formatHelp": {
+      "title": "备注格式指南",
+      "checkboxes": "✓ 复选框:",
+      "checkboxUnchecked": "- [ ] 未选中项",
+      "checkboxChecked": "- [x] 已选中项",
+      "tree": "🌳 树状结构 (自动检测):",
+      "treeParent": "父级行",
+      "treeChild": "··子级 (2个空格)",
+      "treeGrandchild": "····孙级 (4个空格)",
+      "treeHint": "父级行自动折叠！",
+      "mentions": "@ 提及:",
+      "mentionTask": "@[任务名称]",
+      "mentionProject": "@[项目名称]",
+      "mentionContact": "@[联系人名称]",
+      "example": "📝 示例:",
+      "exampleText": "会议备注\n··- [ ] 致电@[John]\n····- [x] 准备幻灯片\n····- [ ] 发送邮件",
+      "tip": "💡 提示:",
+      "tipText": "只需使用空格缩进 - 树状结构自动检测！"
+    },
+    "notifications": {
+      "reminder": "任务提醒",
+      "taskDue": "任务即将到期",
+      "permissionDenied": "通知权限被拒绝"
+    }
   }
 }

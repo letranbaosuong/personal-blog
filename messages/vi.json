@@ -176,5 +176,118 @@
       "description": "Chúng tôi đang khắc phục sự cố này. Vui lòng thử lại sau.",
       "retry": "Thử lại"
     }
+  },
+  "taskflow": {
+    "title": "TaskFlow",
+    "sidebar": {
+      "myDay": "Hôm nay",
+      "important": "Quan trọng",
+      "planned": "Đã lên kế hoạch",
+      "tasks": "Nhiệm vụ",
+      "projects": "Dự án",
+      "contacts": "Liên hệ",
+      "settings": "Cài đặt"
+    },
+    "task": {
+      "title": "Nhiệm vụ",
+      "details": "Chi tiết nhiệm vụ",
+      "newTask": "Nhiệm vụ mới",
+      "addTask": "Thêm nhiệm vụ",
+      "addStep": "Thêm bước...",
+      "noTasks": "Chưa có nhiệm vụ nào",
+      "noTasksDescription": "Thêm nhiệm vụ để bắt đầu",
+      "completed": "Đã hoàn thành",
+      "pending": "Đang chờ",
+      "inProgress": "Đang thực hiện",
+      "dueDate": "Ngày hết hạn",
+      "reminder": "Nhắc nhở",
+      "repeat": "Lặp lại",
+      "notes": "Ghi chú",
+      "notesPlaceholder": "Thêm ghi chú... (Gõ @ để đề cập)",
+      "notesHint": "Gõ @ để đề cập nhiệm vụ, dự án hoặc liên hệ",
+      "subTasks": "Nhiệm vụ phụ",
+      "subTasksCompleted": "{completed}/{total} đã hoàn thành",
+      "deleteConfirm": "Bạn có chắc chắn muốn xóa nhiệm vụ này?",
+      "deleteTask": "Xóa nhiệm vụ",
+      "created": "Đã tạo",
+      "goBack": "Quay lại"
+    },
+    "project": {
+      "title": "Dự án",
+      "details": "Chi tiết dự án",
+      "newProject": "Dự án mới",
+      "addProject": "Thêm dự án",
+      "noProjects": "Chưa có dự án nào",
+      "noProjectsDescription": "Tạo dự án để tổ chức nhiệm vụ của bạn",
+      "deleteConfirm": "Bạn có chắc chắn muốn xóa dự án này?",
+      "deleteProject": "Xóa dự án"
+    },
+    "contact": {
+      "title": "Liên hệ",
+      "details": "Chi tiết liên hệ",
+      "newContact": "Liên hệ mới",
+      "addContact": "Thêm liên hệ",
+      "noContacts": "Chưa có liên hệ nào",
+      "noContactsDescription": "Thêm liên hệ để bắt đầu",
+      "name": "Tên",
+      "email": "Email",
+      "phone": "Điện thoại",
+      "company": "Công ty",
+      "deleteConfirm": "Bạn có chắc chắn muốn xóa liên hệ này?",
+      "deleteContact": "Xóa liên hệ"
+    },
+    "status": {
+      "label": "Trạng thái",
+      "pending": "Đang chờ",
+      "inProgress": "Đang thực hiện",
+      "completed": "Đã hoàn thành"
+    },
+    "actions": {
+      "important": "Quan trọng",
+      "myDay": "Hôm nay",
+      "ok": "OK",
+      "edit": "Sửa",
+      "editNotes": "Sửa ghi chú"
+    },
+    "settings": {
+      "title": "Cài đặt",
+      "notifications": "Thông báo",
+      "enableNotifications": "Bật thông báo",
+      "notificationsDescription": "Nhận nhắc nhở về nhiệm vụ của bạn",
+      "theme": "Giao diện",
+      "language": "Ngôn ngữ",
+      "dataManagement": "Quản lý dữ liệu",
+      "exportData": "Xuất dữ liệu",
+      "importData": "Nhập dữ liệu",
+      "clearAllData": "Xóa tất cả dữ liệu",
+      "clearConfirm": "Bạn có chắc chắn? Thao tác này sẽ xóa tất cả nhiệm vụ, dự án và liên hệ.",
+      "exportSuccess": "Xuất dữ liệu thành công",
+      "importSuccess": "Nhập dữ liệu thành công",
+      "importError": "Nhập dữ liệu thất bại"
+    },
+    "formatHelp": {
+      "title": "Hướng dẫn định dạng ghi chú",
+      "checkboxes": "✓ Hộp kiểm:",
+      "checkboxUnchecked": "- [ ] Mục chưa đánh dấu",
+      "checkboxChecked": "- [x] Mục đã đánh dấu",
+      "tree": "🌳 Cấu trúc cây (tự động nhận diện):",
+      "treeParent": "Dòng cha",
+      "treeChild": "··Con (2 khoảng trắng)",
+      "treeGrandchild": "····Cháu (4 khoảng trắng)",
+      "treeHint": "Dòng cha tự động thu gọn!",
+      "mentions": "@ Đề cập:",
+      "mentionTask": "@[Tên nhiệm vụ]",
+      "mentionProject": "@[Tên dự án]",
+      "mentionContact": "@[Tên liên hệ]",
+      "example": "📝 Ví dụ:",
+      "exampleText": "Ghi chú cuộc họp\n··- [ ] Gọi @[John]\n····- [x] Chuẩn bị slides\n····- [ ] Gửi email",
+      "tip": "💡 Mẹo:",
+      "tipText": "Chỉ cần dùng khoảng trắng để thụt lề - cấu trúc cây tự động nhận diện!"
+    },
+    "notifications": {
+      "reminder": "Nhắc nhở nhiệm vụ",
+      "taskDue": "Nhiệm vụ sắp hết hạn",
+      "permissionDenied": "Quyền thông báo bị từ chối"
+    }
   }
 }

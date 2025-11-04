@@ -176,5 +176,118 @@
       "description": "We're working on fixing this. Please try again later.",
       "retry": "Try again"
     }
+  },
+  "taskflow": {
+    "title": "TaskFlow",
+    "sidebar": {
+      "myDay": "My Day",
+      "important": "Important",
+      "planned": "Planned",
+      "tasks": "Tasks",
+      "projects": "Projects",
+      "contacts": "Contacts",
+      "settings": "Settings"
+    },
+    "task": {
+      "title": "Task",
+      "details": "Task Details",
+      "newTask": "New Task",
+      "addTask": "Add a task",
+      "addStep": "Add a step...",
+      "noTasks": "No tasks yet",
+      "noTasksDescription": "Add a task to get started",
+      "completed": "Completed",
+      "pending": "Pending",
+      "inProgress": "In Progress",
+      "dueDate": "Due Date",
+      "reminder": "Reminder",
+      "repeat": "Repeat",
+      "notes": "Notes",
+      "notesPlaceholder": "Add notes... (Type @ to mention)",
+      "notesHint": "Type @ to mention tasks, projects, or contacts",
+      "subTasks": "Sub-tasks",
+      "subTasksCompleted": "{completed}/{total} completed",
+      "deleteConfirm": "Are you sure you want to delete this task?",
+      "deleteTask": "Delete Task",
+      "created": "Created",
+      "goBack": "Go back"
+    },
+    "project": {
+      "title": "Project",
+      "details": "Project Details",
+      "newProject": "New Project",
+      "addProject": "Add a project",
+      "noProjects": "No projects yet",
+      "noProjectsDescription": "Create a project to organize your tasks",
+      "deleteConfirm": "Are you sure you want to delete this project?",
+      "deleteProject": "Delete Project"
+    },
+    "contact": {
+      "title": "Contact",
+      "details": "Contact Details",
+      "newContact": "New Contact",
+      "addContact": "Add a contact",
+      "noContacts": "No contacts yet",
+      "noContactsDescription": "Add a contact to get started",
+      "name": "Name",
+      "email": "Email",
+      "phone": "Phone",
+      "company": "Company",
+      "deleteConfirm": "Are you sure you want to delete this contact?",
+      "deleteContact": "Delete Contact"
+    },
+    "status": {
+      "label": "Status",
+      "pending": "Pending",
+      "inProgress": "In Progress",
+      "completed": "Completed"
+    },
+    "actions": {
+      "important": "Important",
+      "myDay": "My Day",
+      "ok": "OK",
+      "edit": "Edit",
+      "editNotes": "Edit notes"
+    },
+    "settings": {
+      "title": "Settings",
+      "notifications": "Notifications",
+      "enableNotifications": "Enable Notifications",
+      "notificationsDescription": "Get reminded about your tasks",
+      "theme": "Theme",
+      "language": "Language",
+      "dataManagement": "Data Management",
+      "exportData": "Export Data",
+      "importData": "Import Data",
+      "clearAllData": "Clear All Data",
+      "clearConfirm": "Are you sure? This will delete all tasks, projects, and contacts.",
+      "exportSuccess": "Data exported successfully",
+      "importSuccess": "Data imported successfully",
+      "importError": "Failed to import data"
+    },
+    "formatHelp": {
+      "title": "Notes Formatting Guide",
+      "checkboxes": "Checkboxes:",
+      "checkboxUnchecked": "- [ ] Unchecked item",
+      "checkboxChecked": "- [x] Checked item",
+      "tree": "Tree Structure (auto-detect):",
+      "treeParent": "Parent line",
+      "treeChild": "··Child (2 spaces)",
+      "treeGrandchild": "····Grand-child (4 spaces)",
+      "treeHint": "Parent lines auto-collapse!",
+      "mentions": "@ Mentions:",
+      "mentionTask": "@[Task name]",
+      "mentionProject": "@[Project name]",
+      "mentionContact": "@[Contact name]",
+      "example": "Example:",
+      "exampleText": "Meeting notes\n··- [ ] Call @[John]\n····- [x] Prepare slides\n····- [ ] Send email",
+      "tip": "Tip:",
+      "tipText": "Just use spaces to indent - tree structure auto-detects!"
+    },
+    "notifications": {
+      "reminder": "Task Reminder",
+      "taskDue": "Task is due",
+      "permissionDenied": "Notifications permission denied"
+    }
   }
 }
