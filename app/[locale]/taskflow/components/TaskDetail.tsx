@@ -12,6 +12,7 @@ import SubTaskItem from './SubTaskItem';
 import MentionTextarea from './MentionTextarea';
 import MentionText from './MentionText';
 import RichNotes, { toggleCheckboxInText } from './RichNotes';
+import FormatHelpTooltip from './FormatHelpTooltip';
 
 interface TaskDetailProps {
   task: Task;
@@ -192,10 +193,11 @@ export default function TaskDetail({
         {/* Description */}
         <div className="mb-6">
           <div className="mb-2 flex items-center justify-between">
-            <label className="block text-sm font-medium text-slate-700 dark:text-slate-300">
-              Notes
+            <label className="flex items-center gap-2 text-sm font-medium text-slate-700 dark:text-slate-300">
+              <span>Notes</span>
+              <FormatHelpTooltip />
               {isEditingNotes && (
-                <span className="ml-2 text-xs text-slate-500 dark:text-slate-400">
+                <span className="ml-2 text-xs font-normal text-slate-500 dark:text-slate-400">
                   (Type @ to mention tasks, projects, or contacts)
                 </span>
               )}
