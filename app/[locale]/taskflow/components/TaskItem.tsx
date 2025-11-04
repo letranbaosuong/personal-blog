@@ -167,7 +167,7 @@ export default function TaskItem({
             {task.description && (
               <div className="flex items-center gap-1 text-xs text-slate-500 dark:text-slate-400" title="Has notes">
                 <FileText className="h-3 w-3" />
-                <span>notes</span>
+                <span>Notes</span>
               </div>
             )}
           </div>
