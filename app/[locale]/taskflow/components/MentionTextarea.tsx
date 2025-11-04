@@ -8,6 +8,7 @@
 import { useState, useRef, useEffect } from 'react';
 import { Task, Project, Contact } from '../types';
 import { CheckSquare, Folder, User } from 'lucide-react';
+import MentionText from './MentionText';
 
 interface MentionItem {
   id: string;
@@ -24,6 +25,10 @@ interface MentionTextareaProps {
   projects?: Project[];
   contacts?: Contact[];
   className?: string;
+  // Navigation callbacks for clickable mentions in preview
+  onTaskClick?: (task: Task) => void;
+  onProjectClick?: (project: Project) => void;
+  onContactClick?: (contact: Contact) => void;
 }
 
 export default function MentionTextarea({
@@ -35,6 +40,9 @@ export default function MentionTextarea({
   projects = [],
   contacts = [],
   className = '',
+  onTaskClick,
+  onProjectClick,
+  onContactClick,
 }: MentionTextareaProps) {
   const [showMentions, setShowMentions] = useState(false);
   const [mentionSearch, setMentionSearch] = useState('');
@@ -236,6 +244,24 @@ export default function MentionTextarea({
       {showMentions && filteredMentions.length === 0 && (
         <div className="absolute z-50 mt-1 w-full rounded-lg border border-slate-300 bg-white p-3 text-sm text-slate-500 shadow-lg dark:border-slate-600 dark:bg-slate-700 dark:text-slate-400">
           No matches found. Try typing a task, project, or contact name.
+        </div>
+      )}
+
+      {/* Live Preview with clickable mentions */}
+      {value && value.includes('@[') && (
+        <div className="mt-2 rounded-lg border border-slate-200 bg-slate-50 p-3 dark:border-slate-600 dark:bg-slate-800">
+          <div className="mb-1 text-xs font-medium text-slate-500 dark:text-slate-400">
+            Preview (click to navigate):
+          </div>
+          <MentionText
+            text={value}
+            tasks={tasks}
+            projects={projects}
+            contacts={contacts}
+            onTaskClick={onTaskClick}
+            onProjectClick={onProjectClick}
+            onContactClick={onContactClick}
+          />
         </div>
       )}
     </div>
