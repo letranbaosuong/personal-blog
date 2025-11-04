@@ -24,17 +24,17 @@ export default function FormatHelpTooltip() {
       </button>
 
       {isOpen && (
-        <div className="absolute left-0 top-6 z-50 w-80 rounded-lg border border-slate-200 bg-white p-4 shadow-lg dark:border-slate-700 dark:bg-slate-800">
+        <div className="absolute left-0 top-6 z-50 w-[calc(100vw-2rem)] max-w-xs sm:w-80 sm:max-w-none rounded-lg border border-slate-200 bg-white p-3 sm:p-4 shadow-lg dark:border-slate-700 dark:bg-slate-800">
           {/* Arrow */}
-          <div className="absolute -top-2 left-4 h-4 w-4 rotate-45 border-l border-t border-slate-200 bg-white dark:border-slate-700 dark:bg-slate-800" />
+          <div className="absolute -top-2 left-2 sm:left-4 h-4 w-4 rotate-45 border-l border-t border-slate-200 bg-white dark:border-slate-700 dark:bg-slate-800" />
 
           {/* Content */}
-          <div className="relative space-y-3">
-            <h4 className="text-sm font-semibold text-slate-900 dark:text-slate-100">
+          <div className="relative space-y-2 sm:space-y-3">
+            <h4 className="text-xs sm:text-sm font-semibold text-slate-900 dark:text-slate-100">
               Notes Formatting Guide
             </h4>
 
-            <div className="space-y-2 text-xs">
+            <div className="space-y-1.5 sm:space-y-2 text-[10px] sm:text-xs">
               {/* Checkboxes */}
               <div>
                 <div className="font-medium text-slate-700 dark:text-slate-300">
@@ -78,7 +78,7 @@ export default function FormatHelpTooltip() {
                 <div className="font-medium text-slate-700 dark:text-slate-300">
                   📝 Example:
                 </div>
-                <div className="ml-3 mt-1 rounded bg-slate-50 p-2 font-mono text-slate-600 dark:bg-slate-900 dark:text-slate-400">
+                <div className="ml-3 mt-1 rounded bg-slate-50 p-1.5 sm:p-2 font-mono text-slate-600 dark:bg-slate-900 dark:text-slate-400">
                   <div>Meeting notes</div>
                   <div>··- [ ] Call @[John]</div>
                   <div>····- [x] Prepare slides</div>
@@ -88,8 +88,8 @@ export default function FormatHelpTooltip() {
             </div>
 
             {/* Tip */}
-            <div className="rounded-md bg-blue-50 p-2 dark:bg-blue-900/20">
-              <p className="text-xs text-blue-900 dark:text-blue-300">
+            <div className="rounded-md bg-blue-50 p-1.5 sm:p-2 dark:bg-blue-900/20">
+              <p className="text-[10px] sm:text-xs text-blue-900 dark:text-blue-300">
                 💡 <strong>Tip:</strong> Just use spaces to indent - tree structure auto-detects!
               </p>
             </div>
