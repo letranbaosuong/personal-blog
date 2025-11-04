@@ -7,6 +7,7 @@
 
 import { Task, Project, Contact } from '../types';
 import { CheckSquare, Folder, User } from 'lucide-react';
+import LinkPreview from './LinkPreview';
 
 interface MentionTextProps {
   text: string;
@@ -19,7 +20,7 @@ interface MentionTextProps {
 }
 
 interface ParsedSegment {
-  type: 'text' | 'mention';
+  type: 'text' | 'mention' | 'url';
   content: string;
   item?: Task | Project | Contact;
   itemType?: 'task' | 'project' | 'contact';
@@ -34,7 +35,45 @@ export default function MentionText({
   onProjectClick,
   onContactClick,
 }: MentionTextProps) {
-  // Parse text to find mentions with @[Name] format
+  // Parse URLs from text segment
+  const parseUrls = (textContent: string): ParsedSegment[] => {
+    // Regex to match URLs (http, https)
+    const urlRegex = /(https?:\/\/[^\s]+)/g;
+    const segments: ParsedSegment[] = [];
+    let lastIndex = 0;
+    let match;
+
+    while ((match = urlRegex.exec(textContent)) !== null) {
+      // Add text before URL
+      if (match.index > lastIndex) {
+        segments.push({
+          type: 'text',
+          content: textContent.substring(lastIndex, match.index),
+        });
+      }
+
+      // Add URL
+      segments.push({
+        type: 'url',
+        content: match[1],
+      });
+
+      lastIndex = match.index + match[0].length;
+    }
+
+    // Add remaining text
+    if (lastIndex < textContent.length) {
+      segments.push({
+        type: 'text',
+        content: textContent.substring(lastIndex),
+      });
+    }
+
+    // If no URLs found, return original text as single segment
+    return segments.length > 0 ? segments : [{ type: 'text', content: textContent }];
+  };
+
+  // Parse text to find mentions with @[Name] format and URLs
   const parseText = (input: string): ParsedSegment[] => {
     if (!input) return [];
 
@@ -45,12 +84,11 @@ export default function MentionText({
     let match;
 
     while ((match = mentionRegex.exec(input)) !== null) {
-      // Add text before mention
+      // Add text before mention (and parse URLs within it)
       if (match.index > lastIndex) {
-        segments.push({
-          type: 'text',
-          content: input.substring(lastIndex, match.index),
-        });
+        const textBeforeMention = input.substring(lastIndex, match.index);
+        const parsedUrls = parseUrls(textBeforeMention);
+        segments.push(...parsedUrls);
       }
 
       const mentionName = match[1];
@@ -92,12 +130,11 @@ export default function MentionText({
       lastIndex = match.index + match[0].length;
     }
 
-    // Add remaining text
+    // Add remaining text (and parse URLs within it)
     if (lastIndex < input.length) {
-      segments.push({
-        type: 'text',
-        content: input.substring(lastIndex),
-      });
+      const remainingText = input.substring(lastIndex);
+      const parsedUrls = parseUrls(remainingText);
+      segments.push(...parsedUrls);
     }
 
     return segments;
@@ -153,8 +190,14 @@ export default function MentionText({
   return (
     <div className="whitespace-pre-wrap break-words text-sm text-slate-900 dark:text-slate-100">
       {segments.map((segment, index) => {
+        // Render plain text
         if (segment.type === 'text') {
           return <span key={index}>{segment.content}</span>;
+        }
+
+        // Render URL preview
+        if (segment.type === 'url') {
+          return <LinkPreview key={index} url={segment.content} />;
         }
 
         // Render clickable mention
