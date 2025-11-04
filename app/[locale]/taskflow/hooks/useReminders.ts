@@ -83,6 +83,8 @@ export function useReminders(tasks: Task[], options?: UseRemindersOptions) {
     const now = new Date();
     const nowTime = now.getTime();
 
+    console.log(`[Reminder Check] Running at ${now.toLocaleTimeString()}, checking ${tasksRef.current.length} tasks`);
+
     tasksRef.current.forEach((task) => {
       // Skip if no reminder or already completed
       if (!task.reminder || task.status === 'completed') {
@@ -95,61 +97,77 @@ export function useReminders(tasks: Task[], options?: UseRemindersOptions) {
       // Validate reminder time
       // 1. Must be a valid date
       if (isNaN(reminderTime.getTime())) {
-        console.warn(`Invalid reminder time for task ${task.id}:`, task.reminder);
+        console.warn(`[Reminder] Invalid time for "${task.title}":`, task.reminder);
         return;
       }
 
       const reminderTimestamp = reminderTime.getTime();
       const timeDiff = nowTime - reminderTimestamp;
+      const timeDiffMinutes = Math.floor(timeDiff / 60000);
+      const timeDiffSeconds = Math.floor(timeDiff / 1000);
 
-      // 2. Strict time validation - only notify reminders that JUST arrived
-      // Reminder must be:
-      // - Has arrived (reminderTime <= now)
-      // - Very recent (within last 10 minutes) - not old reminders
-      // - Not yet notified
+      // Check conditions
       const hasArrived = reminderTimestamp <= nowTime;
-      const isVeryRecent = timeDiff >= 0 && timeDiff < 10 * 60 * 1000; // Within 10 minutes
+      const isRecent = timeDiff >= 0 && timeDiff < 15 * 60 * 1000; // Within 15 minutes (extended window)
       const notYetNotified = !notifiedReminders.current.has(reminderKey);
 
-      // Debug logging
-      if (task.reminder && !notYetNotified) {
-        console.log(`[Reminder] Already notified: ${task.title} at ${task.reminder}`);
+      // Comprehensive logging for debugging
+      console.log(`[Reminder] Task: "${task.title}"`);
+      console.log(`  - Reminder time: ${reminderTime.toLocaleString()}`);
+      console.log(`  - Current time: ${now.toLocaleString()}`);
+      console.log(`  - Time diff: ${timeDiffSeconds}s (${timeDiffMinutes}m)`);
+      console.log(`  - Has arrived: ${hasArrived}`);
+      console.log(`  - Is recent (< 15m): ${isRecent}`);
+      console.log(`  - Not yet notified: ${notYetNotified}`);
+
+      if (!hasArrived) {
+        console.log(`  → SKIP: Reminder not yet arrived (in ${Math.abs(timeDiffMinutes)} minutes)`);
+        return;
       }
 
-      if (hasArrived && isVeryRecent && notYetNotified) {
-        console.log(`[Reminder] Triggering notification for: ${task.title} at ${task.reminder}`);
-        console.log(`[Reminder] Time diff: ${Math.floor(timeDiff / 1000)} seconds ago`);
-        // Format message
-        const dueDateText = task.dueDate
-          ? ` (Due: ${new Date(task.dueDate).toLocaleDateString('en-US', {
-              month: 'short',
-              day: 'numeric',
-            })})`
-          : '';
+      if (!isRecent) {
+        console.log(`  → SKIP: Reminder too old (${timeDiffMinutes} minutes ago)`);
+        return;
+      }
 
-        const message = `${task.title}${dueDateText}`;
+      if (!notYetNotified) {
+        console.log(`  → SKIP: Already notified`);
+        return;
+      }
 
-        // Show browser notification
-        notifications.show({
+      // All conditions met - trigger notification
+      console.log(`  ✅ TRIGGERING NOTIFICATION!`);
+
+      // Format message
+      const dueDateText = task.dueDate
+        ? ` (Due: ${new Date(task.dueDate).toLocaleDateString('en-US', {
+            month: 'short',
+            day: 'numeric',
+          })})`
+        : '';
+
+      const message = `${task.title}${dueDateText}`;
+
+      // Show browser notification
+      notifications.show({
+        title: '⏰ Task Reminder',
+        body: message,
+        tag: task.id,
+        data: { taskId: task.id },
+      });
+
+      // Trigger callback for in-app notification
+      if (optionsRef.current?.onReminder) {
+        optionsRef.current.onReminder({
+          taskId: task.id,
           title: '⏰ Task Reminder',
-          body: message,
-          tag: task.id,
-          data: { taskId: task.id },
+          message,
         });
-
-        // Trigger callback for in-app notification
-        if (optionsRef.current?.onReminder) {
-          optionsRef.current.onReminder({
-            taskId: task.id,
-            title: '⏰ Task Reminder',
-            message,
-          });
-        }
-
-        // Mark as notified in memory and localStorage
-        notifiedReminders.current.add(reminderKey);
-        saveNotifiedReminder(reminderKey);
       }
+
+      // Mark as notified in memory and localStorage
+      notifiedReminders.current.add(reminderKey);
+      saveNotifiedReminder(reminderKey);
     });
   }, []); // No dependencies - stable function
 
