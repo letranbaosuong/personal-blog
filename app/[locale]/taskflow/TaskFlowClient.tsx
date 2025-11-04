@@ -171,11 +171,13 @@ export default function TaskFlowClient() {
   }, [navigationHistory, tasks, contacts]);
 
   // Monitor reminders
-  useReminders(tasks, {
-    onReminder: (notification) => {
+  const reminderOptions = useMemo(() => ({
+    onReminder: (notification: any) => {
       addToast(notification.title, notification.message, notification.taskId);
     },
-  });
+  }), [addToast]);
+
+  useReminders(tasks, reminderOptions);
 
   // Listen for browser notification clicks
   useEffect(() => {

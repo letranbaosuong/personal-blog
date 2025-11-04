@@ -20,6 +20,7 @@ interface UseRemindersOptions {
 
 export function useReminders(tasks: Task[], options?: UseRemindersOptions) {
   const notifiedReminders = useRef<Set<string>>(new Set());
+  const isInitialMount = useRef(true);
 
   // Check and trigger reminders
   const checkReminders = useCallback(() => {
@@ -86,10 +87,29 @@ export function useReminders(tasks: Task[], options?: UseRemindersOptions) {
 
   // Check reminders every minute
   useEffect(() => {
-    // Check immediately
-    checkReminders();
+    // Skip immediate check on initial mount or re-renders
+    // Only check via interval to avoid duplicate notifications on language change
+    if (isInitialMount.current) {
+      isInitialMount.current = false;
 
-    // Set up interval to check every minute
+      // Check after a short delay on first mount
+      const initialTimeout = setTimeout(() => {
+        checkReminders();
+      }, 1000);
+
+      // Set up interval to check every minute
+      const interval = setInterval(() => {
+        checkReminders();
+      }, 60 * 1000); // Check every 60 seconds
+
+      return () => {
+        clearTimeout(initialTimeout);
+        clearInterval(interval);
+      };
+    }
+
+    // For subsequent renders (like language change), only set up interval
+    // Don't check immediately to avoid duplicate notifications
     const interval = setInterval(() => {
       checkReminders();
     }, 60 * 1000); // Check every 60 seconds
