@@ -3,7 +3,9 @@
  * Handles both internal and external links appropriately
  */
 
-import { Link } from '@/lib/i18n/navigation';
+'use client';
+
+import { usePathname } from 'next/navigation';
 
 interface ProjectLinkProps {
   href: string;
@@ -18,32 +20,26 @@ export default function ProjectLink({
   className = '',
   variant = 'demo',
 }: ProjectLinkProps) {
+  const pathname = usePathname();
+
+  // Extract locale from pathname (e.g., /en/projects/... -> en)
+  const locale = pathname.split('/')[1];
+
   // Check if it's an external URL (starts with http:// or https://)
   const isExternal = href.startsWith('http://') || href.startsWith('https://');
 
-  if (isExternal) {
-    // External link - use regular anchor
-    return (
-      <a
-        href={href}
-        target="_blank"
-        rel="noopener noreferrer"
-        className={className}
-      >
-        {children}
-      </a>
-    );
-  }
+  // For all links (both external and internal), use regular anchor tag
+  // This ensures target="_blank" works correctly and opens in new tab
+  const finalHref = isExternal ? href : `/${locale}/${href}`;
 
-  // Internal link - use i18n Link (will automatically add locale prefix)
   return (
-    <Link
-      href={`/${href}`}
-      className={className}
+    <a
+      href={finalHref}
       target="_blank"
       rel="noopener noreferrer"
+      className={className}
     >
       {children}
-    </Link>
+    </a>
   );
 }
