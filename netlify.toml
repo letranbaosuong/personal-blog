@@ -1,0 +1,51 @@
+# Netlify Configuration for Next.js Personal Blog
+# Documentation: https://docs.netlify.com/configure-builds/file-based-configuration/
+
+[build]
+  # Build command
+  command = "npm run build"
+
+  # Publish directory (Next.js default)
+  publish = ".next"
+
+  # Base directory
+  base = ""
+
+[build.environment]
+  # Node version (match with your local)
+  NODE_VERSION = "20"
+
+  # Next.js configuration
+  NEXT_TELEMETRY_DISABLED = "1"
+
+# Next.js Runtime Plugin
+[[plugins]]
+  package = "@netlify/plugin-nextjs"
+
+# Headers for security and performance
+[[headers]]
+  for = "/*"
+  [headers.values]
+    X-Frame-Options = "DENY"
+    X-Content-Type-Options = "nosniff"
+    X-XSS-Protection = "1; mode=block"
+    Referrer-Policy = "strict-origin-when-cross-origin"
+
+# Cache static assets
+[[headers]]
+  for = "/_next/static/*"
+  [headers.values]
+    Cache-Control = "public, max-age=31536000, immutable"
+
+# Cache images
+[[headers]]
+  for = "/images/*"
+  [headers.values]
+    Cache-Control = "public, max-age=31536000, immutable"
+
+# Redirects for i18n (optional - if you want default locale redirect)
+# [[redirects]]
+#   from = "/"
+#   to = "/en"
+#   status = 302
+#   force = false
