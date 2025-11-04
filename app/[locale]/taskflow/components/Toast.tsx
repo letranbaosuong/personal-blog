@@ -24,7 +24,7 @@ interface ToastProps {
 
 export default function Toast({ toasts, onDismiss, onTaskClick }: ToastProps) {
   return (
-    <div className="fixed bottom-4 right-4 z-50 flex flex-col gap-2">
+    <div className="fixed bottom-4 left-4 right-4 z-50 flex flex-col gap-2 sm:left-auto sm:right-4 sm:max-w-md">
       {toasts.map((toast) => (
         <ToastItem
           key={toast.id}
@@ -93,19 +93,19 @@ function ToastItem({
   return (
     <div
       onClick={handleToastClick}
-      className={`flex min-w-[320px] max-w-md items-start gap-3 rounded-lg border p-4 shadow-lg transition-all duration-300 ${
+      className={`flex w-full items-start gap-3 rounded-lg border p-3 shadow-lg transition-all duration-300 sm:min-w-[320px] sm:max-w-md sm:p-4 ${
         isVisible ? 'translate-x-0 opacity-100' : 'translate-x-full opacity-0'
       } ${getTypeStyles()} ${toast.taskId ? 'cursor-pointer hover:shadow-xl' : ''}`}
     >
       {/* Icon */}
       <div className="flex-shrink-0 pt-0.5">
-        <Bell className="h-5 w-5" />
+        <Bell className="h-4 w-4 sm:h-5 sm:w-5" />
       </div>
 
       {/* Content */}
-      <div className="flex-1">
+      <div className="flex-1 min-w-0">
         <h4 className="text-sm font-semibold">{toast.title}</h4>
-        <p className="mt-1 text-sm opacity-90">{toast.message}</p>
+        <p className="mt-1 text-sm opacity-90 break-words">{toast.message}</p>
         {toast.taskId && (
           <p className="mt-1 text-xs opacity-70">Click to view task</p>
         )}
