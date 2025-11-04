@@ -88,8 +88,9 @@ export default function RichNotes({
         };
       }
 
-      // Tree header syntax: ▼ or ▶ at start
-      const treeMatch = trimmedLine.match(/^[▼▶]\s*(.+)$/);
+      // Tree header syntax: > at start (easy to type!)
+      // Also support ▼ or ▶ for backward compatibility
+      const treeMatch = trimmedLine.match(/^[>▼▶]\s*(.+)$/);
       if (treeMatch) {
         return {
           type: 'tree',
@@ -199,30 +200,35 @@ export default function RichNotes({
           return (
             <div
               key={index}
-              className="flex items-start gap-2 py-1"
+              className="mb-1 mt-2"
               style={{ paddingLeft: `${paddingLeft}px` }}
             >
               <button
                 onClick={() => toggleSection(line.lineIndex)}
-                className="flex-shrink-0 mt-0.5 text-slate-600 hover:text-slate-900 dark:text-slate-400 dark:hover:text-slate-100 transition-colors"
+                className="flex w-full items-start gap-2 rounded-md bg-slate-100 px-2 py-1.5 transition-all hover:bg-slate-200 dark:bg-slate-700 dark:hover:bg-slate-600"
               >
-                {isCollapsed ? (
-                  <ChevronRight className="h-4 w-4" />
-                ) : (
-                  <ChevronDown className="h-4 w-4" />
-                )}
+                <div className="flex-shrink-0 mt-0.5 text-slate-600 dark:text-slate-300">
+                  {isCollapsed ? (
+                    <ChevronRight className="h-4 w-4" />
+                  ) : (
+                    <ChevronDown className="h-4 w-4" />
+                  )}
+                </div>
+                <div className="flex-1 text-left text-sm font-semibold text-slate-900 dark:text-slate-100">
+                  <MentionText
+                    text={line.content}
+                    tasks={tasks}
+                    projects={projects}
+                    contacts={contacts}
+                    onTaskClick={onTaskClick}
+                    onProjectClick={onProjectClick}
+                    onContactClick={onContactClick}
+                  />
+                </div>
+                <div className="flex-shrink-0 text-xs text-slate-500 dark:text-slate-400">
+                  {isCollapsed ? 'Click to expand' : 'Click to collapse'}
+                </div>
               </button>
-              <div className="flex-1 text-sm font-medium text-slate-900 dark:text-slate-100">
-                <MentionText
-                  text={line.content}
-                  tasks={tasks}
-                  projects={projects}
-                  contacts={contacts}
-                  onTaskClick={onTaskClick}
-                  onProjectClick={onProjectClick}
-                  onContactClick={onContactClick}
-                />
-              </div>
             </div>
           );
         }
