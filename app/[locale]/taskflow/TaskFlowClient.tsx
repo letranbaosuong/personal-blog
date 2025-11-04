@@ -6,7 +6,7 @@
 'use client';
 
 import { useState, useMemo, useCallback, useEffect } from 'react';
-import { Plus } from 'lucide-react';
+import { Plus, Menu, X } from 'lucide-react';
 import Sidebar from './components/Sidebar';
 import TaskList from './components/TaskList';
 import TaskDetail from './components/TaskDetail';
@@ -36,6 +36,7 @@ export default function TaskFlowClient() {
   const [isContactFormOpen, setIsContactFormOpen] = useState(false);
   const [toasts, setToasts] = useState<ToastMessage[]>([]);
   const [navigationHistory, setNavigationHistory] = useState<NavigationHistoryItem[]>([]);
+  const [isMobileSidebarOpen, setIsMobileSidebarOpen] = useState(false);
 
   // Quick add task properties
   const [quickAddDueDate, setQuickAddDueDate] = useState<string | undefined>();
@@ -317,9 +318,19 @@ export default function TaskFlowClient() {
         {/* Header */}
         <div className="border-b border-slate-200 bg-white p-6 dark:border-slate-700 dark:bg-slate-800">
           <div className={`flex items-center justify-between ${activeView === 'contacts' ? '' : 'mb-4'}`}>
-            <h2 className="text-2xl font-bold text-slate-900 dark:text-slate-100">
-              {viewTitle}
-            </h2>
+            <div className="flex items-center gap-3">
+              {/* Mobile Menu Button */}
+              <button
+                onClick={() => setIsMobileSidebarOpen(true)}
+                className="flex items-center justify-center rounded-lg p-2 text-slate-600 transition-colors hover:bg-slate-100 dark:text-slate-400 dark:hover:bg-slate-700 md:hidden"
+                aria-label="Open menu"
+              >
+                <Menu className="h-6 w-6" />
+              </button>
+              <h2 className="text-2xl font-bold text-slate-900 dark:text-slate-100">
+                {viewTitle}
+              </h2>
+            </div>
             <div className="flex items-center gap-4">
               <div className="text-sm text-slate-500 dark:text-slate-400">
                 {activeView === 'contacts'
@@ -605,6 +616,44 @@ export default function TaskFlowClient() {
           <Plus className="h-6 w-6" />
         </button>
       </div>
+
+      {/* Mobile Sidebar Drawer */}
+      {isMobileSidebarOpen && (
+        <>
+          {/* Overlay */}
+          <div
+            className="fixed inset-0 z-40 bg-black/50 md:hidden"
+            onClick={() => setIsMobileSidebarOpen(false)}
+          />
+
+          {/* Sidebar */}
+          <div className="fixed inset-y-0 left-0 z-50 w-64 md:hidden">
+            <div className="relative flex h-full flex-col border-r border-slate-200 bg-white dark:border-slate-700 dark:bg-slate-800">
+              {/* Close Button */}
+              <button
+                onClick={() => setIsMobileSidebarOpen(false)}
+                className="absolute right-3 top-3 rounded-lg p-2 text-slate-400 transition-colors hover:bg-slate-100 hover:text-slate-600 dark:hover:bg-slate-700 dark:hover:text-slate-300"
+                aria-label="Close menu"
+              >
+                <X className="h-5 w-5" />
+              </button>
+
+              {/* Sidebar Content */}
+              <Sidebar
+                activeView={activeView}
+                onViewChange={(view) => {
+                  setActiveView(view);
+                  setIsMobileSidebarOpen(false);
+                }}
+                onNewProject={() => {
+                  handleNewProject();
+                  setIsMobileSidebarOpen(false);
+                }}
+              />
+            </div>
+          </div>
+        </>
+      )}
 
       {/* Toast Notifications */}
       <Toast toasts={toasts} onDismiss={dismissToast} onTaskClick={handleTaskClick} />
