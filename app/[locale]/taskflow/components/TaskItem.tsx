@@ -5,7 +5,7 @@
 'use client';
 
 import { Task } from '../types';
-import { CheckCircle2, Circle, Star, Calendar, ChevronDown, ChevronRight } from 'lucide-react';
+import { CheckCircle2, Circle, Star, Calendar, ChevronDown, ChevronRight, FileText } from 'lucide-react';
 import { useState } from 'react';
 
 interface TaskItemProps {
@@ -112,13 +112,6 @@ export default function TaskItem({
             </button>
           </div>
 
-          {/* Description */}
-          {task.description && (
-            <p className="mt-1 text-xs text-slate-500 line-clamp-2 dark:text-slate-400">
-              {task.description}
-            </p>
-          )}
-
           {/* Sub-tasks progress */}
           {hasSubTasks && !isExpanded && (
             <div className="mt-2 flex items-center gap-2">
@@ -170,6 +163,11 @@ export default function TaskItem({
               <span className="rounded-full bg-blue-100 px-2 py-0.5 text-xs text-blue-700 dark:bg-blue-900/30 dark:text-blue-300">
                 📁 {projectName}
               </span>
+            )}
+            {task.description && (
+              <div className="flex items-center gap-1 text-xs text-slate-500 dark:text-slate-400" title="Has notes">
+                <FileText className="h-3 w-3" />
+              </div>
             )}
           </div>
         </div>
