@@ -18,8 +18,55 @@ interface UseRemindersOptions {
   onReminder?: (notification: ReminderNotification) => void;
 }
 
+// LocalStorage key for notified reminders
+const NOTIFIED_REMINDERS_KEY = 'taskflow_notified_reminders';
+
+// Helper: Load notified reminders from localStorage
+const loadNotifiedReminders = (): Set<string> => {
+  // Only access localStorage in browser environment
+  if (typeof window === 'undefined') return new Set();
+
+  try {
+    const stored = localStorage.getItem(NOTIFIED_REMINDERS_KEY);
+    if (!stored) return new Set();
+
+    const data = JSON.parse(stored) as { key: string; timestamp: number }[];
+    const now = Date.now();
+
+    // Filter out old entries (older than 24 hours)
+    const validEntries = data.filter(entry => now - entry.timestamp < 24 * 60 * 60 * 1000);
+
+    // Save cleaned data back
+    localStorage.setItem(NOTIFIED_REMINDERS_KEY, JSON.stringify(validEntries));
+
+    return new Set(validEntries.map(entry => entry.key));
+  } catch (error) {
+    console.error('Failed to load notified reminders:', error);
+    return new Set();
+  }
+};
+
+// Helper: Save notified reminder to localStorage
+const saveNotifiedReminder = (key: string): void => {
+  // Only access localStorage in browser environment
+  if (typeof window === 'undefined') return;
+
+  try {
+    const stored = localStorage.getItem(NOTIFIED_REMINDERS_KEY);
+    const data = stored ? JSON.parse(stored) : [];
+
+    // Add new entry with timestamp
+    data.push({ key, timestamp: Date.now() });
+
+    localStorage.setItem(NOTIFIED_REMINDERS_KEY, JSON.stringify(data));
+  } catch (error) {
+    console.error('Failed to save notified reminder:', error);
+  }
+};
+
 export function useReminders(tasks: Task[], options?: UseRemindersOptions) {
-  const notifiedReminders = useRef<Set<string>>(new Set());
+  // Initialize with persisted reminders from localStorage
+  const notifiedReminders = useRef<Set<string>>(loadNotifiedReminders());
 
   // Store tasks and options in refs to avoid dependency issues
   const tasksRef = useRef<Task[]>(tasks);
@@ -34,6 +81,7 @@ export function useReminders(tasks: Task[], options?: UseRemindersOptions) {
   // Check and trigger reminders (stable function with no dependencies)
   const checkReminders = useCallback(() => {
     const now = new Date();
+    const nowTime = now.getTime();
 
     tasksRef.current.forEach((task) => {
       // Skip if no reminder or already completed
@@ -44,11 +92,26 @@ export function useReminders(tasks: Task[], options?: UseRemindersOptions) {
       const reminderTime = new Date(task.reminder);
       const reminderKey = `${task.id}-${task.reminder}`;
 
-      // Check if reminder time has passed and not yet notified
-      if (
-        reminderTime <= now &&
-        !notifiedReminders.current.has(reminderKey)
-      ) {
+      // Validate reminder time
+      // 1. Must be a valid date
+      if (isNaN(reminderTime.getTime())) {
+        console.warn(`Invalid reminder time for task ${task.id}:`, task.reminder);
+        return;
+      }
+
+      const reminderTimestamp = reminderTime.getTime();
+      const timeDiff = nowTime - reminderTimestamp;
+
+      // 2. Reminder time must have passed (but not too long ago)
+      // Only trigger if:
+      // - Reminder time <= now (has arrived)
+      // - Not too old (within last 24 hours to avoid old reminders)
+      // - Not yet notified
+      const hasArrived = reminderTimestamp <= nowTime;
+      const notTooOld = timeDiff < 24 * 60 * 60 * 1000; // Within 24 hours
+      const notYetNotified = !notifiedReminders.current.has(reminderKey);
+
+      if (hasArrived && notTooOld && notYetNotified) {
         // Format message
         const dueDateText = task.dueDate
           ? ` (Due: ${new Date(task.dueDate).toLocaleDateString('en-US', {
@@ -76,13 +139,9 @@ export function useReminders(tasks: Task[], options?: UseRemindersOptions) {
           });
         }
 
-        // Mark as notified
+        // Mark as notified in memory and localStorage
         notifiedReminders.current.add(reminderKey);
-
-        // Clean up old reminders after 1 hour
-        setTimeout(() => {
-          notifiedReminders.current.delete(reminderKey);
-        }, 60 * 60 * 1000);
+        saveNotifiedReminder(reminderKey);
       }
     });
   }, []); // No dependencies - stable function
