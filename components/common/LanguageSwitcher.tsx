@@ -18,6 +18,7 @@ export default function LanguageSwitcher() {
   const pathname = usePathname();
   const [isOpen, setIsOpen] = useState(false);
   const [showAbove, setShowAbove] = useState(false);
+  const [dropdownPosition, setDropdownPosition] = useState({ top: 0, left: 0 });
   const dropdownRef = useRef<HTMLDivElement>(null);
   const buttonRef = useRef<HTMLButtonElement>(null);
 
@@ -30,7 +31,23 @@ export default function LanguageSwitcher() {
       const dropdownHeight = 300; // Approximate height of dropdown
 
       // If not enough space below but enough space above, show above
-      setShowAbove(spaceBelow < dropdownHeight && spaceAbove > dropdownHeight);
+      const shouldShowAbove = spaceBelow < dropdownHeight && spaceAbove > dropdownHeight;
+      setShowAbove(shouldShowAbove);
+
+      // Calculate position for fixed positioning
+      if (shouldShowAbove) {
+        // Position above button
+        setDropdownPosition({
+          top: rect.top - dropdownHeight - 8, // 8px gap
+          left: rect.left,
+        });
+      } else {
+        // Position below button
+        setDropdownPosition({
+          top: rect.bottom + 8, // 8px gap
+          left: rect.left,
+        });
+      }
     }
   }, [isOpen]);
 
@@ -109,14 +126,18 @@ export default function LanguageSwitcher() {
       {/* Dropdown Menu */}
       {isOpen && (
         <div
+          style={{
+            top: `${dropdownPosition.top}px`,
+            left: `${dropdownPosition.left}px`,
+          }}
           className={twMerge(
-            'absolute right-0 z-50 w-56',
+            'fixed z-50 w-56',
             'rounded-lg border border-gray-200 bg-white shadow-lg',
             'dark:border-gray-700 dark:bg-gray-800',
             'animate-in fade-in duration-200',
             showAbove
-              ? 'bottom-full mb-2 origin-bottom-right slide-in-from-bottom-2'
-              : 'top-full mt-2 origin-top-right slide-in-from-top-2'
+              ? 'origin-bottom-left slide-in-from-bottom-2'
+              : 'origin-top-left slide-in-from-top-2'
           )}
           role="menu"
           aria-orientation="vertical"
