@@ -16,8 +16,9 @@ interface LayoutWrapperProps {
 export default function LayoutWrapper({ children, header, footer }: LayoutWrapperProps) {
   const pathname = usePathname();
 
-  // Check if current route is taskflow (any locale)
-  const isTaskFlowPage = pathname?.includes('/taskflow');
+  // Check if current route is EXACTLY taskflow app (any locale)
+  // Match /[locale]/taskflow but NOT /[locale]/projects/taskflow-project
+  const isTaskFlowPage = pathname?.match(/^\/[a-z]{2}\/taskflow\/?$/);
 
   // For TaskFlow, render full screen without header/footer
   if (isTaskFlowPage) {
