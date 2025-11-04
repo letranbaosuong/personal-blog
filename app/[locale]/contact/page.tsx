@@ -77,10 +77,10 @@ export default async function ContactPage({ params }: LocalePageProps) {
                       {t('info.email')}
                     </h3>
                     <a
-                      href="mailto:your.email@example.com"
+                      href="mailto:letranbaosuong@gmail.com"
                       className="text-slate-600 hover:text-blue-600 dark:text-slate-300 dark:hover:text-blue-400"
                     >
-                      your.email@example.com
+                      letranbaosuong@gmail.com
                     </a>
                   </div>
                 </div>
@@ -106,7 +106,7 @@ export default async function ContactPage({ params }: LocalePageProps) {
               </h2>
               <div className="flex gap-4">
                 <a
-                  href="https://github.com/yourusername"
+                  href="https://github.com/letranbaosuong"
                   target="_blank"
                   rel="noopener noreferrer"
                   className="flex h-12 w-12 items-center justify-center rounded-lg bg-slate-900 text-white transition-colors hover:bg-slate-700 dark:bg-slate-700 dark:hover:bg-slate-600"
@@ -115,7 +115,7 @@ export default async function ContactPage({ params }: LocalePageProps) {
                   <Github className="h-5 w-5" />
                 </a>
                 <a
-                  href="https://linkedin.com/in/yourusername"
+                  href="https://linkedin.com/in/letranbaosuong"
                   target="_blank"
                   rel="noopener noreferrer"
                   className="flex h-12 w-12 items-center justify-center rounded-lg bg-blue-600 text-white transition-colors hover:bg-blue-700"

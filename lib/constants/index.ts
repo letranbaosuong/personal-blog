@@ -7,16 +7,16 @@ import type { BlogCategory } from '@/lib/types';
 // Site Configuration
 export const SITE_CONFIG = {
   name: 'Personal Blog & Portfolio',
-  title: 'Your Name - Full Stack Developer',
+  title: 'Lê Trần Bảo Sương - Full Stack Developer',
   description:
     'Personal blog and portfolio showcasing projects, skills, and thoughts on technology, health, fitness, and music.',
   url: process.env.NEXT_PUBLIC_SITE_URL || 'http://localhost:3000',
-  author: 'Your Name',
-  email: 'your.email@example.com',
+  author: 'Lê Trần Bảo Sương',
+  email: 'letranbaosuong@gmail.com',
   social: {
-    github: 'https://github.com/yourusername',
-    linkedin: 'https://linkedin.com/in/yourusername',
-    twitter: 'https://twitter.com/yourusername',
+    github: 'https://github.com/letranbaosuong',
+    linkedin: 'https://linkedin.com/in/letranbaosuong',
+    twitter: 'https://twitter.com/letranbaosuong',
   },
 } as const;
 
