@@ -8,7 +8,7 @@ import { setRequestLocale } from 'next-intl/server';
 import { getTranslations } from 'next-intl/server';
 import Container from '@/components/common/Container';
 import { LocalePageProps } from '@/types/i18n';
-import Link from 'next/link';
+import { Link } from '@/lib/i18n/navigation';
 
 export async function generateMetadata({ params }: LocalePageProps): Promise<Metadata> {
   const { locale } = await params;

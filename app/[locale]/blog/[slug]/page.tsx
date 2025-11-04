@@ -9,7 +9,7 @@ import { notFound } from 'next/navigation';
 import Container from '@/components/common/Container';
 import { LocalePageProps } from '@/types/i18n';
 import { ArrowLeft, Calendar, Clock } from 'lucide-react';
-import Link from 'next/link';
+import { Link } from '@/lib/i18n/navigation';
 
 interface BlogPostDetailPageProps extends LocalePageProps {
   params: Promise<{

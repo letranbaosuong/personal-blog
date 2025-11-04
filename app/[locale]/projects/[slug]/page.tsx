@@ -10,7 +10,7 @@ import Container from '@/components/common/Container';
 import ProjectLink from '@/components/projects/ProjectLink';
 import { LocalePageProps } from '@/types/i18n';
 import { ArrowLeft, Github, ExternalLink, CheckCircle, Clock } from 'lucide-react';
-import Link from 'next/link';
+import { Link } from '@/lib/i18n/navigation';
 
 interface ProjectDetailPageProps extends LocalePageProps {
   params: Promise<{
