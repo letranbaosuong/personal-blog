@@ -148,34 +148,62 @@ export function useReminders(tasks: Task[], options?: UseRemindersOptions) {
 
       const message = `${task.title}${dueDateText}`;
 
+      console.log(`[Reminder] Notification details:`);
+      console.log(`  - Title: ⏰ Task Reminder`);
+      console.log(`  - Body: ${message}`);
+      console.log(`  - Task ID: ${task.id}`);
+
       // Show browser notification
+      console.log(`[Reminder] Calling notifications.show()...`);
       notifications.show({
         title: '⏰ Task Reminder',
         body: message,
         tag: task.id,
         data: { taskId: task.id },
+      }).then(() => {
+        console.log(`[Reminder] Browser notification shown successfully`);
+      }).catch((error) => {
+        console.error(`[Reminder] Failed to show browser notification:`, error);
       });
 
       // Trigger callback for in-app notification
       if (optionsRef.current?.onReminder) {
+        console.log(`[Reminder] Calling onReminder callback for in-app notification...`);
         optionsRef.current.onReminder({
           taskId: task.id,
           title: '⏰ Task Reminder',
           message,
         });
+        console.log(`[Reminder] In-app notification triggered`);
+      } else {
+        console.warn(`[Reminder] No onReminder callback found - in-app notification skipped`);
       }
 
       // Mark as notified in memory and localStorage
       notifiedReminders.current.add(reminderKey);
       saveNotifiedReminder(reminderKey);
+      console.log(`[Reminder] Marked as notified in localStorage`);
     });
   }, []); // No dependencies - stable function
 
   // Request notification permission on mount
   useEffect(() => {
-    if (notifications.isSupported()) {
-      notifications.requestPermission();
-    }
+    const setupNotifications = async () => {
+      if (notifications.isSupported()) {
+        console.log('[Reminder] Notification API supported');
+        const permission = await notifications.requestPermission();
+        console.log('[Reminder] Notification permission:', permission ? 'granted' : 'denied');
+
+        if (!permission) {
+          console.warn('[Reminder] ⚠️ Notification permission denied! Reminders will not show browser notifications.');
+          console.warn('[Reminder] Please allow notifications in browser settings.');
+        }
+      } else {
+        console.warn('[Reminder] ⚠️ Notification API not supported in this browser');
+      }
+    };
+
+    setupNotifications();
   }, []);
 
   // Schedule precise timeouts for upcoming reminders
