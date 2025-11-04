@@ -11,6 +11,7 @@ import { useState, useRef, useEffect } from 'react';
 import SubTaskItem from './SubTaskItem';
 import MentionTextarea from './MentionTextarea';
 import MentionText from './MentionText';
+import RichNotes, { toggleCheckboxInText } from './RichNotes';
 
 interface TaskDetailProps {
   task: Task;
@@ -235,11 +236,8 @@ export default function TaskDetail({
               </div>
             </div>
           ) : task.description ? (
-            <div
-              onClick={() => setIsEditingNotes(true)}
-              className="cursor-text rounded-lg border border-transparent p-3 transition-colors hover:bg-slate-50 dark:hover:bg-slate-700"
-            >
-              <MentionText
+            <div className="rounded-lg border border-transparent p-3 transition-colors hover:bg-slate-50 dark:hover:bg-slate-700">
+              <RichNotes
                 text={task.description}
                 tasks={tasks}
                 projects={projects}
@@ -247,6 +245,11 @@ export default function TaskDetail({
                 onTaskClick={onTaskClick}
                 onProjectClick={(project) => onProjectClick?.(project.id)}
                 onContactClick={onContactClick}
+                onCheckboxToggle={(lineIndex) => {
+                  const newDescription = toggleCheckboxInText(task.description || '', lineIndex);
+                  onUpdate(task.id, { description: newDescription });
+                }}
+                readOnly={false}
               />
             </div>
           ) : (

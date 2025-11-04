@@ -10,6 +10,7 @@ import { X, Star, Trash2, Mail, Phone, Briefcase, MapPin, Calendar, Users, Edit2
 import { useState, useRef, useEffect } from 'react';
 import MentionTextarea from './MentionTextarea';
 import MentionText from './MentionText';
+import RichNotes, { toggleCheckboxInText } from './RichNotes';
 
 interface ContactDetailProps {
   contact: Contact;
@@ -490,11 +491,8 @@ export default function ContactDetail({
               </div>
             </div>
           ) : contact.notes ? (
-            <div
-              onClick={() => setIsEditingNotes(true)}
-              className="cursor-text rounded-lg border border-transparent p-3 transition-colors hover:bg-slate-50 dark:hover:bg-slate-700"
-            >
-              <MentionText
+            <div className="rounded-lg border border-transparent p-3 transition-colors hover:bg-slate-50 dark:hover:bg-slate-700">
+              <RichNotes
                 text={contact.notes}
                 tasks={tasks}
                 projects={projects}
@@ -502,6 +500,11 @@ export default function ContactDetail({
                 onTaskClick={onTaskClick}
                 onProjectClick={(project) => onProjectClick?.(project.id)}
                 onContactClick={onContactClick}
+                onCheckboxToggle={(lineIndex) => {
+                  const newNotes = toggleCheckboxInText(contact.notes || '', lineIndex);
+                  onUpdate(contact.id, { notes: newNotes });
+                }}
+                readOnly={false}
               />
             </div>
           ) : (
