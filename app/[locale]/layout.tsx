@@ -90,7 +90,7 @@ export default async function LocaleLayout({
 
   return (
     <html lang={locale} dir={localeDirs[locale as Locale]} suppressHydrationWarning>
-      <body className={`${inter.variable} font-sans antialiased`}>
+      <body className={`${inter.variable} font-sans antialiased bg-white dark:bg-slate-900`}>
         <NextIntlClientProvider
           locale={locale}
           messages={messages}

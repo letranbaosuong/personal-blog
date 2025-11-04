@@ -26,7 +26,7 @@ export default function LayoutWrapper({ children, header, footer }: LayoutWrappe
 
   // For other pages, render with header and footer
   return (
-    <div className="flex min-h-screen flex-col">
+    <div className="flex min-h-screen flex-col bg-white dark:bg-slate-900 transition-colors duration-200">
       {header}
       <main className="flex-1">{children}</main>
       {footer}
