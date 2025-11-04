@@ -17,7 +17,22 @@ export default function LanguageSwitcher() {
   const router = useRouter();
   const pathname = usePathname();
   const [isOpen, setIsOpen] = useState(false);
+  const [showAbove, setShowAbove] = useState(false);
   const dropdownRef = useRef<HTMLDivElement>(null);
+  const buttonRef = useRef<HTMLButtonElement>(null);
+
+  // Calculate dropdown position based on button location
+  useEffect(() => {
+    if (isOpen && buttonRef.current) {
+      const rect = buttonRef.current.getBoundingClientRect();
+      const spaceBelow = window.innerHeight - rect.bottom;
+      const spaceAbove = rect.top;
+      const dropdownHeight = 300; // Approximate height of dropdown
+
+      // If not enough space below but enough space above, show above
+      setShowAbove(spaceBelow < dropdownHeight && spaceAbove > dropdownHeight);
+    }
+  }, [isOpen]);
 
   // Close dropdown when clicking outside
   useEffect(() => {
@@ -52,6 +67,7 @@ export default function LanguageSwitcher() {
     <div className="relative" ref={dropdownRef}>
       {/* Trigger Button */}
       <button
+        ref={buttonRef}
         onClick={() => setIsOpen(!isOpen)}
         className={twMerge(
           'flex items-center gap-2 rounded-lg px-3 py-2 text-sm font-medium transition-all',
@@ -94,10 +110,13 @@ export default function LanguageSwitcher() {
       {isOpen && (
         <div
           className={twMerge(
-            'absolute right-0 z-50 mt-2 w-56 origin-top-right',
+            'absolute right-0 z-50 w-56',
             'rounded-lg border border-gray-200 bg-white shadow-lg',
             'dark:border-gray-700 dark:bg-gray-800',
-            'animate-in fade-in slide-in-from-top-2 duration-200'
+            'animate-in fade-in duration-200',
+            showAbove
+              ? 'bottom-full mb-2 origin-bottom-right slide-in-from-bottom-2'
+              : 'top-full mt-2 origin-top-right slide-in-from-top-2'
           )}
           role="menu"
           aria-orientation="vertical"
