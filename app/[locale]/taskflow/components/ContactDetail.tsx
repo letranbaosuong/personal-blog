@@ -6,8 +6,8 @@
 'use client';
 
 import { Contact, Task, Project } from '../types';
-import { X, Star, Trash2, Mail, Phone, Briefcase, MapPin, Calendar, Users, Edit2 } from 'lucide-react';
-import { useState } from 'react';
+import { X, Star, Trash2, Mail, Phone, Briefcase, MapPin, Calendar, Users, Edit2, Check } from 'lucide-react';
+import { useState, useRef, useEffect } from 'react';
 import MentionTextarea from './MentionTextarea';
 import MentionText from './MentionText';
 
@@ -42,6 +42,7 @@ export default function ContactDetail({
   const [editedName, setEditedName] = useState(contact.name);
   const [isEditingNotes, setIsEditingNotes] = useState(false);
   const [newTag, setNewTag] = useState('');
+  const notesEditorRef = useRef<HTMLDivElement>(null);
 
   const handleSaveName = () => {
     if (editedName.trim() && editedName !== contact.name) {
@@ -64,6 +65,22 @@ export default function ContactDetail({
     const currentTags = contact.tags || [];
     onUpdate(contact.id, { tags: currentTags.filter(tag => tag !== tagToRemove) });
   };
+
+  // Handle click outside to save notes
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      if (
+        isEditingNotes &&
+        notesEditorRef.current &&
+        !notesEditorRef.current.contains(event.target as Node)
+      ) {
+        setIsEditingNotes(false);
+      }
+    };
+
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => document.removeEventListener('mousedown', handleClickOutside);
+  }, [isEditingNotes]);
 
   return (
     <div className="flex h-full flex-col border-l border-slate-200 bg-white dark:border-slate-700 dark:bg-slate-800">
@@ -435,19 +452,30 @@ export default function ContactDetail({
             )}
           </div>
           {isEditingNotes ? (
-            <MentionTextarea
-              value={contact.notes || ''}
-              onChange={(value) => onUpdate(contact.id, { notes: value })}
-              placeholder="Add notes about this contact... (Type @ to mention)"
-              rows={4}
-              tasks={tasks}
-              projects={projects}
-              contacts={contacts}
-              onTaskClick={onTaskClick}
-              onProjectClick={(project) => onProjectClick?.(project.id)}
-              onContactClick={onContactClick}
-              className="w-full rounded-lg border border-slate-300 bg-white px-3 py-2 text-sm text-slate-900 placeholder-slate-400 focus:border-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-500/20 dark:border-slate-600 dark:bg-slate-700 dark:text-slate-100 dark:placeholder-slate-500"
-            />
+            <div ref={notesEditorRef}>
+              <MentionTextarea
+                value={contact.notes || ''}
+                onChange={(value) => onUpdate(contact.id, { notes: value })}
+                placeholder="Add notes about this contact... (Type @ to mention)"
+                rows={4}
+                tasks={tasks}
+                projects={projects}
+                contacts={contacts}
+                onTaskClick={onTaskClick}
+                onProjectClick={(project) => onProjectClick?.(project.id)}
+                onContactClick={onContactClick}
+                className="w-full rounded-lg border border-slate-300 bg-white px-3 py-2 text-sm text-slate-900 placeholder-slate-400 focus:border-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-500/20 dark:border-slate-600 dark:bg-slate-700 dark:text-slate-100 dark:placeholder-slate-500"
+              />
+              <div className="mt-2 flex justify-end gap-2">
+                <button
+                  onClick={() => setIsEditingNotes(false)}
+                  className="flex items-center gap-1.5 rounded-lg bg-blue-600 px-4 py-2 text-sm font-medium text-white transition-colors hover:bg-blue-700 dark:bg-blue-500 dark:hover:bg-blue-600"
+                >
+                  <Check className="h-4 w-4" />
+                  OK
+                </button>
+              </div>
+            </div>
           ) : contact.notes ? (
             <div
               onClick={() => setIsEditingNotes(true)}

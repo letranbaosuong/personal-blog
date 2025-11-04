@@ -6,8 +6,8 @@
 'use client';
 
 import { Task, Project, Contact } from '../types';
-import { X, Star, Calendar, Trash2, Plus, Sun, Edit2 } from 'lucide-react';
-import { useState } from 'react';
+import { X, Star, Calendar, Trash2, Plus, Sun, Edit2, Check } from 'lucide-react';
+import { useState, useRef, useEffect } from 'react';
 import SubTaskItem from './SubTaskItem';
 import MentionTextarea from './MentionTextarea';
 import MentionText from './MentionText';
@@ -51,6 +51,7 @@ export default function TaskDetail({
   const [editedTitle, setEditedTitle] = useState(task.title);
   const [isEditingNotes, setIsEditingNotes] = useState(false);
   const [newSubTaskTitle, setNewSubTaskTitle] = useState('');
+  const notesEditorRef = useRef<HTMLDivElement>(null);
 
   const handleSaveTitle = () => {
     if (editedTitle.trim() && editedTitle !== task.title) {
@@ -67,6 +68,22 @@ export default function TaskDetail({
       setNewSubTaskTitle('');
     }
   };
+
+  // Handle click outside to save notes
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      if (
+        isEditingNotes &&
+        notesEditorRef.current &&
+        !notesEditorRef.current.contains(event.target as Node)
+      ) {
+        setIsEditingNotes(false);
+      }
+    };
+
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => document.removeEventListener('mousedown', handleClickOutside);
+  }, [isEditingNotes]);
 
   const completedSubTasks = task.subTasks.filter((st) => st.isCompleted).length;
   const totalSubTasks = task.subTasks.length;
@@ -180,19 +197,30 @@ export default function TaskDetail({
             )}
           </div>
           {isEditingNotes ? (
-            <MentionTextarea
-              value={task.description || ''}
-              onChange={(value) => onUpdate(task.id, { description: value })}
-              placeholder="Add notes... (Type @ to mention)"
-              rows={4}
-              tasks={tasks}
-              projects={projects}
-              contacts={contacts}
-              onTaskClick={onTaskClick}
-              onProjectClick={(project) => onProjectClick?.(project.id)}
-              onContactClick={onContactClick}
-              className="w-full rounded-lg border border-slate-300 bg-white px-3 py-2 text-sm text-slate-900 placeholder-slate-400 focus:border-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-500/20 dark:border-slate-600 dark:bg-slate-700 dark:text-slate-100 dark:placeholder-slate-500"
-            />
+            <div ref={notesEditorRef}>
+              <MentionTextarea
+                value={task.description || ''}
+                onChange={(value) => onUpdate(task.id, { description: value })}
+                placeholder="Add notes... (Type @ to mention)"
+                rows={4}
+                tasks={tasks}
+                projects={projects}
+                contacts={contacts}
+                onTaskClick={onTaskClick}
+                onProjectClick={(project) => onProjectClick?.(project.id)}
+                onContactClick={onContactClick}
+                className="w-full rounded-lg border border-slate-300 bg-white px-3 py-2 text-sm text-slate-900 placeholder-slate-400 focus:border-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-500/20 dark:border-slate-600 dark:bg-slate-700 dark:text-slate-100 dark:placeholder-slate-500"
+              />
+              <div className="mt-2 flex justify-end gap-2">
+                <button
+                  onClick={() => setIsEditingNotes(false)}
+                  className="flex items-center gap-1.5 rounded-lg bg-blue-600 px-4 py-2 text-sm font-medium text-white transition-colors hover:bg-blue-700 dark:bg-blue-500 dark:hover:bg-blue-600"
+                >
+                  <Check className="h-4 w-4" />
+                  OK
+                </button>
+              </div>
+            </div>
           ) : task.description ? (
             <div
               onClick={() => setIsEditingNotes(true)}
