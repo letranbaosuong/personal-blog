@@ -284,6 +284,25 @@
       "tip": "💡 Mẹo:",
       "tipText": "Chỉ cần dùng khoảng trắng để thụt lề - cấu trúc cây tự động nhận diện!"
     },
+    "share": {
+      "title": "Chia sẻ",
+      "project": "Dự án",
+      "task": "Nhiệm vụ",
+      "contact": "Liên hệ",
+      "description": "Bất kỳ ai có link này đều có thể xem và cộng tác trên mục này theo thời gian thực.",
+      "shareLink": "Link chia sẻ",
+      "copy": "Sao chép",
+      "copied": "Đã sao chép",
+      "close": "Đóng",
+      "generating": "Đang tạo link chia sẻ...",
+      "features": "Tính năng",
+      "feature1": "Đồng bộ theo thời gian thực",
+      "feature2": "Không cần đăng nhập",
+      "feature3": "Chỉnh sửa cộng tác",
+      "notConfigured": "Tính năng chia sẻ chưa khả dụng",
+      "configureFirebase": "Vui lòng cấu hình Firebase để bật tính năng chia sẻ.",
+      "error": "Lỗi"
+    },
     "notifications": {
       "reminder": "Nhắc nhở nhiệm vụ",
       "taskDue": "Nhiệm vụ sắp hết hạn",

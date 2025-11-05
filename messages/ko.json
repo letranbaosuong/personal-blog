@@ -284,6 +284,25 @@
       "tip": "💡 팁:",
       "tipText": "공백으로 들여쓰기만 하세요 - 트리 구조가 자동으로 감지됩니다!"
     },
+    "share": {
+      "title": "공유",
+      "project": "프로젝트",
+      "task": "작업",
+      "contact": "연락처",
+      "description": "이 링크를 가진 사람은 누구나 실시간으로 이 항목을 보고 공동 작업할 수 있습니다.",
+      "shareLink": "공유 링크",
+      "copy": "복사",
+      "copied": "복사됨",
+      "close": "닫기",
+      "generating": "공유 링크 생성 중...",
+      "features": "기능",
+      "feature1": "실시간 동기화",
+      "feature2": "로그인 불필요",
+      "feature3": "공동 편집",
+      "notConfigured": "공유 기능을 사용할 수 없습니다",
+      "configureFirebase": "공유 기능을 활성화하려면 Firebase를 구성하세요.",
+      "error": "오류"
+    },
     "notifications": {
       "reminder": "작업 알림",
       "taskDue": "작업 마감일입니다",

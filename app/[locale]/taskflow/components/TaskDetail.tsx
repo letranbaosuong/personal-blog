@@ -13,6 +13,9 @@ import MentionTextarea from './MentionTextarea';
 import MentionText from './MentionText';
 import RichNotes, { toggleCheckboxInText } from './RichNotes';
 import FormatHelpTooltip from './FormatHelpTooltip';
+import { ShareButton } from './ShareButton';
+import { ShareDialog } from './ShareDialog';
+import { ShareIndicator } from './ShareIndicator';
 
 interface TaskDetailProps {
   task: Task;
@@ -55,6 +58,7 @@ export default function TaskDetail({
   const [editedTitle, setEditedTitle] = useState(task.title);
   const [isEditingNotes, setIsEditingNotes] = useState(false);
   const [newSubTaskTitle, setNewSubTaskTitle] = useState('');
+  const [isShareDialogOpen, setIsShareDialogOpen] = useState(false);
   const notesEditorRef = useRef<HTMLDivElement>(null);
 
   const handleSaveTitle = () => {
@@ -145,7 +149,7 @@ export default function TaskDetail({
         </div>
 
         {/* Quick Actions */}
-        <div className="mb-6 flex gap-2">
+        <div className="mb-6 flex flex-wrap gap-2">
           <button
             onClick={() => onToggleImportant(task.id)}
             className={`flex items-center gap-2 rounded-lg px-3 py-2 text-sm font-medium transition-colors ${
@@ -168,6 +172,12 @@ export default function TaskDetail({
             <Sun className="h-4 w-4" />
             My Day
           </button>
+          <ShareButton
+            onClick={() => setIsShareDialogOpen(true)}
+            variant="outline"
+            size="md"
+            label="Share"
+          />
         </div>
 
         {/* Due Date */}
@@ -361,6 +371,15 @@ export default function TaskDetail({
           Delete Task
         </button>
       </div>
+
+      {/* Share Dialog */}
+      <ShareDialog
+        isOpen={isShareDialogOpen}
+        onClose={() => setIsShareDialogOpen(false)}
+        data={task}
+        type="task"
+        title="Share Task"
+      />
     </div>
   );
 }

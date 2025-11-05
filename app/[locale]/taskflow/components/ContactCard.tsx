@@ -4,8 +4,10 @@
 
 'use client';
 
+import { useState } from 'react';
 import { Contact } from '../types';
-import { Star, Mail, Phone, Briefcase, MapPin } from 'lucide-react';
+import { Star, Mail, Phone, Briefcase, MapPin, Share2 } from 'lucide-react';
+import { ShareDialog } from './ShareDialog';
 
 interface ContactCardProps {
   contact: Contact;
@@ -18,6 +20,7 @@ export default function ContactCard({
   onToggleImportant,
   onClick,
 }: ContactCardProps) {
+  const [isShareDialogOpen, setIsShareDialogOpen] = useState(false);
   return (
     <div
       className="group cursor-pointer rounded-lg border border-slate-200 bg-white p-4 transition-all hover:shadow-md dark:border-slate-700 dark:bg-slate-800"
@@ -41,26 +44,40 @@ export default function ContactCard({
 
         {/* Content */}
         <div className="flex-1 overflow-hidden">
-          {/* Name & Important */}
+          {/* Name & Actions */}
           <div className="flex items-start justify-between gap-2">
             <h3 className="text-base font-semibold text-slate-900 dark:text-slate-100">
               {contact.name}
             </h3>
-            <button
-              onClick={(e) => {
-                e.stopPropagation();
-                onToggleImportant(contact.id);
-              }}
-              className="flex-shrink-0"
-            >
-              <Star
-                className={`h-4 w-4 transition-colors ${
-                  contact.isImportant
-                    ? 'fill-yellow-400 text-yellow-400'
-                    : 'text-slate-300 hover:text-yellow-400 dark:text-slate-600'
-                }`}
-              />
-            </button>
+            <div className="flex items-center gap-1">
+              <button
+                onClick={(e) => {
+                  e.stopPropagation();
+                  setIsShareDialogOpen(true);
+                }}
+                className="flex-shrink-0 opacity-0 transition-opacity group-hover:opacity-100"
+                title="Share contact"
+              >
+                <Share2
+                  className="h-4 w-4 text-slate-400 transition-colors hover:text-blue-500"
+                />
+              </button>
+              <button
+                onClick={(e) => {
+                  e.stopPropagation();
+                  onToggleImportant(contact.id);
+                }}
+                className="flex-shrink-0"
+              >
+                <Star
+                  className={`h-4 w-4 transition-colors ${
+                    contact.isImportant
+                      ? 'fill-yellow-400 text-yellow-400'
+                      : 'text-slate-300 hover:text-yellow-400 dark:text-slate-600'
+                  }`}
+                />
+              </button>
+            </div>
           </div>
 
           {/* Info snippets */}
@@ -123,6 +140,15 @@ export default function ContactCard({
           )}
         </div>
       </div>
+
+      {/* Share Dialog */}
+      <ShareDialog
+        isOpen={isShareDialogOpen}
+        onClose={() => setIsShareDialogOpen(false)}
+        data={contact}
+        type="contact"
+        title="Share Contact"
+      />
     </div>
   );
 }

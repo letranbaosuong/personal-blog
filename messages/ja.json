@@ -284,6 +284,25 @@
       "tip": "💡 ヒント:",
       "tipText": "スペースでインデントするだけ - ツリー構造は自動検出されます！"
     },
+    "share": {
+      "title": "共有",
+      "project": "プロジェクト",
+      "task": "タスク",
+      "contact": "連絡先",
+      "description": "このリンクを持っている人は誰でも、このアイテムをリアルタイムで閲覧・共同編集できます。",
+      "shareLink": "共有リンク",
+      "copy": "コピー",
+      "copied": "コピーしました",
+      "close": "閉じる",
+      "generating": "共有リンクを生成中...",
+      "features": "機能",
+      "feature1": "リアルタイム同期",
+      "feature2": "ログイン不要",
+      "feature3": "共同編集",
+      "notConfigured": "共有機能は利用できません",
+      "configureFirebase": "共有機能を有効にするには、Firebaseを設定してください。",
+      "error": "エラー"
+    },
     "notifications": {
       "reminder": "タスクリマインダー",
       "taskDue": "タスクの期限です",

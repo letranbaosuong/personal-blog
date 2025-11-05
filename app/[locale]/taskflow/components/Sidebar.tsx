@@ -4,10 +4,12 @@
 
 'use client';
 
-import { Home, Star, Sun, CheckCircle, Users, Plus } from 'lucide-react';
+import { Home, Star, Sun, CheckCircle, Users, Plus, Share2 } from 'lucide-react';
 import { useState } from 'react';
 import { Project } from '../types';
 import TaskFlowSettings from './TaskFlowSettings';
+import { ShareDialog } from './ShareDialog';
+import { ShareIndicator } from './ShareIndicator';
 
 interface SidebarProps {
   activeView: string;
@@ -25,6 +27,7 @@ export default function Sidebar({
   getProjectTaskCount,
 }: SidebarProps) {
   const [showNewProjectInput, setShowNewProjectInput] = useState(false);
+  const [shareDialogProject, setShareDialogProject] = useState<Project | null>(null);
 
   const menuItems = [
     { id: 'my-day', label: 'My Day', icon: Sun, color: 'text-orange-600' },
@@ -91,25 +94,46 @@ export default function Sidebar({
             const isActive = activeView === `project:${project.id}`;
             const taskCount = getProjectTaskCount(project.id);
             return (
-              <button
+              <div
                 key={project.id}
-                onClick={() => onViewChange(`project:${project.id}`)}
-                className={`flex w-full items-center justify-between gap-2 rounded-lg px-3 py-2 text-left text-sm transition-colors ${
+                className={`group relative flex items-center gap-1 rounded-lg transition-colors ${
                   isActive
-                    ? 'bg-blue-50 text-blue-600 dark:bg-blue-900/20 dark:text-blue-400'
-                    : 'text-slate-700 hover:bg-slate-50 dark:text-slate-300 dark:hover:bg-slate-700'
+                    ? 'bg-blue-50 dark:bg-blue-900/20'
+                    : 'hover:bg-slate-50 dark:hover:bg-slate-700'
                 }`}
               >
-                <div className="flex items-center gap-2 overflow-hidden">
-                  <span className="text-lg">{project.icon || '📁'}</span>
-                  <span className="truncate">{project.name}</span>
-                </div>
-                {taskCount > 0 && (
-                  <span className="flex-shrink-0 text-xs text-slate-400 dark:text-slate-500">
-                    {taskCount}
-                  </span>
-                )}
-              </button>
+                <button
+                  onClick={() => onViewChange(`project:${project.id}`)}
+                  className={`flex flex-1 items-center justify-between gap-2 px-3 py-2 text-left text-sm ${
+                    isActive
+                      ? 'text-blue-600 dark:text-blue-400'
+                      : 'text-slate-700 dark:text-slate-300'
+                  }`}
+                >
+                  <div className="flex items-center gap-2 overflow-hidden">
+                    <span className="text-lg">{project.icon || '📁'}</span>
+                    <span className="truncate">{project.name}</span>
+                    {project.isShared && (
+                      <ShareIndicator isShared={true} variant="icon" size="sm" />
+                    )}
+                  </div>
+                  {taskCount > 0 && (
+                    <span className="flex-shrink-0 text-xs text-slate-400 dark:text-slate-500">
+                      {taskCount}
+                    </span>
+                  )}
+                </button>
+                <button
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    setShareDialogProject(project);
+                  }}
+                  className="mr-2 rounded p-1 text-slate-400 opacity-0 transition-all hover:bg-slate-200 hover:text-slate-600 group-hover:opacity-100 dark:hover:bg-slate-600 dark:hover:text-slate-300"
+                  title="Share project"
+                >
+                  <Share2 size={14} />
+                </button>
+              </div>
             );
           })}
 
@@ -126,6 +150,17 @@ export default function Sidebar({
       <div className="border-t border-slate-200 dark:border-slate-700">
         <TaskFlowSettings />
       </div>
+
+      {/* Share Dialog for Projects */}
+      {shareDialogProject && (
+        <ShareDialog
+          isOpen={true}
+          onClose={() => setShareDialogProject(null)}
+          data={shareDialogProject}
+          type="project"
+          title="Share Project"
+        />
+      )}
     </div>
   );
 }

@@ -6,6 +6,7 @@
 'use client';
 
 import { useState, useMemo, useCallback, useEffect } from 'react';
+import { useSearchParams } from 'next/navigation';
 import { Plus, Menu, X } from 'lucide-react';
 import Sidebar from './components/Sidebar';
 import TaskList from './components/TaskList';
@@ -21,8 +22,10 @@ import { useTasks } from './hooks/useTasks';
 import { useProjects } from './hooks/useProjects';
 import { useContacts } from './hooks/useContacts';
 import { useReminders } from './hooks/useReminders';
-import { Task, Contact, TaskFilters, RepeatSettings } from './types';
+import { useShare } from './hooks/useShare';
+import { Task, Contact, TaskFilters, RepeatSettings, Project } from './types';
 import { storage, STORAGE_KEYS } from './lib/storage';
+import type { ShareType } from './lib/shareService';
 
 type NavigationHistoryItem = {
   type: 'task' | 'contact';
@@ -30,6 +33,11 @@ type NavigationHistoryItem = {
 };
 
 export default function TaskFlowClient() {
+  // Get URL search params for shared items
+  const searchParams = useSearchParams();
+  const shareCode = searchParams.get('share');
+  const shareType = searchParams.get('type') as ShareType | null;
+
   // Load activeView from localStorage, default to 'all' if not found
   const [activeView, setActiveView] = useState(() => {
     const saved = storage.get<string>(STORAGE_KEYS.ACTIVE_VIEW);
@@ -42,6 +50,23 @@ export default function TaskFlowClient() {
   const [toasts, setToasts] = useState<ToastMessage[]>([]);
   const [navigationHistory, setNavigationHistory] = useState<NavigationHistoryItem[]>([]);
   const [isMobileSidebarOpen, setIsMobileSidebarOpen] = useState(false);
+
+  // Share hook for loading shared data
+  const { loadShared, sharedData, isLoading: isLoadingShared, error: shareError } = useShare({
+    autoSync: true,
+    onSyncUpdate: (data) => {
+      // Handle real-time sync updates
+      if (data && shareType) {
+        addToast({
+          id: `sync_${Date.now()}`,
+          title: 'Sync Update',
+          message: `${shareType.charAt(0).toUpperCase() + shareType.slice(1)} has been updated`,
+          type: 'info',
+          duration: 3000,
+        });
+      }
+    },
+  });
 
   // Save activeView to localStorage when it changes
   useEffect(() => {
@@ -248,6 +273,65 @@ export default function TaskFlowClient() {
       window.removeEventListener('taskflow:openTask', handleOpenTask as EventListener);
     };
   }, [handleTaskClick]);
+
+  // Load shared data from URL params
+  useEffect(() => {
+    if (shareCode && shareType) {
+      loadShared(shareCode, shareType);
+    }
+  }, [shareCode, shareType, loadShared]);
+
+  // Display shared data when loaded
+  useEffect(() => {
+    if (sharedData && shareType) {
+      if (shareType === 'task') {
+        const sharedTask = sharedData.data as Task;
+        setSelectedTask(sharedTask);
+        setSelectedContact(null);
+        addToast({
+          id: `shared_task_${Date.now()}`,
+          title: 'Shared Task Loaded',
+          message: `Viewing shared task: ${sharedTask.title}`,
+          type: 'success',
+          duration: 5000,
+        });
+      } else if (shareType === 'contact') {
+        const sharedContact = sharedData.data as Contact;
+        setSelectedContact(sharedContact);
+        setSelectedTask(null);
+        addToast({
+          id: `shared_contact_${Date.now()}`,
+          title: 'Shared Contact Loaded',
+          message: `Viewing shared contact: ${sharedContact.name}`,
+          type: 'success',
+          duration: 5000,
+        });
+      } else if (shareType === 'project') {
+        const sharedProject = sharedData.data as Project;
+        setActiveView(`project:${sharedProject.id}`);
+        addToast({
+          id: `shared_project_${Date.now()}`,
+          title: 'Shared Project Loaded',
+          message: `Viewing shared project: ${sharedProject.name}`,
+          type: 'success',
+          duration: 5000,
+        });
+      }
+    }
+  }, [sharedData, shareType]);
+
+  // Show error toast if share loading fails
+  useEffect(() => {
+    if (shareError) {
+      addToast({
+        id: `share_error_${Date.now()}`,
+        title: 'Error Loading Shared Item',
+        message: shareError,
+        type: 'error',
+        duration: 5000,
+      });
+    }
+  }, [shareError]);
 
   // Update selected task when tasks change
   useMemo(() => {

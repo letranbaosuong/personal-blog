@@ -284,6 +284,25 @@
       "tip": "Tip:",
       "tipText": "Just use spaces to indent - tree structure auto-detects!"
     },
+    "share": {
+      "title": "Share",
+      "project": "Project",
+      "task": "Task",
+      "contact": "Contact",
+      "description": "Anyone with this link can view and collaborate on this item in real-time.",
+      "shareLink": "Share Link",
+      "copy": "Copy",
+      "copied": "Copied",
+      "close": "Close",
+      "generating": "Generating share link...",
+      "features": "Features",
+      "feature1": "Real-time synchronization",
+      "feature2": "No login required",
+      "feature3": "Collaborative editing",
+      "notConfigured": "Sharing not available",
+      "configureFirebase": "Please configure Firebase to enable sharing features.",
+      "error": "Error"
+    },
     "notifications": {
       "reminder": "Task Reminder",
       "taskDue": "Task is due",
