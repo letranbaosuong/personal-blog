@@ -128,7 +128,7 @@ export default function Sidebar({
                     e.stopPropagation();
                     setShareDialogProject(project);
                   }}
-                  className="mr-2 rounded p-1 text-slate-400 opacity-0 transition-all hover:bg-slate-200 hover:text-slate-600 group-hover:opacity-100 dark:hover:bg-slate-600 dark:hover:text-slate-300"
+                  className="mr-2 rounded p-1 text-slate-400 transition-colors hover:bg-slate-200 hover:text-blue-600 dark:text-slate-500 dark:hover:bg-slate-600 dark:hover:text-blue-400"
                   title="Share project"
                 >
                   <Share2 size={14} />

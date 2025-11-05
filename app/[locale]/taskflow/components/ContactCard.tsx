@@ -55,11 +55,11 @@ export default function ContactCard({
                   e.stopPropagation();
                   setIsShareDialogOpen(true);
                 }}
-                className="flex-shrink-0 opacity-0 transition-opacity group-hover:opacity-100"
+                className="flex-shrink-0 rounded p-0.5 transition-colors hover:bg-slate-100 dark:hover:bg-slate-700"
                 title="Share contact"
               >
                 <Share2
-                  className="h-4 w-4 text-slate-400 transition-colors hover:text-blue-500"
+                  className="h-4 w-4 text-slate-400 transition-colors hover:text-blue-500 dark:text-slate-500 dark:hover:text-blue-400"
                 />
               </button>
               <button
