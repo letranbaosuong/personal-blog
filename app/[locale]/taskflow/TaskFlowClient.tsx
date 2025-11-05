@@ -18,6 +18,7 @@ import DatePicker from './components/DatePicker';
 import ReminderPicker from './components/ReminderPicker';
 import RepeatPicker from './components/RepeatPicker';
 import Toast, { ToastMessage } from './components/Toast';
+import { ShareTestPanel } from './components/ShareTestPanel';
 import { useTasks } from './hooks/useTasks';
 import { useProjects } from './hooks/useProjects';
 import { useContacts } from './hooks/useContacts';
@@ -793,6 +794,9 @@ export default function TaskFlowClient() {
           setIsContactFormOpen(false);
         }}
       />
+
+      {/* Firebase Test Panel (Developer Tool) */}
+      <ShareTestPanel />
     </div>
   );
 }
