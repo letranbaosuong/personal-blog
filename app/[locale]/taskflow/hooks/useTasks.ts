@@ -1,5 +1,6 @@
 /**
  * useTasks Hook - React hook for task management
+ * Supports collaborative editing via Firebase when in shared mode
  */
 
 'use client';
@@ -7,10 +8,21 @@
 import { useState, useEffect, useCallback } from 'react';
 import { Task, TaskFilters } from '../types';
 import { taskService } from '../lib/taskService';
+import { updateSharedData, type ShareType } from '../lib/shareService';
 
-export function useTasks(filters?: TaskFilters) {
+interface ShareMode {
+  code: string;
+  type: ShareType;
+}
+
+interface UseTasksOptions {
+  shareMode?: ShareMode | null;
+}
+
+export function useTasks(filters?: TaskFilters, options?: UseTasksOptions) {
   const [tasks, setTasks] = useState<Task[]>([]);
   const [loading, setLoading] = useState(true);
+  const { shareMode } = options || {};
 
   // Load tasks
   const loadTasks = useCallback(() => {
@@ -26,6 +38,20 @@ export function useTasks(filters?: TaskFilters) {
       setLoading(false);
     }
   }, [filters]);
+
+  // Sync to Firebase when in shared mode
+  const syncToFirebase = useCallback(
+    async (task: Task) => {
+      if (shareMode && shareMode.type === 'task') {
+        try {
+          await updateSharedData(shareMode.code, 'task', task);
+        } catch (error) {
+          console.error('Error syncing task to Firebase:', error);
+        }
+      }
+    },
+    [shareMode]
+  );
 
   // Initialize
   useEffect(() => {
@@ -45,12 +71,16 @@ export function useTasks(filters?: TaskFilters) {
 
   // Update task
   const updateTask = useCallback(
-    (id: string, updates: Partial<Task>) => {
+    async (id: string, updates: Partial<Task>) => {
       const updated = taskService.updateTask(id, updates);
-      if (updated) loadTasks();
+      if (updated) {
+        loadTasks();
+        // Sync to Firebase if in shared mode
+        await syncToFirebase(updated);
+      }
       return updated;
     },
-    [loadTasks]
+    [loadTasks, syncToFirebase]
   );
 
   // Delete task
@@ -65,62 +95,80 @@ export function useTasks(filters?: TaskFilters) {
 
   // Toggle complete
   const toggleComplete = useCallback(
-    (id: string) => {
+    async (id: string) => {
       const updated = taskService.toggleComplete(id);
-      if (updated) loadTasks();
+      if (updated) {
+        loadTasks();
+        await syncToFirebase(updated);
+      }
       return updated;
     },
-    [loadTasks]
+    [loadTasks, syncToFirebase]
   );
 
   // Toggle important
   const toggleImportant = useCallback(
-    (id: string) => {
+    async (id: string) => {
       const updated = taskService.toggleImportant(id);
-      if (updated) loadTasks();
+      if (updated) {
+        loadTasks();
+        await syncToFirebase(updated);
+      }
       return updated;
     },
-    [loadTasks]
+    [loadTasks, syncToFirebase]
   );
 
   // Toggle my day
   const toggleMyDay = useCallback(
-    (id: string) => {
+    async (id: string) => {
       const updated = taskService.toggleMyDay(id);
-      if (updated) loadTasks();
+      if (updated) {
+        loadTasks();
+        await syncToFirebase(updated);
+      }
       return updated;
     },
-    [loadTasks]
+    [loadTasks, syncToFirebase]
   );
 
   // Add sub-task
   const addSubTask = useCallback(
-    (taskId: string, title: string) => {
+    async (taskId: string, title: string) => {
       const updated = taskService.addSubTask(taskId, title);
-      if (updated) loadTasks();
+      if (updated) {
+        loadTasks();
+        await syncToFirebase(updated);
+      }
       return updated;
     },
-    [loadTasks]
+    [loadTasks, syncToFirebase]
   );
 
   // Toggle sub-task
   const toggleSubTask = useCallback(
-    (taskId: string, subTaskId: string) => {
+    async (taskId: string, subTaskId: string) => {
       const updated = taskService.toggleSubTask(taskId, subTaskId);
-      if (updated) loadTasks();
+      if (updated) {
+        loadTasks();
+        await syncToFirebase(updated);
+      }
       return updated;
     },
-    [loadTasks]
+    [loadTasks, syncToFirebase]
   );
 
   // Delete sub-task
   const deleteSubTask = useCallback(
-    (taskId: string, subTaskId: string) => {
+    async (taskId: string, subTaskId: string) => {
       const updated = taskService.deleteSubTask(taskId, subTaskId);
-      if (updated) loadTasks();
+      if (updated) {
+        loadTasks();
+        await syncToFirebase(updated);
+      }
       return updated;
     },
-    [loadTasks]
+    [loadTasks, syncToFirebase]
   );
 
   return {

@@ -79,7 +79,18 @@ export default function TaskFlowClient() {
   const [quickAddReminder, setQuickAddReminder] = useState<string | undefined>();
   const [quickAddRepeat, setQuickAddRepeat] = useState<RepeatSettings | undefined>();
 
-  const { projects, createProject, getProjectTaskCount } = useProjects();
+  // Create share mode object for projects
+  const shareModeProjects = shareCode && shareType === 'project'
+    ? { code: shareCode, type: shareType as 'project' }
+    : null;
+
+  const { projects, createProject, getProjectTaskCount } = useProjects({ shareMode: shareModeProjects });
+
+  // Create share mode object for contacts
+  const shareModeContacts = shareCode && shareType === 'contact'
+    ? { code: shareCode, type: shareType as 'contact' }
+    : null;
+
   const {
     contacts,
     loading: contactsLoading,
@@ -87,7 +98,7 @@ export default function TaskFlowClient() {
     updateContact,
     deleteContact,
     toggleImportant: toggleContactImportant,
-  } = useContacts();
+  } = useContacts({ shareMode: shareModeContacts });
 
   // Get current project if viewing a project
   const currentProject = useMemo(() => {
@@ -120,6 +131,11 @@ export default function TaskFlowClient() {
     }
   }, [activeView]);
 
+  // Create share mode object for collaborative editing
+  const shareModeTasks = shareCode && shareType === 'task'
+    ? { code: shareCode, type: shareType as 'task' }
+    : null;
+
   const {
     tasks,
     loading,
@@ -132,7 +148,7 @@ export default function TaskFlowClient() {
     addSubTask,
     toggleSubTask,
     deleteSubTask,
-  } = useTasks(filters);
+  } = useTasks(filters, { shareMode: shareModeTasks });
 
   // Toast notification handlers
   const addToast = useCallback((title: string, message: string, taskId?: string) => {

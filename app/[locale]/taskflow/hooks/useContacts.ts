@@ -1,5 +1,6 @@
 /**
  * useContacts Hook - React hook for contact management
+ * Supports collaborative editing via Firebase when in shared mode
  */
 
 'use client';
@@ -7,10 +8,21 @@
 import { useState, useEffect, useCallback } from 'react';
 import { Contact } from '../types';
 import { contactService } from '../lib/contactService';
+import { updateSharedData, type ShareType } from '../lib/shareService';
 
-export function useContacts() {
+interface ShareMode {
+  code: string;
+  type: ShareType;
+}
+
+interface UseContactsOptions {
+  shareMode?: ShareMode | null;
+}
+
+export function useContacts(options?: UseContactsOptions) {
   const [contacts, setContacts] = useState<Contact[]>([]);
   const [loading, setLoading] = useState(true);
+  const { shareMode } = options || {};
 
   // Load contacts
   const loadContacts = useCallback(() => {
@@ -24,6 +36,20 @@ export function useContacts() {
       setLoading(false);
     }
   }, []);
+
+  // Sync to Firebase when in shared mode
+  const syncToFirebase = useCallback(
+    async (contact: Contact) => {
+      if (shareMode && shareMode.type === 'contact') {
+        try {
+          await updateSharedData(shareMode.code, 'contact', contact);
+        } catch (error) {
+          console.error('Error syncing contact to Firebase:', error);
+        }
+      }
+    },
+    [shareMode]
+  );
 
   // Initialize
   useEffect(() => {
@@ -43,12 +69,15 @@ export function useContacts() {
 
   // Update contact
   const updateContact = useCallback(
-    (id: string, updates: Partial<Contact>) => {
+    async (id: string, updates: Partial<Contact>) => {
       const updated = contactService.updateContact(id, updates);
-      if (updated) loadContacts();
+      if (updated) {
+        loadContacts();
+        await syncToFirebase(updated);
+      }
       return updated;
     },
-    [loadContacts]
+    [loadContacts, syncToFirebase]
   );
 
   // Delete contact
@@ -63,12 +92,15 @@ export function useContacts() {
 
   // Toggle important
   const toggleImportant = useCallback(
-    (id: string) => {
+    async (id: string) => {
       const updated = contactService.toggleImportant(id);
-      if (updated) loadContacts();
+      if (updated) {
+        loadContacts();
+        await syncToFirebase(updated);
+      }
       return updated;
     },
-    [loadContacts]
+    [loadContacts, syncToFirebase]
   );
 
   // Search contacts

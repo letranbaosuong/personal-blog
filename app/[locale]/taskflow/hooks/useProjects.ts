@@ -1,5 +1,6 @@
 /**
  * useProjects Hook - React hook for project management
+ * Supports collaborative editing via Firebase when in shared mode
  */
 
 'use client';
@@ -7,10 +8,21 @@
 import { useState, useEffect, useCallback } from 'react';
 import { Project } from '../types';
 import { projectService } from '../lib/projectService';
+import { updateSharedData, type ShareType } from '../lib/shareService';
 
-export function useProjects() {
+interface ShareMode {
+  code: string;
+  type: ShareType;
+}
+
+interface UseProjectsOptions {
+  shareMode?: ShareMode | null;
+}
+
+export function useProjects(options?: UseProjectsOptions) {
   const [projects, setProjects] = useState<Project[]>([]);
   const [loading, setLoading] = useState(true);
+  const { shareMode } = options || {};
 
   // Load projects
   const loadProjects = useCallback(() => {
@@ -24,6 +36,20 @@ export function useProjects() {
       setLoading(false);
     }
   }, []);
+
+  // Sync to Firebase when in shared mode
+  const syncToFirebase = useCallback(
+    async (project: Project) => {
+      if (shareMode && shareMode.type === 'project') {
+        try {
+          await updateSharedData(shareMode.code, 'project', project);
+        } catch (error) {
+          console.error('Error syncing project to Firebase:', error);
+        }
+      }
+    },
+    [shareMode]
+  );
 
   // Initialize
   useEffect(() => {
@@ -43,12 +69,15 @@ export function useProjects() {
 
   // Update project
   const updateProject = useCallback(
-    (id: string, updates: Partial<Project>) => {
+    async (id: string, updates: Partial<Project>) => {
       const updated = projectService.updateProject(id, updates);
-      if (updated) loadProjects();
+      if (updated) {
+        loadProjects();
+        await syncToFirebase(updated);
+      }
       return updated;
     },
-    [loadProjects]
+    [loadProjects, syncToFirebase]
   );
 
   // Delete project
