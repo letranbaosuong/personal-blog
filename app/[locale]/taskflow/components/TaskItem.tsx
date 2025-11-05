@@ -5,8 +5,9 @@
 'use client';
 
 import { Task } from '../types';
-import { CheckCircle2, Circle, Star, Calendar, ChevronDown, ChevronRight, FileText } from 'lucide-react';
+import { CheckCircle2, Circle, Star, Calendar, ChevronDown, ChevronRight, FileText, Share2 } from 'lucide-react';
 import { useState } from 'react';
+import { ShareDialog } from './ShareDialog';
 
 interface TaskItemProps {
   task: Task;
@@ -24,6 +25,7 @@ export default function TaskItem({
   projectName,
 }: TaskItemProps) {
   const [isExpanded, setIsExpanded] = useState(false);
+  const [isShareDialogOpen, setIsShareDialogOpen] = useState(false);
 
   const completedSubTasks = task.subTasks.filter((st) => st.isCompleted).length;
   const totalSubTasks = task.subTasks.length;
@@ -95,21 +97,35 @@ export default function TaskItem({
             >
               {task.title}
             </h3>
-            <button
-              onClick={(e) => {
-                e.stopPropagation();
-                onToggleImportant(task.id);
-              }}
-              className="flex-shrink-0"
-            >
-              <Star
-                className={`h-4 w-4 transition-colors ${
-                  task.isImportant
-                    ? 'fill-yellow-400 text-yellow-400'
-                    : 'text-slate-300 hover:text-yellow-400 dark:text-slate-600'
-                }`}
-              />
-            </button>
+            <div className="flex items-center gap-1">
+              <button
+                onClick={(e) => {
+                  e.stopPropagation();
+                  setIsShareDialogOpen(true);
+                }}
+                className="flex-shrink-0 rounded p-0.5 transition-colors hover:bg-slate-100 dark:hover:bg-slate-700"
+                title="Share task"
+              >
+                <Share2
+                  className="h-4 w-4 text-slate-400 transition-colors hover:text-blue-500 dark:text-slate-500 dark:hover:text-blue-400"
+                />
+              </button>
+              <button
+                onClick={(e) => {
+                  e.stopPropagation();
+                  onToggleImportant(task.id);
+                }}
+                className="flex-shrink-0"
+              >
+                <Star
+                  className={`h-4 w-4 transition-colors ${
+                    task.isImportant
+                      ? 'fill-yellow-400 text-yellow-400'
+                      : 'text-slate-300 hover:text-yellow-400 dark:text-slate-600'
+                  }`}
+                />
+              </button>
+            </div>
           </div>
 
           {/* Sub-tasks progress */}
@@ -173,6 +189,15 @@ export default function TaskItem({
           </div>
         </div>
       </div>
+
+      {/* Share Dialog */}
+      <ShareDialog
+        isOpen={isShareDialogOpen}
+        onClose={() => setIsShareDialogOpen(false)}
+        data={task}
+        type="task"
+        title="Share Task"
+      />
     </div>
   );
 }
