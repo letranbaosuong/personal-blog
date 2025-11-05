@@ -2,23 +2,51 @@
  * Share Service for TaskFlow
  *
  * Provides sharing functionality for projects, tasks, and contacts
- * using Firebase Realtime Database without authentication.
+ * using Firebase Realtime Database with anonymous authentication.
  */
 
 import { ref, set, get, onValue, remove, update, Unsubscribe } from 'firebase/database';
 import { getRealtimeDatabase, isFirebaseConfigured } from './firebase';
+import { getCurrentUser, getUserDisplayName, getUserId } from './auth';
 import type { Project, Task, Contact } from '../types';
 
 // Share types
 export type ShareType = 'project' | 'task' | 'contact';
+
+// Permission levels
+export enum PermissionLevel {
+  OWNER = 'owner',
+  EDITOR = 'editor',
+  VIEWER = 'viewer',
+  PUBLIC = 'public',
+}
+
+// Share permissions
+export interface SharePermissions {
+  owner: string; // User ID of owner
+  viewers: string[]; // User IDs who can view
+  editors: string[]; // User IDs who can edit
+  public: boolean; // If true, anyone with link can edit
+}
 
 // Shared data wrapper with metadata
 export interface SharedData<T> {
   data: T;
   shareCode: string;
   type: ShareType;
+
+  // User/ownership info
+  createdBy: string; // User ID who created the share
+  createdByName: string; // Display name
   createdAt: string;
+
+  // Permissions
+  permissions: SharePermissions;
+
+  // Sync info
   lastSync: string;
+  lastEditBy?: string; // User ID who last edited
+  lastEditByName?: string; // Display name
   expiresAt?: string; // Optional expiry
 }
 
@@ -93,11 +121,22 @@ export const shareProject = async (project: Project): Promise<ShareResult> => {
     }
 
     const shareCode = generateShareCode();
+    const userId = getUserId() || 'anonymous';
+    const userName = getUserDisplayName();
+
     const sharedData: SharedData<Project> = {
       data: { ...project, isShared: true },
       shareCode,
       type: 'project',
+      createdBy: userId,
+      createdByName: userName,
       createdAt: new Date().toISOString(),
+      permissions: {
+        owner: userId,
+        viewers: [],
+        editors: [],
+        public: true, // Default: public share
+      },
       lastSync: new Date().toISOString(),
     };
 
@@ -140,11 +179,22 @@ export const shareTask = async (task: Task): Promise<ShareResult> => {
     }
 
     const shareCode = generateShareCode();
+    const userId = getUserId() || 'anonymous';
+    const userName = getUserDisplayName();
+
     const sharedData: SharedData<Task> = {
       data: task,
       shareCode,
       type: 'task',
+      createdBy: userId,
+      createdByName: userName,
       createdAt: new Date().toISOString(),
+      permissions: {
+        owner: userId,
+        viewers: [],
+        editors: [],
+        public: true,
+      },
       lastSync: new Date().toISOString(),
     };
 
@@ -187,11 +237,22 @@ export const shareContact = async (contact: Contact): Promise<ShareResult> => {
     }
 
     const shareCode = generateShareCode();
+    const userId = getUserId() || 'anonymous';
+    const userName = getUserDisplayName();
+
     const sharedData: SharedData<Contact> = {
       data: contact,
       shareCode,
       type: 'contact',
+      createdBy: userId,
+      createdByName: userName,
       createdAt: new Date().toISOString(),
+      permissions: {
+        owner: userId,
+        viewers: [],
+        editors: [],
+        public: true,
+      },
       lastSync: new Date().toISOString(),
     };
 

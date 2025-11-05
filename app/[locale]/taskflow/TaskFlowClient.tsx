@@ -24,6 +24,7 @@ import { useProjects } from './hooks/useProjects';
 import { useContacts } from './hooks/useContacts';
 import { useReminders } from './hooks/useReminders';
 import { useShare } from './hooks/useShare';
+import { useAuth } from './hooks/useAuth';
 import { Task, Contact, TaskFilters, RepeatSettings, Project } from './types';
 import { storage, STORAGE_KEYS } from './lib/storage';
 import type { ShareType } from './lib/shareService';
@@ -34,6 +35,9 @@ type NavigationHistoryItem = {
 };
 
 export default function TaskFlowClient() {
+  // Auto sign-in with Firebase Auth (anonymous)
+  const { user, userId, displayName, isLoading: authLoading } = useAuth();
+
   // Get URL search params for shared items
   const searchParams = useSearchParams();
   const shareCode = searchParams.get('share');
