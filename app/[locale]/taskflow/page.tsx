@@ -6,6 +6,7 @@
 import { Metadata } from 'next';
 import { setRequestLocale } from 'next-intl/server';
 import { LocalePageProps } from '@/types/i18n';
+import { Suspense } from 'react';
 import TaskFlowClient from './TaskFlowClient';
 
 export async function generateMetadata({ params }: LocalePageProps): Promise<Metadata> {
@@ -30,5 +31,16 @@ export default async function TaskFlowPage({ params }: LocalePageProps) {
   const { locale } = await params;
   setRequestLocale(locale);
 
-  return <TaskFlowClient />;
+  return (
+    <Suspense fallback={
+      <div className="flex h-screen items-center justify-center bg-slate-50 dark:bg-slate-900">
+        <div className="text-center">
+          <div className="mb-4 inline-block h-8 w-8 animate-spin rounded-full border-4 border-blue-200 border-t-blue-600 dark:border-blue-800 dark:border-t-blue-400"></div>
+          <p className="text-sm text-slate-600 dark:text-slate-400">Loading TaskFlow...</p>
+        </div>
+      </div>
+    }>
+      <TaskFlowClient />
+    </Suspense>
+  );
 }

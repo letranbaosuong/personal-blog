@@ -57,13 +57,10 @@ export default function TaskFlowClient() {
     onSyncUpdate: (data) => {
       // Handle real-time sync updates
       if (data && shareType) {
-        addToast({
-          id: `sync_${Date.now()}`,
-          title: 'Sync Update',
-          message: `${shareType.charAt(0).toUpperCase() + shareType.slice(1)} has been updated`,
-          type: 'info',
-          duration: 3000,
-        });
+        addToast(
+          'Sync Update',
+          `${shareType.charAt(0).toUpperCase() + shareType.slice(1)} has been updated`
+        );
       }
     },
   });
@@ -288,34 +285,25 @@ export default function TaskFlowClient() {
         const sharedTask = sharedData.data as Task;
         setSelectedTask(sharedTask);
         setSelectedContact(null);
-        addToast({
-          id: `shared_task_${Date.now()}`,
-          title: 'Shared Task Loaded',
-          message: `Viewing shared task: ${sharedTask.title}`,
-          type: 'success',
-          duration: 5000,
-        });
+        addToast(
+          'Shared Task Loaded',
+          `Viewing shared task: ${sharedTask.title}`
+        );
       } else if (shareType === 'contact') {
         const sharedContact = sharedData.data as Contact;
         setSelectedContact(sharedContact);
         setSelectedTask(null);
-        addToast({
-          id: `shared_contact_${Date.now()}`,
-          title: 'Shared Contact Loaded',
-          message: `Viewing shared contact: ${sharedContact.name}`,
-          type: 'success',
-          duration: 5000,
-        });
+        addToast(
+          'Shared Contact Loaded',
+          `Viewing shared contact: ${sharedContact.name}`
+        );
       } else if (shareType === 'project') {
         const sharedProject = sharedData.data as Project;
         setActiveView(`project:${sharedProject.id}`);
-        addToast({
-          id: `shared_project_${Date.now()}`,
-          title: 'Shared Project Loaded',
-          message: `Viewing shared project: ${sharedProject.name}`,
-          type: 'success',
-          duration: 5000,
-        });
+        addToast(
+          'Shared Project Loaded',
+          `Viewing shared project: ${sharedProject.name}`
+        );
       }
     }
   }, [sharedData, shareType]);
@@ -323,13 +311,10 @@ export default function TaskFlowClient() {
   // Show error toast if share loading fails
   useEffect(() => {
     if (shareError) {
-      addToast({
-        id: `share_error_${Date.now()}`,
-        title: 'Error Loading Shared Item',
-        message: shareError,
-        type: 'error',
-        duration: 5000,
-      });
+      addToast(
+        'Error Loading Shared Item',
+        shareError
+      );
     }
   }, [shareError]);
 
