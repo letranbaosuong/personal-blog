@@ -66,10 +66,27 @@ export const signInUser = async (): Promise<User | null> => {
     const userCredential = await signInAnonymously(firebaseAuth);
     currentUser = userCredential.user;
 
-    console.log('User signed in anonymously:', currentUser.uid);
+    console.log('✅ User signed in anonymously:', currentUser.uid);
     return currentUser;
-  } catch (error) {
-    console.error('Error signing in anonymously:', error);
+  } catch (error: any) {
+    // Handle specific Firebase Auth errors
+    const errorCode = error?.code;
+    const errorMessage = error?.message;
+
+    if (errorCode === 'auth/admin-restricted-operation') {
+      console.error('❌ Firebase Anonymous Auth not enabled!');
+      console.error('📝 Please enable Anonymous Authentication in Firebase Console:');
+      console.error('   1. Go to: https://console.firebase.google.com/');
+      console.error('   2. Select your project');
+      console.error('   3. Build → Authentication → Sign-in method');
+      console.error('   4. Enable "Anonymous" sign-in');
+      console.error('   5. Refresh this page');
+      console.error('');
+      console.error('📚 See FIREBASE_AUTH_SETUP.md for detailed steps');
+    } else {
+      console.error('Error signing in anonymously:', errorMessage || error);
+    }
+
     return null;
   }
 };

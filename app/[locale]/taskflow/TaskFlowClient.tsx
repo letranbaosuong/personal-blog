@@ -19,6 +19,7 @@ import ReminderPicker from './components/ReminderPicker';
 import RepeatPicker from './components/RepeatPicker';
 import Toast, { ToastMessage } from './components/Toast';
 import { ShareTestPanel } from './components/ShareTestPanel';
+import { AuthErrorBanner } from './components/AuthErrorBanner';
 import { useTasks } from './hooks/useTasks';
 import { useProjects } from './hooks/useProjects';
 import { useContacts } from './hooks/useContacts';
@@ -36,7 +37,7 @@ type NavigationHistoryItem = {
 
 export default function TaskFlowClient() {
   // Auto sign-in with Firebase Auth (anonymous)
-  const { user, userId, displayName, isLoading: authLoading } = useAuth();
+  const { user, userId, displayName, isLoading: authLoading, error: authError } = useAuth();
 
   // Get URL search params for shared items
   const searchParams = useSearchParams();
@@ -845,6 +846,9 @@ export default function TaskFlowClient() {
           setIsContactFormOpen(false);
         }}
       />
+
+      {/* Auth Error Banner */}
+      <AuthErrorBanner error={authError} />
 
       {/* Firebase Test Panel (Developer Tool) */}
       <ShareTestPanel />
