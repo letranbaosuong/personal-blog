@@ -5,7 +5,7 @@
 
 'use client';
 
-import { useState, useMemo, useCallback, useEffect } from 'react';
+import { useState, useMemo, useCallback, useEffect, useRef } from 'react';
 import { useSearchParams } from 'next/navigation';
 import { Plus, Menu, X } from 'lucide-react';
 import Sidebar from './components/Sidebar';
@@ -52,19 +52,8 @@ export default function TaskFlowClient() {
   const [navigationHistory, setNavigationHistory] = useState<NavigationHistoryItem[]>([]);
   const [isMobileSidebarOpen, setIsMobileSidebarOpen] = useState(false);
 
-  // Share hook for loading shared data
-  const { loadShared, sharedData, isLoading: isLoadingShared, error: shareError } = useShare({
-    autoSync: true,
-    onSyncUpdate: (data) => {
-      // Handle real-time sync updates
-      if (data && shareType) {
-        addToast(
-          'Sync Update',
-          `${shareType.charAt(0).toUpperCase() + shareType.slice(1)} has been updated`
-        );
-      }
-    },
-  });
+  // Track if shared data has been initially loaded (to avoid showing toast on first load)
+  const sharedDataInitialLoadRef = useRef(false);
 
   // Save activeView to localStorage when it changes
   useEffect(() => {
@@ -160,6 +149,23 @@ export default function TaskFlowClient() {
   const dismissToast = useCallback((id: string) => {
     setToasts((prev) => prev.filter((t) => t.id !== id));
   }, []);
+
+  // Memoized sync update callback to prevent infinite loop
+  const handleSyncUpdate = useCallback((data: any) => {
+    // Only show toast for real-time updates, not initial load
+    if (sharedDataInitialLoadRef.current && data && shareType) {
+      addToast(
+        'Sync Update',
+        `${shareType.charAt(0).toUpperCase() + shareType.slice(1)} has been updated`
+      );
+    }
+  }, [shareType, addToast]);
+
+  // Share hook for loading shared data
+  const { loadShared, sharedData, isLoading: isLoadingShared, error: shareError } = useShare({
+    autoSync: true,
+    onSyncUpdate: handleSyncUpdate,
+  });
 
   // Handle task click from notifications
   const handleTaskClick = useCallback((taskId: string) => {
@@ -272,16 +278,23 @@ export default function TaskFlowClient() {
     };
   }, [handleTaskClick]);
 
-  // Load shared data from URL params
+  // Load shared data from URL params (only once when params change)
   useEffect(() => {
     if (shareCode && shareType) {
+      // Reset initial load flag
+      sharedDataInitialLoadRef.current = false;
       loadShared(shareCode, shareType);
     }
-  }, [shareCode, shareType, loadShared]);
+    // Only depend on shareCode and shareType to avoid re-loading
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [shareCode, shareType]);
 
-  // Display shared data when loaded
+  // Display shared data when loaded (only on initial load, not on sync updates)
   useEffect(() => {
-    if (sharedData && shareType) {
+    if (sharedData && shareType && !sharedDataInitialLoadRef.current) {
+      // Mark as initially loaded
+      sharedDataInitialLoadRef.current = true;
+
       if (shareType === 'task') {
         const sharedTask = sharedData.data as Task;
         setSelectedTask(sharedTask);
@@ -307,7 +320,25 @@ export default function TaskFlowClient() {
         );
       }
     }
-  }, [sharedData, shareType]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [sharedData?.shareCode, shareType]);
+
+  // Update local state when shared data syncs (without showing toast)
+  useEffect(() => {
+    if (sharedData && shareType && sharedDataInitialLoadRef.current) {
+      // Only update local state for subsequent sync updates
+      if (shareType === 'task') {
+        const sharedTask = sharedData.data as Task;
+        setSelectedTask(sharedTask);
+      } else if (shareType === 'contact') {
+        const sharedContact = sharedData.data as Contact;
+        setSelectedContact(sharedContact);
+      }
+      // Note: Project view doesn't need updating as it's already set to project view
+    }
+    // Only depend on lastSync to avoid infinite loop
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [sharedData?.lastSync]);
 
   // Show error toast if share loading fails
   useEffect(() => {
