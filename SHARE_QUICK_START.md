@@ -35,31 +35,165 @@ Tính năng share đã được implement **hoàn chỉnh** và **sẵn sàng s�
 4. Chọn **"Start in test mode"** (cho development)
 5. Click **"Enable"**
 
-### Bước 3: Get Config & Update `.env.local`
+### Bước 3: Lấy Firebase Config (Chi tiết từng bước)
 
-1. Click ⚙️ **Settings** → **Project Settings**
-2. Scroll xuống **"Your apps"** section
-3. Click **Web icon** (</>)
-4. Copy config values
-5. Update file `.env.local` (đã có sẵn trong project):
+#### 3A. Lấy Config từ Firebase Console
 
-```bash
-# Firebase Configuration
-NEXT_PUBLIC_FIREBASE_API_KEY=AIzaSyC...
-NEXT_PUBLIC_FIREBASE_AUTH_DOMAIN=your-project.firebaseapp.com
-NEXT_PUBLIC_FIREBASE_PROJECT_ID=your-project-id
-NEXT_PUBLIC_FIREBASE_STORAGE_BUCKET=your-project.appspot.com
-NEXT_PUBLIC_FIREBASE_MESSAGING_SENDER_ID=123456789
-NEXT_PUBLIC_FIREBASE_APP_ID=1:123456789:web:abc123
-NEXT_PUBLIC_FIREBASE_MEASUREMENT_ID=G-XXXXXXXXXX
-
-# ⚠️ QUAN TRỌNG: Database URL (lấy từ Realtime Database page)
-NEXT_PUBLIC_FIREBASE_DATABASE_URL=https://your-project-default-rtdb.asia-southeast1.firebasedatabase.app
+**Bước 1:** Trong Firebase Console, click vào icon ⚙️ **Settings** (góc trên bên trái)
+```
+┌─────────────────────────────┐
+│ ⚙️ Settings                 │ ← Click vào đây
+│   • Project settings        │
+│   • Usage and billing       │
+└─────────────────────────────┘
 ```
 
-**Lấy Database URL:**
-- Vào **Realtime Database** page
-- Copy URL từ phần **Data** tab (dạng `https://...firebasedatabase.app`)
+**Bước 2:** Click **"Project settings"**
+
+**Bước 3:** Scroll xuống phần **"Your apps"**
+```
+Your apps
+─────────────────────────────
+Currently no apps in this project
+
+[Add app]
+  🌐 Web    📱 iOS    🤖 Android    🎮 Unity
+```
+
+**Bước 4:** Click icon **Web** (🌐 hoặc </>)
+
+**Bước 5:** Điền thông tin:
+- **App nickname:** `TaskFlow` (hoặc tên bạn muốn)
+- **Firebase Hosting:** Không cần check
+- Click **"Register app"**
+
+**Bước 6:** Copy config code. Bạn sẽ thấy đoạn code như này:
+```javascript
+// Firebase config sẽ hiển thị như này:
+const firebaseConfig = {
+  apiKey: "AIzaSyDxxx...",           // ← Copy dòng này
+  authDomain: "myproject.firebaseapp.com",
+  projectId: "myproject-12345",
+  storageBucket: "myproject.appspot.com",
+  messagingSenderId: "123456789012",
+  appId: "1:123456789012:web:abcdef123456",
+  measurementId: "G-XXXXXXXXXX"
+};
+```
+
+**Bước 7:** Click **"Continue to console"**
+
+#### 3B. Lấy Database URL
+
+**Bước 1:** Trong menu bên trái, click **"Realtime Database"**
+
+**Bước 2:** Ở phần **Data** tab, bạn sẽ thấy URL ở trên cùng:
+```
+┌─────────────────────────────────────────────────────────┐
+│ https://myproject-12345-default-rtdb.asia-southeast1... │ ← Copy URL này
+│                                                          │
+│ Data  Rules  Backups  Usage                            │
+├─────────────────────────────────────────────────────────┤
+│ myproject-12345-default-rtdb                            │
+│   ∅ null                                                │
+└─────────────────────────────────────────────────────────┘
+```
+
+**Copy toàn bộ URL** (ví dụ: `https://myproject-12345-default-rtdb.asia-southeast1.firebasedatabase.app`)
+
+#### 3C. Update `.env.local`
+
+**Bước 1:** Mở file `.env.local` trong project của bạn
+
+**Bước 2:** Thay thế các giá trị `your_xxx_here` bằng giá trị thật từ Firebase:
+
+**VÍ DỤ CỤ THỂ:**
+
+```bash
+# BEFORE (template)
+NEXT_PUBLIC_FIREBASE_API_KEY=your_api_key_here
+
+# AFTER (giá trị thật)
+NEXT_PUBLIC_FIREBASE_API_KEY=AIzaSyDxVpK8jQ2mN3oR7sT9uV1wX2yZ4aB6cD8
+```
+
+**File `.env.local` hoàn chỉnh:**
+
+```bash
+# Site Configuration
+NEXT_PUBLIC_SITE_URL=http://localhost:3000
+
+# Firebase Configuration
+# ⚠️ THAY THẾ các giá trị bên dưới bằng config từ Firebase Console
+
+# 1️⃣ API Key (từ firebaseConfig.apiKey)
+NEXT_PUBLIC_FIREBASE_API_KEY=AIzaSyDxVpK8jQ2mN3oR7sT9uV1wX2yZ4aB6cD8
+
+# 2️⃣ Auth Domain (từ firebaseConfig.authDomain)
+NEXT_PUBLIC_FIREBASE_AUTH_DOMAIN=myproject-12345.firebaseapp.com
+
+# 3️⃣ Project ID (từ firebaseConfig.projectId)
+NEXT_PUBLIC_FIREBASE_PROJECT_ID=myproject-12345
+
+# 4️⃣ Storage Bucket (từ firebaseConfig.storageBucket)
+NEXT_PUBLIC_FIREBASE_STORAGE_BUCKET=myproject-12345.appspot.com
+
+# 5️⃣ Messaging Sender ID (từ firebaseConfig.messagingSenderId)
+NEXT_PUBLIC_FIREBASE_MESSAGING_SENDER_ID=123456789012
+
+# 6️⃣ App ID (từ firebaseConfig.appId)
+NEXT_PUBLIC_FIREBASE_APP_ID=1:123456789012:web:abcdef123456789012345
+
+# 7️⃣ Measurement ID (từ firebaseConfig.measurementId) - Optional
+NEXT_PUBLIC_FIREBASE_MEASUREMENT_ID=G-ABC123XYZ
+
+# 8️⃣ Database URL (từ Realtime Database page) - QUAN TRỌNG NHẤT!
+NEXT_PUBLIC_FIREBASE_DATABASE_URL=https://myproject-12345-default-rtdb.asia-southeast1.firebasedatabase.app
+```
+
+**Bước 3:** Save file
+
+**Bước 4:** Restart dev server
+```bash
+# Stop server (Ctrl+C)
+# Start lại
+npm run dev
+```
+
+#### 📝 Mapping Table (Giúp bạn không nhầm lẫn)
+
+| File `.env.local` | Lấy từ Firebase | Ví dụ |
+|------------------|-----------------|-------|
+| `NEXT_PUBLIC_FIREBASE_API_KEY` | `firebaseConfig.apiKey` | `AIzaSyDxVpK...` |
+| `NEXT_PUBLIC_FIREBASE_AUTH_DOMAIN` | `firebaseConfig.authDomain` | `myproject.firebaseapp.com` |
+| `NEXT_PUBLIC_FIREBASE_PROJECT_ID` | `firebaseConfig.projectId` | `myproject-12345` |
+| `NEXT_PUBLIC_FIREBASE_STORAGE_BUCKET` | `firebaseConfig.storageBucket` | `myproject.appspot.com` |
+| `NEXT_PUBLIC_FIREBASE_MESSAGING_SENDER_ID` | `firebaseConfig.messagingSenderId` | `123456789012` |
+| `NEXT_PUBLIC_FIREBASE_APP_ID` | `firebaseConfig.appId` | `1:123456789012:web:abc...` |
+| `NEXT_PUBLIC_FIREBASE_MEASUREMENT_ID` | `firebaseConfig.measurementId` | `G-ABC123XYZ` |
+| `NEXT_PUBLIC_FIREBASE_DATABASE_URL` | Realtime Database URL (top bar) | `https://...firebasedatabase.app` |
+
+#### ⚠️ Lưu ý quan trọng:
+
+1. **Không có dấu ngoặc kép:** Copy value trực tiếp, không cần `""`
+   ```bash
+   # ✅ Đúng
+   NEXT_PUBLIC_FIREBASE_API_KEY=AIzaSyD...
+
+   # ❌ Sai
+   NEXT_PUBLIC_FIREBASE_API_KEY="AIzaSyD..."
+   ```
+
+2. **Không có khoảng trắng:** Không có space trước/sau dấu `=`
+   ```bash
+   # ✅ Đúng
+   NEXT_PUBLIC_FIREBASE_API_KEY=AIzaSyD...
+
+   # ❌ Sai
+   NEXT_PUBLIC_FIREBASE_API_KEY = AIzaSyD...
+   ```
+
+3. **Database URL phải chính xác:** Copy toàn bộ URL từ Realtime Database page
 
 ---
 
