@@ -10,6 +10,9 @@
 import { useState, useEffect, useCallback } from 'react';
 import {
   signInUser,
+  signOutUser,
+  signInWithEmail as authSignInWithEmail,
+  signUpWithEmail as authSignUpWithEmail,
   getCurrentUser,
   getUserDisplayName,
   getUserId,
@@ -31,6 +34,9 @@ interface UseAuthReturn {
 
   // Actions
   signIn: () => Promise<void>;
+  signOut: () => Promise<void>;
+  signInWithEmail: (email: string, password: string) => Promise<boolean>;
+  signUpWithEmail: (email: string, password: string, displayName: string) => Promise<boolean>;
   refresh: () => void;
 }
 
@@ -84,6 +90,96 @@ export function useAuth(): UseAuthReturn {
   }, [available]);
 
   /**
+   * Sign out user
+   */
+  const signOut = useCallback(async () => {
+    if (!available) {
+      setError('Firebase Auth not available');
+      return;
+    }
+
+    setIsLoading(true);
+    setError(null);
+
+    try {
+      const success = await signOutUser();
+      if (success) {
+        setUser(null);
+      } else {
+        setError('Failed to sign out');
+      }
+    } catch (err) {
+      const errorMessage = err instanceof Error ? err.message : 'Unknown error';
+      setError(errorMessage);
+      console.error('Sign out error:', err);
+    } finally {
+      setIsLoading(false);
+    }
+  }, [available]);
+
+  /**
+   * Sign in with email and password
+   */
+  const signInWithEmail = useCallback(async (email: string, password: string): Promise<boolean> => {
+    if (!available) {
+      setError('Firebase Auth not available');
+      return false;
+    }
+
+    setIsLoading(true);
+    setError(null);
+
+    try {
+      const signedInUser = await authSignInWithEmail(email, password);
+      if (signedInUser) {
+        setUser(signedInUser);
+        return true;
+      } else {
+        setError('Failed to sign in with email');
+        return false;
+      }
+    } catch (err) {
+      const errorMessage = err instanceof Error ? err.message : 'Unknown error';
+      setError(errorMessage);
+      console.error('Sign in with email error:', err);
+      throw err; // Re-throw to allow caller to handle specific errors
+    } finally {
+      setIsLoading(false);
+    }
+  }, [available]);
+
+  /**
+   * Sign up with email, password, and display name
+   */
+  const signUpWithEmail = useCallback(async (email: string, password: string, displayName: string): Promise<boolean> => {
+    if (!available) {
+      setError('Firebase Auth not available');
+      return false;
+    }
+
+    setIsLoading(true);
+    setError(null);
+
+    try {
+      const newUser = await authSignUpWithEmail(email, password, displayName);
+      if (newUser) {
+        setUser(newUser);
+        return true;
+      } else {
+        setError('Failed to create account');
+        return false;
+      }
+    } catch (err) {
+      const errorMessage = err instanceof Error ? err.message : 'Unknown error';
+      setError(errorMessage);
+      console.error('Sign up with email error:', err);
+      throw err; // Re-throw to allow caller to handle specific errors
+    } finally {
+      setIsLoading(false);
+    }
+  }, [available]);
+
+  /**
    * Refresh user state
    */
   const refresh = useCallback(() => {
@@ -92,7 +188,8 @@ export function useAuth(): UseAuthReturn {
   }, []);
 
   /**
-   * Auto sign-in on mount
+   * Initial auth state check
+   * Wait for onAuthStateChanged to fire instead of auto sign-in
    */
   useEffect(() => {
     if (!available) {
@@ -100,27 +197,57 @@ export function useAuth(): UseAuthReturn {
       return;
     }
 
-    // Check if already signed in
+    // Just check current user, don't auto sign-in
+    // Let onAuthStateChanged listener handle the state
     const currentUser = getCurrentUser();
     if (currentUser) {
-      setUser(currentUser);
-      setIsLoading(false);
-      return;
+      console.log('🔍 Current user on mount:', {
+        uid: currentUser.uid,
+        email: currentUser.email,
+        isAnonymous: currentUser.isAnonymous,
+        displayName: currentUser.displayName,
+      });
+    } else {
+      console.log('👤 No user on mount, waiting for auth state...');
     }
-
-    // Sign in anonymously
-    signIn();
-  }, [available, signIn]);
+  }, [available]);
 
   /**
    * Listen for auth state changes
+   * This is the ONLY place that should trigger anonymous sign-in
    */
   useEffect(() => {
     if (!available) return;
 
+    let hasInitialized = false;
+
     const unsubscribe = onAuthChange((authUser) => {
-      setUser(authUser);
-      setIsLoading(false);
+      console.log('🔔 Auth state changed:', {
+        uid: authUser?.uid,
+        email: authUser?.email,
+        isAnonymous: authUser?.isAnonymous,
+      });
+
+      if (authUser) {
+        // User exists (either email or anonymous)
+        setUser(authUser);
+        setIsLoading(false);
+        hasInitialized = true;
+      } else if (!hasInitialized) {
+        // No user AND first time: sign in anonymously
+        console.log('👤 No user found, signing in anonymously...');
+        hasInitialized = true;
+        signInUser().then((user) => {
+          if (user) {
+            setUser(user);
+          }
+          setIsLoading(false);
+        });
+      } else {
+        // User signed out manually
+        setUser(null);
+        setIsLoading(false);
+      }
     });
 
     return () => {
@@ -142,6 +269,9 @@ export function useAuth(): UseAuthReturn {
 
     // Actions
     signIn,
+    signOut,
+    signInWithEmail,
+    signUpWithEmail,
     refresh,
   };
 }

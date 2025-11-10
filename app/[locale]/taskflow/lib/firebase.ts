@@ -7,6 +7,7 @@
 
 import { initializeApp, getApps, FirebaseApp } from 'firebase/app';
 import { getDatabase, Database } from 'firebase/database';
+import { getFirestore, Firestore } from 'firebase/firestore';
 
 // Firebase configuration from environment variables
 const firebaseConfig = {
@@ -23,6 +24,7 @@ const firebaseConfig = {
 // Initialize Firebase app (singleton pattern)
 let app: FirebaseApp;
 let database: Database | null = null;
+let firestore: Firestore | null = null;
 
 /**
  * Get Firebase app instance
@@ -69,6 +71,32 @@ export const getRealtimeDatabase = (): Database | null => {
     return database;
   } catch (error) {
     console.error('Firebase Database initialization error:', error);
+    return null;
+  }
+};
+
+/**
+ * Get Firestore instance for data synchronization
+ * Returns null if Firebase is not configured
+ */
+export const getFirestoreDB = (): Firestore | null => {
+  if (typeof window === 'undefined') {
+    return null; // Server-side rendering guard
+  }
+
+  try {
+    const firebaseApp = getFirebaseApp();
+    if (!firebaseApp) {
+      console.warn('Firebase app not initialized. Check your environment variables.');
+      return null;
+    }
+
+    if (!firestore) {
+      firestore = getFirestore(firebaseApp);
+    }
+    return firestore;
+  } catch (error) {
+    console.error('Firestore initialization error:', error);
     return null;
   }
 };

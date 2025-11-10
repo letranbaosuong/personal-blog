@@ -4,6 +4,7 @@
 
 import { Task, SubTask, TaskFilters } from '../types';
 import { storage, STORAGE_KEYS } from './storage';
+import { syncTasksToFirestore } from './firestore-sync';
 
 export const taskService = {
   // Get all tasks
@@ -70,6 +71,12 @@ export const taskService = {
     };
     tasks.push(newTask);
     storage.set(STORAGE_KEYS.TASKS, tasks);
+
+    // Sync to Firestore (for email users)
+    syncTasksToFirestore(tasks).catch((error) =>
+      console.error('Failed to sync task to Firestore:', error)
+    );
+
     return newTask;
   },
 
@@ -89,6 +96,12 @@ export const taskService = {
 
     tasks[index] = updatedTask;
     storage.set(STORAGE_KEYS.TASKS, tasks);
+
+    // Sync to Firestore (for email users)
+    syncTasksToFirestore(tasks).catch((error) =>
+      console.error('Failed to sync task update to Firestore:', error)
+    );
+
     return updatedTask;
   },
 
@@ -98,6 +111,12 @@ export const taskService = {
     const filteredTasks = tasks.filter((task) => task.id !== id);
     if (filteredTasks.length === tasks.length) return false;
     storage.set(STORAGE_KEYS.TASKS, filteredTasks);
+
+    // Sync to Firestore (for email users)
+    syncTasksToFirestore(filteredTasks).catch((error) =>
+      console.error('Failed to sync task deletion to Firestore:', error)
+    );
+
     return true;
   },
 

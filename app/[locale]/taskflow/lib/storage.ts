@@ -18,9 +18,14 @@ export const storage = {
     if (typeof window === 'undefined') return null;
     try {
       const item = localStorage.getItem(key);
-      return item ? JSON.parse(item) : null;
+      if (!item || item === '' || item === 'undefined' || item === 'null') {
+        return null;
+      }
+      return JSON.parse(item);
     } catch (error) {
-      console.error('Error reading from localStorage:', error);
+      console.error('Error reading from localStorage:', error, 'Key:', key, 'Value:', localStorage.getItem(key));
+      // Clear corrupted data
+      localStorage.removeItem(key);
       return null;
     }
   },

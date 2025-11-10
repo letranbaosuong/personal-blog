@@ -28,20 +28,36 @@ const loadNotifiedReminders = (): Set<string> => {
 
   try {
     const stored = localStorage.getItem(NOTIFIED_REMINDERS_KEY);
-    if (!stored) return new Set();
+    if (!stored || stored === '' || stored === 'undefined' || stored === 'null') {
+      return new Set();
+    }
 
     const data = JSON.parse(stored) as { key: string; timestamp: number }[];
+    if (!Array.isArray(data)) {
+      console.warn('Invalid notified reminders data, clearing...');
+      localStorage.removeItem(NOTIFIED_REMINDERS_KEY);
+      return new Set();
+    }
+
     const now = Date.now();
 
     // Filter out old entries (older than 24 hours)
-    const validEntries = data.filter(entry => now - entry.timestamp < 24 * 60 * 60 * 1000);
+    const validEntries = data.filter(entry =>
+      entry && entry.key && entry.timestamp && (now - entry.timestamp < 24 * 60 * 60 * 1000)
+    );
 
     // Save cleaned data back
-    localStorage.setItem(NOTIFIED_REMINDERS_KEY, JSON.stringify(validEntries));
+    if (validEntries.length > 0) {
+      localStorage.setItem(NOTIFIED_REMINDERS_KEY, JSON.stringify(validEntries));
+    } else {
+      localStorage.removeItem(NOTIFIED_REMINDERS_KEY);
+    }
 
     return new Set(validEntries.map(entry => entry.key));
   } catch (error) {
     console.error('Failed to load notified reminders:', error);
+    // Clear corrupted data
+    localStorage.removeItem(NOTIFIED_REMINDERS_KEY);
     return new Set();
   }
 };
@@ -53,7 +69,19 @@ const saveNotifiedReminder = (key: string): void => {
 
   try {
     const stored = localStorage.getItem(NOTIFIED_REMINDERS_KEY);
-    const data = stored ? JSON.parse(stored) : [];
+    let data = [];
+
+    if (stored && stored !== '' && stored !== 'undefined' && stored !== 'null') {
+      try {
+        data = JSON.parse(stored);
+        if (!Array.isArray(data)) {
+          data = [];
+        }
+      } catch (parseError) {
+        console.warn('Failed to parse notified reminders, starting fresh');
+        data = [];
+      }
+    }
 
     // Add new entry with timestamp
     data.push({ key, timestamp: Date.now() });
@@ -61,6 +89,8 @@ const saveNotifiedReminder = (key: string): void => {
     localStorage.setItem(NOTIFIED_REMINDERS_KEY, JSON.stringify(data));
   } catch (error) {
     console.error('Failed to save notified reminder:', error);
+    // Clear corrupted data
+    localStorage.removeItem(NOTIFIED_REMINDERS_KEY);
   }
 };
 
