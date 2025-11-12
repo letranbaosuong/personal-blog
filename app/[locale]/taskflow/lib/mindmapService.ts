@@ -1,6 +1,7 @@
 /**
  * Mindmap Service
- * Utilities for managing mindmap nodes and layout
+ * Utilities for managing mindmap nodes in a simple tree structure
+ * Simplified for better UX - no complex layouts, just simple hierarchy
  */
 
 import type { Mindmap, MindmapNode, MindmapEdge, MindmapLayoutType } from '../types';
@@ -12,7 +13,7 @@ export function createEmptyMindmap(rootLabel: string = 'Main Topic'): Mindmap {
   const rootNode: MindmapNode = {
     id: `node_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`,
     label: rootLabel,
-    position: { x: 400, y: 300 },
+    position: { x: 0, y: 0 }, // Position not used in simple view
     createdAt: new Date().toISOString(),
     updatedAt: new Date().toISOString(),
   };
@@ -20,7 +21,7 @@ export function createEmptyMindmap(rootLabel: string = 'Main Topic'): Mindmap {
   return {
     nodes: [rootNode],
     edges: [],
-    layoutType: 'tree',
+    layoutType: 'tree', // Always tree for simplicity
     centerNode: rootNode.id,
   };
 }
@@ -31,14 +32,13 @@ export function createEmptyMindmap(rootLabel: string = 'Main Topic'): Mindmap {
 export function addNode(
   mindmap: Mindmap,
   label: string,
-  parentId?: string,
-  position?: { x: number; y: number }
+  parentId?: string
 ): Mindmap {
   const newNode: MindmapNode = {
     id: `node_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`,
     label,
     parentId,
-    position: position || calculateNewNodePosition(mindmap, parentId),
+    position: { x: 0, y: 0 }, // Position not used in simple view
     createdAt: new Date().toISOString(),
     updatedAt: new Date().toISOString(),
   };
