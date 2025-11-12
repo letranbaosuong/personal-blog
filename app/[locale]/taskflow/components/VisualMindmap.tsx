@@ -5,7 +5,7 @@
 
 'use client';
 
-import { useState, useRef, useCallback, useMemo } from 'react';
+import { useState, useRef, useCallback, useMemo, useEffect } from 'react';
 import { Plus, ZoomIn, ZoomOut, Maximize2, Trash2, Edit2 } from 'lucide-react';
 import type { Mindmap, MindmapNode as MindmapNodeType } from '../types';
 import {
@@ -41,6 +41,15 @@ export default function VisualMindmap({
   const [editingNodeId, setEditingNodeId] = useState<string | null>(null);
   const [editValue, setEditValue] = useState('');
   const canvasRef = useRef<HTMLDivElement>(null);
+  const inputRef = useRef<HTMLInputElement>(null);
+
+  // Focus input when editing starts
+  useEffect(() => {
+    if (editingNodeId && inputRef.current) {
+      inputRef.current.focus();
+      inputRef.current.select();
+    }
+  }, [editingNodeId]);
 
   // Get root nodes and assign branch colors
   const rootNodes = useMemo(
@@ -168,6 +177,7 @@ export default function VisualMindmap({
   const handleStartEdit = useCallback((node: MindmapNodeType) => {
     setEditingNodeId(node.id);
     setEditValue(node.label);
+    setSelectedNodeId(node.id);
   }, []);
 
   // Handle save edit
@@ -237,45 +247,62 @@ export default function VisualMindmap({
           return (
             <div
               key={node.id}
-              className={`absolute group cursor-pointer transition-all ${
+              className={`absolute group transition-all ${
                 isSelected ? 'ring-2 ring-blue-500 ring-offset-2' : ''
               }`}
               style={{
                 left: pos.x,
                 top: pos.y,
                 transform: 'translate(-50%, -50%)',
+                zIndex: isEditing ? 1000 : isSelected ? 100 : 10,
+                cursor: isEditing ? 'text' : 'pointer',
               }}
-              onClick={() => setSelectedNodeId(node.id)}
+              onClick={(e) => {
+                if (!isEditing) {
+                  setSelectedNodeId(node.id);
+                }
+              }}
+              onDoubleClick={(e) => {
+                if (!isReadOnly && !isEditing) {
+                  e.stopPropagation();
+                  handleStartEdit(node);
+                }
+              }}
             >
               <div
                 className={`
                   px-4 py-2 rounded-full border-2 shadow-md
                   ${color.bg} ${color.border}
                   ${isCenter ? 'px-6 py-3 font-semibold text-base' : 'text-sm'}
+                  ${isEditing ? 'ring-2 ring-blue-400' : ''}
                   whitespace-nowrap
                 `}
               >
                 {isEditing ? (
                   <input
+                    ref={inputRef}
                     type="text"
                     value={editValue}
                     onChange={(e) => setEditValue(e.target.value)}
+                    onClick={(e) => e.stopPropagation()}
+                    onMouseDown={(e) => e.stopPropagation()}
                     onBlur={handleSaveEdit}
                     onKeyDown={(e) => {
-                      if (e.key === 'Enter') handleSaveEdit();
+                      if (e.key === 'Enter') {
+                        e.preventDefault();
+                        handleSaveEdit();
+                      }
                       if (e.key === 'Escape') {
+                        e.preventDefault();
                         setEditingNodeId(null);
                         setEditValue('');
                       }
                     }}
-                    className="bg-transparent outline-none border-none focus:ring-0 min-w-[100px]"
+                    className="bg-white dark:bg-slate-800 text-slate-900 dark:text-white outline-none border-none focus:ring-0 min-w-[100px] px-1"
                     autoFocus
                   />
                 ) : (
-                  <span
-                    onDoubleClick={() => !isReadOnly && handleStartEdit(node)}
-                    className="select-none"
-                  >
+                  <span className="select-none">
                     {node.label}
                   </span>
                 )}
