@@ -65,9 +65,9 @@ export const SignInDialog = ({ isOpen, onClose, onSignIn, onSignUp }: SignInDial
           console.log('✅ Sign in successful! User ID:', userId);
           console.log('🔄 Enabling Firestore sync...');
           await enableFirestoreSync(userId);
-          console.log('✅ Sync complete! Reloading page...');
+          console.log('✅ Sync complete! Reloading page to apply changes...');
 
-          // Reload page to refresh UI with synced data
+          // Reload page to refresh UI with synced data and initialize realtime listeners
           window.location.reload();
         }, 500); // Wait 500ms for Firebase Auth state to update
       }

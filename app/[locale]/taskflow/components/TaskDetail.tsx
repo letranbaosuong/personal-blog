@@ -6,7 +6,7 @@
 'use client';
 
 import { Task, Project, Contact } from '../types';
-import { X, Star, Calendar, Trash2, Plus, Sun, Edit2, Check, ArrowLeft } from 'lucide-react';
+import { X, Star, Calendar, Trash2, Plus, Sun, Edit2, Check, ArrowLeft, Network, List } from 'lucide-react';
 import { useState, useRef, useEffect } from 'react';
 import SubTaskItem from './SubTaskItem';
 import MentionTextarea from './MentionTextarea';
@@ -16,6 +16,10 @@ import FormatHelpTooltip from './FormatHelpTooltip';
 import { ShareButton } from './ShareButton';
 import { ShareDialog } from './ShareDialog';
 import { ShareIndicator } from './ShareIndicator';
+import MindmapView from './MindmapView';
+import MindmapListView from './MindmapListView';
+import { createEmptyMindmap } from '../lib/mindmapService';
+import type { Mindmap } from '../types';
 
 interface TaskDetailProps {
   task: Task;
@@ -59,6 +63,8 @@ export default function TaskDetail({
   const [isEditingNotes, setIsEditingNotes] = useState(false);
   const [newSubTaskTitle, setNewSubTaskTitle] = useState('');
   const [isShareDialogOpen, setIsShareDialogOpen] = useState(false);
+  const [mindmapViewMode, setMindmapViewMode] = useState<'canvas' | 'list'>('canvas');
+  const [showMindmap, setShowMindmap] = useState(false);
   const notesEditorRef = useRef<HTMLDivElement>(null);
 
   const handleSaveTitle = () => {
@@ -75,6 +81,16 @@ export default function TaskDetail({
       onAddSubTask(task.id, newSubTaskTitle.trim());
       setNewSubTaskTitle('');
     }
+  };
+
+  const handleMindmapChange = (mindmap: Mindmap) => {
+    onUpdate(task.id, { mindmap });
+  };
+
+  const handleInitMindmap = () => {
+    const newMindmap = createEmptyMindmap(task.title);
+    onUpdate(task.id, { mindmap: newMindmap });
+    setShowMindmap(true);
   };
 
   // Handle click outside to save notes
@@ -344,6 +360,67 @@ export default function TaskDetail({
             <option value="in-progress">In Progress</option>
             <option value="completed">Completed</option>
           </select>
+        </div>
+
+        {/* Mindmap */}
+        <div className="mb-6">
+          <div className="mb-2 flex items-center justify-between">
+            <label className="text-sm font-medium text-slate-700 dark:text-slate-300">
+              Mindmap
+            </label>
+            {task.mindmap && (
+              <div className="flex gap-1">
+                <button
+                  onClick={() => setMindmapViewMode('canvas')}
+                  className={`p-1.5 rounded transition-colors ${
+                    mindmapViewMode === 'canvas'
+                      ? 'bg-blue-100 text-blue-600 dark:bg-blue-900 dark:text-blue-300'
+                      : 'hover:bg-slate-100 dark:hover:bg-slate-700 text-slate-600 dark:text-slate-400'
+                  }`}
+                  title="Canvas View"
+                >
+                  <Network className="h-4 w-4" />
+                </button>
+                <button
+                  onClick={() => setMindmapViewMode('list')}
+                  className={`p-1.5 rounded transition-colors ${
+                    mindmapViewMode === 'list'
+                      ? 'bg-blue-100 text-blue-600 dark:bg-blue-900 dark:text-blue-300'
+                      : 'hover:bg-slate-100 dark:hover:bg-slate-700 text-slate-600 dark:text-slate-400'
+                  }`}
+                  title="List View"
+                >
+                  <List className="h-4 w-4" />
+                </button>
+              </div>
+            )}
+          </div>
+
+          {task.mindmap ? (
+            <div className="border border-slate-300 dark:border-slate-600 rounded-lg overflow-hidden">
+              <div className="h-[500px]">
+                {mindmapViewMode === 'canvas' ? (
+                  <MindmapView
+                    mindmap={task.mindmap}
+                    onMindmapChange={handleMindmapChange}
+                  />
+                ) : (
+                  <MindmapListView
+                    mindmap={task.mindmap}
+                    onMindmapChange={handleMindmapChange}
+                  />
+                )}
+              </div>
+            </div>
+          ) : (
+            <button
+              onClick={handleInitMindmap}
+              className="w-full flex items-center justify-center gap-2 rounded-lg border-2 border-dashed border-slate-300 dark:border-slate-600 bg-slate-50 dark:bg-slate-800 px-4 py-8 text-sm font-medium text-slate-600 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-700 hover:border-blue-400 dark:hover:border-blue-600 hover:text-blue-600 dark:hover:text-blue-400 transition-colors"
+            >
+              <Network className="h-5 w-5" />
+              Create Mindmap for this Task
+            </button>
+          )}
         </div>
 
         {/* Created date */}

@@ -23,17 +23,39 @@ import { storage, STORAGE_KEYS } from './storage';
 import { Task, Project, Contact } from '../types';
 
 /**
- * Remove undefined fields from object
+ * Remove undefined fields from object (recursively)
  * Firestore doesn't accept undefined values
  */
 const removeUndefinedFields = <T extends Record<string, any>>(obj: T): Partial<T> => {
   const cleaned: any = {};
+
   Object.keys(obj).forEach((key) => {
     const value = obj[key];
-    if (value !== undefined) {
+
+    // Skip undefined values
+    if (value === undefined) {
+      return;
+    }
+
+    // Recursively clean nested objects
+    if (value !== null && typeof value === 'object' && !Array.isArray(value) && !(value instanceof Date)) {
+      cleaned[key] = removeUndefinedFields(value);
+    }
+    // Recursively clean arrays
+    else if (Array.isArray(value)) {
+      cleaned[key] = value.map((item) => {
+        if (item !== null && typeof item === 'object' && !Array.isArray(item) && !(item instanceof Date)) {
+          return removeUndefinedFields(item);
+        }
+        return item;
+      }).filter(item => item !== undefined);
+    }
+    // Keep all other values (including null, which Firestore accepts)
+    else {
       cleaned[key] = value;
     }
   });
+
   return cleaned;
 };
 

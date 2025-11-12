@@ -57,6 +57,26 @@ export function useProjects(options?: UseProjectsOptions) {
     loadProjects();
   }, [loadProjects]);
 
+  // Listen for realtime Firestore updates
+  useEffect(() => {
+    const handleDataUpdate = (event: Event) => {
+      const customEvent = event as CustomEvent<{ type: string; data: any[] }>;
+
+      // Only reload if projects were updated
+      if (customEvent.detail.type === 'projects') {
+        console.log('📥 Projects updated from Firestore, reloading...');
+        loadProjects();
+      }
+    };
+
+    // Listen for custom event from Firestore sync
+    window.addEventListener('taskflow-data-updated', handleDataUpdate);
+
+    return () => {
+      window.removeEventListener('taskflow-data-updated', handleDataUpdate);
+    };
+  }, [loadProjects]);
+
   // Create project
   const createProject = useCallback(
     (project: Omit<Project, 'id' | 'createdAt' | 'taskIds'>) => {

@@ -59,6 +59,26 @@ export function useTasks(filters?: TaskFilters, options?: UseTasksOptions) {
     loadTasks();
   }, [loadTasks]);
 
+  // Listen for realtime Firestore updates
+  useEffect(() => {
+    const handleDataUpdate = (event: Event) => {
+      const customEvent = event as CustomEvent<{ type: string; data: any[] }>;
+
+      // Only reload if tasks were updated
+      if (customEvent.detail.type === 'tasks') {
+        console.log('📥 Tasks updated from Firestore, reloading...');
+        loadTasks();
+      }
+    };
+
+    // Listen for custom event from Firestore sync
+    window.addEventListener('taskflow-data-updated', handleDataUpdate);
+
+    return () => {
+      window.removeEventListener('taskflow-data-updated', handleDataUpdate);
+    };
+  }, [loadTasks]);
+
   // Create task
   const createTask = useCallback(
     (task: Omit<Task, 'id' | 'createdAt' | 'updatedAt'>) => {

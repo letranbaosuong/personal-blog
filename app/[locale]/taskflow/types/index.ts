@@ -41,6 +41,7 @@ export interface Task {
   subTasks: SubTask[];
   attachments: Attachment[];
   assignedTo?: string[];
+  mindmap?: Mindmap; // Optional mindmap for this task
   createdBy: string;
   createdAt: string;
   updatedAt: string;
@@ -100,4 +101,34 @@ export interface TaskFilters {
   isMyDay?: boolean;
   projectId?: string;
   searchQuery?: string;
+}
+
+// Mindmap types
+export type MindmapLayoutType = 'tree' | 'radial' | 'free';
+
+export interface MindmapNode {
+  id: string;
+  label: string;
+  description?: string;
+  color?: string;
+  position: { x: number; y: number };
+  parentId?: string;
+  isCollapsed?: boolean;
+  createdAt: string;
+  updatedAt: string;
+}
+
+export interface MindmapEdge {
+  id: string;
+  source: string;
+  target: string;
+  label?: string;
+  animated?: boolean;
+}
+
+export interface Mindmap {
+  nodes: MindmapNode[];
+  edges: MindmapEdge[];
+  layoutType: MindmapLayoutType;
+  centerNode?: string;
 }

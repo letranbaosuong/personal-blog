@@ -57,6 +57,26 @@ export function useContacts(options?: UseContactsOptions) {
     loadContacts();
   }, [loadContacts]);
 
+  // Listen for realtime Firestore updates
+  useEffect(() => {
+    const handleDataUpdate = (event: Event) => {
+      const customEvent = event as CustomEvent<{ type: string; data: any[] }>;
+
+      // Only reload if contacts were updated
+      if (customEvent.detail.type === 'contacts') {
+        console.log('📥 Contacts updated from Firestore, reloading...');
+        loadContacts();
+      }
+    };
+
+    // Listen for custom event from Firestore sync
+    window.addEventListener('taskflow-data-updated', handleDataUpdate);
+
+    return () => {
+      window.removeEventListener('taskflow-data-updated', handleDataUpdate);
+    };
+  }, [loadContacts]);
+
   // Create contact
   const createContact = useCallback(
     (contact: Omit<Contact, 'id' | 'createdAt' | 'updatedAt'>) => {

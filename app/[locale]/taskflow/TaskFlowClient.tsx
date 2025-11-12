@@ -284,6 +284,33 @@ export default function TaskFlowClient() {
     }
   }, [loading, contactsLoading, tasks, contacts, selectedTask, selectedContact]);
 
+  // Update selected task/contact when data changes (for realtime sync)
+  useEffect(() => {
+    if (selectedTask) {
+      const updatedTask = tasks.find((t) => t.id === selectedTask.id);
+      if (updatedTask && JSON.stringify(updatedTask) !== JSON.stringify(selectedTask)) {
+        console.log('📝 Updating selected task with realtime changes');
+        setSelectedTask(updatedTask);
+      } else if (!updatedTask) {
+        // Task was deleted
+        console.log('🗑️ Selected task was deleted');
+        setSelectedTask(null);
+      }
+    }
+
+    if (selectedContact) {
+      const updatedContact = contacts.find((c) => c.id === selectedContact.id);
+      if (updatedContact && JSON.stringify(updatedContact) !== JSON.stringify(selectedContact)) {
+        console.log('📝 Updating selected contact with realtime changes');
+        setSelectedContact(updatedContact);
+      } else if (!updatedContact) {
+        // Contact was deleted
+        console.log('🗑️ Selected contact was deleted');
+        setSelectedContact(null);
+      }
+    }
+  }, [tasks, contacts, selectedTask, selectedContact]);
+
   // Listen for browser notification clicks
   useEffect(() => {
     const handleOpenTask = (event: Event) => {
