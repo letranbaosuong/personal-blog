@@ -77,35 +77,35 @@ function TreeNode({ node, level, mindmap, onUpdate, onDelete, onAddChild, isRead
   };
 
   return (
-    <div className="flex items-start gap-4">
+    <div className="flex items-start gap-2 sm:gap-4">
       {/* Node */}
       <div className="flex flex-col items-start gap-2">
-        <div className="flex items-center gap-2 group">
+        <div className="flex items-center gap-1 sm:gap-2 group">
           {/* Collapse button */}
           {hasChildren && (
             <button
               onClick={handleToggleCollapse}
-              className="p-1 hover:bg-slate-200 dark:hover:bg-slate-700 rounded transition-colors"
+              className="p-1 sm:p-1.5 hover:bg-slate-200 dark:hover:bg-slate-700 rounded transition-colors touch-manipulation"
             >
               {isCollapsed ? (
-                <ChevronRight className="h-4 w-4 text-slate-600 dark:text-slate-400" />
+                <ChevronRight className="h-3.5 w-3.5 sm:h-4 sm:w-4 text-slate-600 dark:text-slate-400" />
               ) : (
-                <ChevronDown className="h-4 w-4 text-slate-600 dark:text-slate-400" />
+                <ChevronDown className="h-3.5 w-3.5 sm:h-4 sm:w-4 text-slate-600 dark:text-slate-400" />
               )}
             </button>
           )}
-          {!hasChildren && <div className="w-6" />}
+          {!hasChildren && <div className="w-5 sm:w-6" />}
 
           {/* Node content */}
           <div className={`
-            relative flex items-center gap-2 px-4 py-2 rounded-lg shadow-sm border-2
-            ${isRoot ? 'rounded-full px-6 py-3' : 'rounded-lg'}
+            relative flex items-center gap-1.5 sm:gap-2 px-3 py-1.5 sm:px-4 sm:py-2 rounded-lg shadow-sm border-2
+            ${isRoot ? 'rounded-full px-4 py-2 sm:px-6 sm:py-3' : 'rounded-lg'}
             ${isRoot ? `${color.bg} ${color.text} ${color.border}` : `${color.light} text-slate-900 dark:text-white border-slate-300 dark:border-slate-600`}
-            ${isRoot ? 'font-semibold text-base' : 'text-sm'}
+            ${isRoot ? 'font-semibold text-sm sm:text-base' : 'text-xs sm:text-sm'}
             transition-all
           `}>
             {isEditing ? (
-              <div className="flex items-center gap-2">
+              <div className="flex items-center gap-1 sm:gap-2">
                 <input
                   type="text"
                   value={editValue}
@@ -114,20 +114,20 @@ function TreeNode({ node, level, mindmap, onUpdate, onDelete, onAddChild, isRead
                     if (e.key === 'Enter') handleSave();
                     if (e.key === 'Escape') handleCancel();
                   }}
-                  className="bg-white dark:bg-slate-800 text-slate-900 dark:text-white px-2 py-1 rounded border border-blue-500 outline-none focus:ring-2 focus:ring-blue-500 min-w-[150px]"
+                  className="bg-white dark:bg-slate-800 text-slate-900 dark:text-white px-2 py-1 rounded border border-blue-500 outline-none focus:ring-2 focus:ring-blue-500 text-xs sm:text-sm min-w-[120px] sm:min-w-[150px]"
                   autoFocus
                 />
                 <button
                   onClick={handleSave}
-                  className="p-1 hover:bg-green-100 dark:hover:bg-green-900 rounded"
+                  className="p-1 sm:p-1.5 hover:bg-green-100 dark:hover:bg-green-900 rounded touch-manipulation"
                 >
-                  <Check className="h-4 w-4 text-green-600" />
+                  <Check className="h-3.5 w-3.5 sm:h-4 sm:w-4 text-green-600" />
                 </button>
                 <button
                   onClick={handleCancel}
-                  className="p-1 hover:bg-red-100 dark:hover:bg-red-900 rounded"
+                  className="p-1 sm:p-1.5 hover:bg-red-100 dark:hover:bg-red-900 rounded touch-manipulation"
                 >
-                  <X className="h-4 w-4 text-red-600" />
+                  <X className="h-3.5 w-3.5 sm:h-4 sm:w-4 text-red-600" />
                 </button>
               </div>
             ) : (
@@ -141,28 +141,28 @@ function TreeNode({ node, level, mindmap, onUpdate, onDelete, onAddChild, isRead
 
                 {/* Actions */}
                 {!isReadOnly && (
-                  <div className="flex gap-1 opacity-0 group-hover:opacity-100 transition-opacity">
+                  <div className="flex gap-0.5 sm:gap-1 opacity-100 sm:opacity-0 sm:group-hover:opacity-100 transition-opacity">
                     <button
                       onClick={() => onAddChild(node.id)}
-                      className="p-1 hover:bg-blue-100 dark:hover:bg-blue-900 rounded"
+                      className="p-1 sm:p-1.5 hover:bg-blue-100 dark:hover:bg-blue-900 rounded touch-manipulation"
                       title="Add child"
                     >
-                      <Plus className="h-3.5 w-3.5 text-blue-600" />
+                      <Plus className="h-3 w-3 sm:h-3.5 sm:w-3.5 text-blue-600" />
                     </button>
                     <button
                       onClick={() => setIsEditing(true)}
-                      className="p-1 hover:bg-blue-100 dark:hover:bg-blue-900 rounded"
+                      className="p-1 sm:p-1.5 hover:bg-blue-100 dark:hover:bg-blue-900 rounded touch-manipulation"
                       title="Edit"
                     >
-                      <Edit2 className="h-3.5 w-3.5 text-blue-600" />
+                      <Edit2 className="h-3 w-3 sm:h-3.5 sm:w-3.5 text-blue-600" />
                     </button>
                     {!isRoot && (
                       <button
                         onClick={handleDelete}
-                        className="p-1 hover:bg-red-100 dark:hover:bg-red-900 rounded"
+                        className="p-1 sm:p-1.5 hover:bg-red-100 dark:hover:bg-red-900 rounded touch-manipulation"
                         title="Delete"
                       >
-                        <Trash2 className="h-3.5 w-3.5 text-red-600" />
+                        <Trash2 className="h-3 w-3 sm:h-3.5 sm:w-3.5 text-red-600" />
                       </button>
                     )}
                   </div>
@@ -174,7 +174,7 @@ function TreeNode({ node, level, mindmap, onUpdate, onDelete, onAddChild, isRead
 
         {/* Children */}
         {hasChildren && !isCollapsed && (
-          <div className="ml-10 flex flex-col gap-3 pl-6 border-l-2 border-slate-300 dark:border-slate-600">
+          <div className="ml-4 sm:ml-10 flex flex-col gap-2 sm:gap-3 pl-3 sm:pl-6 border-l-2 border-slate-300 dark:border-slate-600">
             {children.map((child) => (
               <TreeNode
                 key={child.id}
@@ -230,26 +230,26 @@ export default function TreeMindmap({
   );
 
   return (
-    <div className="h-full w-full overflow-auto bg-white dark:bg-slate-900 p-8">
+    <div className="h-full w-full overflow-auto bg-white dark:bg-slate-900 p-3 sm:p-6 md:p-8">
       {/* Header */}
-      <div className="mb-6 flex items-center justify-between">
+      <div className="mb-4 sm:mb-6 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2">
         <div>
-          <h3 className="text-lg font-semibold text-slate-900 dark:text-white">
-            Mind Map - Tree View
+          <h3 className="text-base sm:text-lg font-semibold text-slate-900 dark:text-white">
+            Mind Map
           </h3>
-          <p className="text-sm text-slate-600 dark:text-slate-400">
-            {mindmap.nodes.length} nodes • Double-click to edit
+          <p className="text-xs sm:text-sm text-slate-600 dark:text-slate-400">
+            {mindmap.nodes.length} nodes
           </p>
         </div>
       </div>
 
       {/* Tree */}
       {rootNodes.length === 0 ? (
-        <div className="flex flex-col items-center justify-center h-64">
-          <p className="text-slate-500 dark:text-slate-400">No nodes yet</p>
+        <div className="flex flex-col items-center justify-center h-48 sm:h-64">
+          <p className="text-sm text-slate-500 dark:text-slate-400">No nodes yet</p>
         </div>
       ) : (
-        <div className="space-y-6">
+        <div className="space-y-4 sm:space-y-6">
           {rootNodes.map((node) => (
             <TreeNode
               key={node.id}
@@ -266,10 +266,11 @@ export default function TreeMindmap({
       )}
 
       {/* Tips */}
-      <div className="mt-8 p-4 bg-blue-50 dark:bg-blue-900/20 rounded-lg border border-blue-200 dark:border-blue-800">
-        <p className="text-sm text-blue-900 dark:text-blue-100">
-          <strong>Tips:</strong> Double-click to edit • Hover over nodes to see actions •
-          Click <ChevronDown className="inline h-3 w-3" /> to collapse branches
+      <div className="mt-6 sm:mt-8 p-3 sm:p-4 bg-blue-50 dark:bg-blue-900/20 rounded-lg border border-blue-200 dark:border-blue-800">
+        <p className="text-xs sm:text-sm text-blue-900 dark:text-blue-100">
+          <strong>Tips:</strong> <span className="hidden sm:inline">Double-click to edit • </span>
+          <span className="sm:hidden">Tap buttons to edit • </span>
+          Tap <ChevronDown className="inline h-3 w-3" /> to collapse
         </p>
       </div>
     </div>
