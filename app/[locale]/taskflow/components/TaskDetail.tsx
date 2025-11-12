@@ -17,7 +17,7 @@ import { ShareButton } from './ShareButton';
 import { ShareDialog } from './ShareDialog';
 import { ShareIndicator } from './ShareIndicator';
 import SimpleMindmap from './SimpleMindmap';
-import VisualMindmap from './VisualMindmap';
+import TreeMindmap from './TreeMindmap';
 import { createEmptyMindmap } from '../lib/mindmapService';
 import type { Mindmap } from '../types';
 
@@ -63,7 +63,7 @@ export default function TaskDetail({
   const [isEditingNotes, setIsEditingNotes] = useState(false);
   const [newSubTaskTitle, setNewSubTaskTitle] = useState('');
   const [isShareDialogOpen, setIsShareDialogOpen] = useState(false);
-  const [mindmapViewMode, setMindmapViewMode] = useState<'visual' | 'simple'>('visual');
+  const [mindmapViewMode, setMindmapViewMode] = useState<'tree' | 'simple'>('tree');
   const notesEditorRef = useRef<HTMLDivElement>(null);
 
   const handleSaveTitle = () => {
@@ -369,13 +369,13 @@ export default function TaskDetail({
             {task.mindmap && (
               <div className="flex gap-1 bg-white dark:bg-slate-800 rounded-lg border border-slate-300 dark:border-slate-600 p-1">
                 <button
-                  onClick={() => setMindmapViewMode('visual')}
+                  onClick={() => setMindmapViewMode('tree')}
                   className={`p-1.5 rounded transition-colors ${
-                    mindmapViewMode === 'visual'
+                    mindmapViewMode === 'tree'
                       ? 'bg-blue-100 text-blue-600 dark:bg-blue-900 dark:text-blue-300'
                       : 'hover:bg-slate-100 dark:hover:bg-slate-700 text-slate-600 dark:text-slate-400'
                   }`}
-                  title="Visual View (Miro-style)"
+                  title="Tree View"
                 >
                   <Network className="h-4 w-4" />
                 </button>
@@ -386,7 +386,7 @@ export default function TaskDetail({
                       ? 'bg-blue-100 text-blue-600 dark:bg-blue-900 dark:text-blue-300'
                       : 'hover:bg-slate-100 dark:hover:bg-slate-700 text-slate-600 dark:text-slate-400'
                   }`}
-                  title="Simple List View"
+                  title="Compact List View"
                 >
                   <List className="h-4 w-4" />
                 </button>
@@ -397,8 +397,8 @@ export default function TaskDetail({
           {task.mindmap ? (
             <div className="border border-slate-300 dark:border-slate-600 rounded-lg overflow-hidden shadow-sm">
               <div className="h-[600px]">
-                {mindmapViewMode === 'visual' ? (
-                  <VisualMindmap
+                {mindmapViewMode === 'tree' ? (
+                  <TreeMindmap
                     mindmap={task.mindmap}
                     onMindmapChange={handleMindmapChange}
                   />
